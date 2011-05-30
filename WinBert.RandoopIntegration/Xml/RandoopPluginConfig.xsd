@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RandoopConfig"
+    targetNamespace="http://arktos.org/RandoopPluginConfig.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://arktos.org/RandoopPluginConfig.xsd"
+    xmlns:rndp="http://arktos.org/RandoopPluginConfig.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:simpleType name="PatternType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Regex" />
+      <xs:enumeration value="ExactString" />
+      <xs:enumeration value="Wildcard" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Char">
+    <xs:restriction base="xs:string">
+      <xs:pattern value=".{1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ForbidExpression">
+    <xs:sequence>
+      <xs:element name="Pattern" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="Type" type="PatternType" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="RandoopPluginConfig">
+    <xs:sequence>
+      <xs:element name="ForbiddenTypes">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ForbiddenType" type="ForbidExpression" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ForbiddenFields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ForbiddenField" type="ForbidExpression" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ForbiddenMembers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ForbiddenField" type="ForbidExpression" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SeedValues">
+        <xs:complexType>
+          <xs:sequence>
+            
+            <xs:element name="ByteSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:byte" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="UByteSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:unsignedByte" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="ShortSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:short" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="UShortSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:unsignedShort" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="IntSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="UIntSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:unsignedInt" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="LongSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="ULongSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:unsignedLong" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="DoubleSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:double" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="UsePositiveInfinity" type="xs:boolean" default="false" use="optional" />
+                <xs:attribute name="UseNegativeInfinity" type="xs:boolean" default="false" use="optional" />
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="FloatSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:float" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="UsePositiveInfinity" type="xs:boolean" default="false" use="optional" />
+                <xs:attribute name="UseNegativeInfinity" type="xs:boolean" default="false" use="optional" />
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="DecimalSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:decimal" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="UseMinusOne" type="xs:boolean" default="false" use="optional" />
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="BoolSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:boolean" minOccurs="1" maxOccurs="2"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="StringSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="UseEmptyString" type="xs:boolean" default="true" use="optional" />
+                <xs:attribute name="UseNull" type="xs:boolean" default="true" use="optional" />
+              </xs:complexType>
+            </xs:element>
+
+            <xs:element name="CharSeedValues">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Values">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Value" type="rndp:Char" minOccurs="0" maxOccurs="unbounded"/>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="RandoopPluginConfig" type="rndp:RandoopPluginConfig" />
+  
+</xs:schema>

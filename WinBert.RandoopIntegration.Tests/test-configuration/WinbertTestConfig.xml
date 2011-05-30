@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WinBertConfig 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://arktos.org/WinBert.xsd"
+  xmlns:rpc="http://arktos.org/RandoopPluginConfig.xsd"
+  MasterArchivePath="X:\userdata\jduv\dev\Projects\BankAccount\.winbert">
+  <IgnoreList />
+  <Projects />
+  <EmbeddedConfigurations>
+    <EmbeddedConfiguration Type="WinBert.RandoopIntegration.Xml.RandoopPluginConfig">
+      <rpc:RandoopPluginConfig >
+        <rpc:ForbiddenTypes />
+        <rpc:ForbiddenFields />
+        <rpc:ForbiddenMembers />
+        <rpc:SeedValues>
+          
+          <rpc:ByteSeedValues>
+            <rpc:Values>
+              <rpc:Value>-127</rpc:Value>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>1</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>127</rpc:Value>
+            </rpc:Values>
+          </rpc:ByteSeedValues>
+          
+          <rpc:UByteSeedValues>
+            <rpc:Values>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>1</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>255</rpc:Value>
+            </rpc:Values>
+          </rpc:UByteSeedValues>
+          
+          <rpc:ShortSeedValues>
+            <rpc:Values>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>32767</rpc:Value>
+            </rpc:Values>
+          </rpc:ShortSeedValues>
+          
+          <rpc:UShortSeedValues>
+            <rpc:Values>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>65535</rpc:Value>
+            </rpc:Values>
+          </rpc:UShortSeedValues>
+          
+          <rpc:IntSeedValues>
+            <rpc:Values>
+              <rpc:Value>-2147483648</rpc:Value>
+              <rpc:Value>-10</rpc:Value>
+              <rpc:Value>-5</rpc:Value>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>2147483647</rpc:Value>
+            </rpc:Values>
+          </rpc:IntSeedValues>
+          
+          <rpc:UIntSeedValues>
+            <rpc:Values>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>4294967295</rpc:Value>
+            </rpc:Values>
+          </rpc:UIntSeedValues>
+          
+          <rpc:LongSeedValues>
+            <rpc:Values>
+              <rpc:Value>-9223372036854775808</rpc:Value>
+              <rpc:Value>-10</rpc:Value>
+              <rpc:Value>-5</rpc:Value>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>9223372036854775807</rpc:Value>
+            </rpc:Values>
+          </rpc:LongSeedValues>
+          
+          <rpc:ULongSeedValues>
+            <rpc:Values>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5</rpc:Value>
+              <rpc:Value>10</rpc:Value>
+              <rpc:Value>18446744073709551615</rpc:Value>
+            </rpc:Values>
+          </rpc:ULongSeedValues>
+          
+          <rpc:DoubleSeedValues>
+            <rpc:Values>
+              <rpc:Value>-10.5</rpc:Value>
+              <rpc:Value>-5.4</rpc:Value>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5.9</rpc:Value>
+              <rpc:Value>10.2</rpc:Value>
+            </rpc:Values>
+          </rpc:DoubleSeedValues>
+          
+          <rpc:FloatSeedValues>
+            <rpc:Values>
+              <rpc:Value>-10.5</rpc:Value>
+              <rpc:Value>-5.4</rpc:Value>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5.9</rpc:Value>
+              <rpc:Value>10.2</rpc:Value>
+            </rpc:Values>
+          </rpc:FloatSeedValues>
+          
+          <rpc:DecimalSeedValues>
+            <rpc:Values>
+              <rpc:Value>-79228162514264337593543950335</rpc:Value>
+              <rpc:Value>-10.5</rpc:Value>
+              <rpc:Value>-5.4</rpc:Value>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>5.9</rpc:Value>
+              <rpc:Value>10.2</rpc:Value>
+              <rpc:Value>79228162514264337593543950335</rpc:Value>
+            </rpc:Values>
+          </rpc:DecimalSeedValues>
+          
+          <rpc:BoolSeedValues>
+            <rpc:Values>
+              <rpc:Value>0</rpc:Value>
+              <rpc:Value>1</rpc:Value>
+            </rpc:Values>
+          </rpc:BoolSeedValues>
+          
+          <rpc:StringSeedValues UseEmptyString="true" UseNull="true">
+            <rpc:Values>
+              <rpc:Value>Hello World</rpc:Value>
+              <rpc:Value>testing</rpc:Value>
+            </rpc:Values>
+          </rpc:StringSeedValues>
+          
+          <rpc:CharSeedValues>
+            <rpc:Values>
+              <rpc:Value>a</rpc:Value>
+              <rpc:Value>z</rpc:Value>
+              <rpc:Value> </rpc:Value>
+            </rpc:Values>
+          </rpc:CharSeedValues>
+          
+        </rpc:SeedValues>
+      </rpc:RandoopPluginConfig>
+    </EmbeddedConfiguration>
+  </EmbeddedConfigurations>
+</WinBertConfig>

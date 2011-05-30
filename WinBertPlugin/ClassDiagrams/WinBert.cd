@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WinBert.Analysis.AnalysisResults" Collapsed="true">
+    <Position X="3.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Analysis\AnalysisResults.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Analysis.BertBehavioralAnalyzer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Analysis\BertBehavioralAnalyzer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Differencing.AssemblyDifferenceResult" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAQAAAACAAAAAAAAAAAAAAAAQAEAAAEAAAA=</HashCode>
+      <FileName>Differencing\AssemblyDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Differencing.BertAssemblyDifferenceEngine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAIAAgAAAAAgEAAA=</HashCode>
+      <FileName>Differencing\BertAssemblyDifferenceEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Differencing.BertTypeDifferenceEngine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAEAAAAAAAAAAAAAAAAAAAAAAAgAIAAAgAAAA=</HashCode>
+      <FileName>Differencing\BertTypeDifferenceEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Differencing.TypeDifferenceResult" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAACAAAAAAAAAAEAAAAAAAAQAIAABEAAAA=</HashCode>
+      <FileName>Differencing\TypeDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Exceptions.InvalidConfigurationException" Collapsed="true">
+    <Position X="10.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exceptions\InvalidConfigurationException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Instrumentation.InstrumentedTestSuite" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAABAAQACAAAAABAAAQAAAAAAQAAAAoBAAA=</HashCode>
+      <FileName>Instrumentation\InstrumentedTestSuite.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Util.BuildVersionManager" Collapsed="true">
+    <Position X="10.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAgAACAIAAgIAAQBoAEAAAAAQAAAAAAEAQA=</HashCode>
+      <FileName>Util\BuildVersionManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Util.FileCopier" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQACAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAABAAAQ=</HashCode>
+      <FileName>Util\FileCopier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Xml.Build" Collapsed="true">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAACAAIAgAgAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Xml\Build.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Xml.IgnoreTarget" Collapsed="true">
+    <Position X="6.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAIAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Xml\IgnoreTarget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Xml.WinBertConfig" Collapsed="true">
+    <Position X="6.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAABQAAAIAAQAAAAQAAAgAAAAAAAAQA=</HashCode>
+      <FileName>Xml\WinBertConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Xml.EmbeddedConfiguration" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAQAAAAAAACAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Xml\WinBertConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Xml.WinBertProject" Collapsed="true">
+    <Position X="8.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAIAAAAQAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Xml\WinBertConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Testing.BertTestAssemblyCompiler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAFAAAIAAAAABAABAAAAACAAQAAIAAgAEAAAAAAA=</HashCode>
+      <FileName>Testing\BertTestAssemblyCompiler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Testing.TestAssembly" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAIAAAAEAAAAAAAA=</HashCode>
+      <FileName>Testing\TestAssembly.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WinBert.Testing.TestSuite" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAgBAAA=</HashCode>
+      <FileName>Testing\TestSuite.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="WinBert.Testing.TestSuiteRunResult" Collapsed="true">
+    <Position X="3.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\TestSuiteRunResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="WinBert.Analysis.IBehavioralAnalyzer">
+    <Position X="7.25" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Analysis\IBehavioralAnalyzer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WinBert.Differencing.IDifferenceEngine&lt;T, TResult&gt;">
+    <Position X="4.5" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Differencing\IDifferenceEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WinBert.Differencing.IDifferenceResult&lt;T&gt;">
+    <Position X="7.25" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAEAAAA=</HashCode>
+      <FileName>Differencing\IDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WinBert.Testing.ITestAssemblyCompiler">
+    <Position X="7.5" Y="8" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAFAAAAAAAAAAAAAAAAAAAAAQAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestAssemblyCompiler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WinBert.Testing.ITestSuite">
+    <Position X="10.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAgBAAA=</HashCode>
+      <FileName>Testing\ITestSuite.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WinBert.Testing.ITestSuiteGenerator">
+    <Position X="3.25" Y="9.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestSuiteGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="WinBert.Testing.ITestSuiteRunner">
+    <Position X="3.25" Y="8" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestSuiteRunner.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="WinBert.Util.FileCopierFlags" Collapsed="true">
+    <Position X="3.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABgAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Util\FileCopier.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WinBert.Xml.IgnoreType" Collapsed="true">
+    <Position X="5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Xml\WinBertConfig.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

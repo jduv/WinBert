@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="WinBert"
+    targetNamespace="http://arktos.org/WinBert.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://arktos.org/WinBert.xsd"
+    xmlns:bert="http://arktos.org/WinBert.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+
+  <xs:complexType name="WinBertConfig">
+    <xs:sequence>
+      <xs:element name="IgnoreList">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="IgnoreTarget" type="bert:IgnoreTarget" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Projects" minOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Project" type="bert:WinBertProject" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="EmbeddedConfigurations" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="EmbeddedConfiguration" type="bert:EmbeddedConfiguration" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="MasterArchivePath" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="WinBertProject">
+    <xs:sequence>
+      <xs:element name="BuildsList" minOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Build" type="bert:Build" maxOccurs="unbounded" />
+          </xs:sequence>
+      </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Name" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Build">
+    <xs:sequence>
+      <xs:element name="Path" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="SequenceNumber" type="xs:unsignedInt" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="IgnoreTarget">
+    <xs:sequence>
+      <xs:element name="Name" minOccurs="1" />
+    </xs:sequence>
+    <xs:attribute name="Type" type="bert:IgnoreType" use="required"/>
+  </xs:complexType>
+
+  <xs:simpleType name="IgnoreType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Method" />
+      <xs:enumeration value="Type" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="EmbeddedConfiguration">
+    <xs:sequence>
+      <xs:any maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute name="Type" type="xs:string" />
+  </xs:complexType>
+  
+  <xs:element name="WinBertConfig" type="bert:WinBertConfig" />
+  
+</xs:schema>

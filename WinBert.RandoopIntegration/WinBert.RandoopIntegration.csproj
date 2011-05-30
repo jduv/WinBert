@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="XSD" AssemblyName="Microsoft.Build.CppTasks.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F0485540-6010-4819-B9D1-D1B767A355BE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WinBert.RandoopIntegration</RootNamespace>
+    <AssemblyName>WinBert.RandoopIntegration</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ForbidExpression.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xml\RandoopPluginConfig.cs">
+      <DependentUpon>RandoopPluginConfig.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="RandoopTestSuiteInstrumenter.cs" />
+    <Compile Include="RandoopTestGenerator.cs" />
+    <Compile Include="RandoopTestRunner.cs" />
+    <Compile Include="PermissiveReflectionFilter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagrams\WinBert.RandoopIntegration.cd" />
+    <None Include="Xml\RandoopPluginConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RandoopCommon\RandoopCommon.csproj">
+      <Project>{D5B45A6E-B8DA-4A4B-B08B-4C1EA24BEB1B}</Project>
+      <Name>RandoopCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RandoopImpl\RandoopImpl.csproj">
+      <Project>{596DF464-5F9A-4892-9CFD-6431806CCA73}</Project>
+      <Name>RandoopImpl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinBertPlugin\WinBert.csproj">
+      <Project>{986263EA-6C7F-4AF2-B448-0A1ED8007193}</Project>
+      <Name>WinBert</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <xsd Namespace="$(RootNamespace).Xml" Language="CS" GenerateFromSchema="classes" Sources="Xml/RandoopPluginConfig.xsd" AdditionalOptions="/outputdir:Xml" />
+  </Target>
+</Project>
