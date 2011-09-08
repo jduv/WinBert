@@ -73,6 +73,7 @@
         /// </param>
         public BuildVersionManager(string archivePath, byte maxBuildsArchivable, string name)
         {
+            // Test comment with hunter green text
             this.MaxArchiveSize = maxBuildsArchivable;
             this.SequenceNumber = 0;
             this.BuildArchive = new SortedList<uint, Build>();

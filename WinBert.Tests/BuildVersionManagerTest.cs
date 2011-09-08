@@ -66,7 +66,7 @@
         }
 
         /// <summary>
-        /// Tests loading a non-existant build using the LoadBuild(uint, string) method.
+        /// Tests loading a non-existent build using the LoadBuild(uint, string) method.
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]

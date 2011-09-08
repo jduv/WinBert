@@ -149,7 +149,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
-  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.5\StyleCop.targets" />  
+  <Import Project="$(ProgramFiles)\MSBuild\Microsoft\StyleCop\v4.4\Microsoft.StyleCop.targets" />  
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
