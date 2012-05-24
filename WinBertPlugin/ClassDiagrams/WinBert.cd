@@ -18,7 +18,7 @@
   <Class Name="WinBert.Differencing.AssemblyDifferenceResult" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAQAAAACAAAAAAAAAAAAAAAAQAEAAAEAAAA=</HashCode>
+      <HashCode>AAEAAAAAAAAAAAACAAAAAAAAAAAAAAAAQAAAAAEAAAA=</HashCode>
       <FileName>Differencing\AssemblyDifferenceResult.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -34,7 +34,7 @@
   <Class Name="WinBert.Differencing.BertTypeDifferenceEngine" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="6.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAEAAAAEAAAAAAAAAAAAAAAAAAAAAAAgAIAAAgAAAA=</HashCode>
+      <HashCode>AAAEAAAAEAAAAAAAAAAAAAAAAAAAAAAAgAAAAAgAAAA=</HashCode>
       <FileName>Differencing\BertTypeDifferenceEngine.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -57,7 +57,7 @@
   <Class Name="WinBert.Instrumentation.InstrumentedTestSuite" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="8.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAABAAQACAAAAABAAAQAAAAAAQAAAAoBAAA=</HashCode>
+      <HashCode>AAAAAAAEAAAAAAAAAAACAAAAAAAAAAAACQFAAAgBAKA=</HashCode>
       <FileName>Instrumentation\InstrumentedTestSuite.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -111,25 +111,18 @@
       <FileName>Xml\WinBertConfig.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="WinBert.Testing.BertTestAssemblyCompiler" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="WinBert.Testing.BertAssemblyCompiler" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAFAAAIAAAAABAABAAAAACAAQAAIAAgAEAAAAAAA=</HashCode>
-      <FileName>Testing\BertTestAssemblyCompiler.cs</FileName>
+      <HashCode>AAAAAFAAAIAAAAABAAAAAAAACAAQAAIAAgAEAAAAAAA=</HashCode>
+      <FileName>Testing\BertAssemblyCompiler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="WinBert.Testing.TestAssembly" Collapsed="true">
-    <Position X="8.5" Y="2.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAIAAAAEAAAAAAAA=</HashCode>
-      <FileName>Testing\TestAssembly.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Class Name="WinBert.Testing.TestSuite" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="10.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAgBAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAFAAAgAAIA=</HashCode>
       <FileName>Testing\TestSuite.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -162,17 +155,17 @@
       <FileName>Differencing\IDifferenceResult.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="WinBert.Testing.ITestAssemblyCompiler">
+  <Interface Name="WinBert.Testing.IAssemblyCompiler">
     <Position X="7.5" Y="8" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAFAAAAAAAAAAAAAAAAAAAAAQAAIAAAAAAAAAAAA=</HashCode>
-      <FileName>Testing\ITestAssemblyCompiler.cs</FileName>
+      <FileName>Testing\IAssemblyCompiler.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="WinBert.Testing.ITestSuite">
     <Position X="10.25" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAgBAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAFAAAgAAIA=</HashCode>
       <FileName>Testing\ITestSuite.cs</FileName>
     </TypeIdentifier>
   </Interface>

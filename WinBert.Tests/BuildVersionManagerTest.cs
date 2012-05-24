@@ -12,6 +12,8 @@
     [TestClass]
     public class BuildVersionManagerTest
     {
+        #region Fields and Constants
+        
         /// <summary>
         ///   Path to the new archive.
         /// </summary>
@@ -32,6 +34,10 @@
         /// </summary>
         private BuildVersionManager versionManagerUnderTest;
 
+        #endregion
+
+        #region Test Plumbing
+        
         /// <summary>
         /// Initializes properties before each test
         /// </summary>
@@ -54,6 +60,10 @@
                 Directory.Delete(archivePath, true);
             }
         }
+
+        #endregion
+
+        #region Test Methods
 
         /// <summary>
         /// Test creating a build manager with a bad archive path (one that doesn't exist).
@@ -224,5 +234,7 @@
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected2));
             Assert.AreEqual(1, this.versionManagerUnderTest.BuildArchive.Count);
         }
+
+        #endregion
     }
 }

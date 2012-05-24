@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-    <UsingTask TaskName="XSD" AssemblyName="Microsoft.Build.CppTasks.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -158,7 +157,7 @@
     </PropertyGroup>
     <ProjectExtensions />
     <Target Name="BeforeBuild">
-        <xsd Namespace="$(RootNamespace).Xml" Language="CS" GenerateFromSchema="classes" Sources="Xml/WinBertConfig.xsd" AdditionalOptions="/outputdir:Xml" />
+        <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfig.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
     </Target>
     <Target Name="AfterBuild">
         <PropertyGroup>
