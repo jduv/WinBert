@@ -11,6 +11,8 @@
     [TestClass]
     public class FileCopierTest
     {
+        #region Fields and Constants
+
         /// <summary>
         ///   Destination directory for all copy operations
         /// </summary>
@@ -35,6 +37,10 @@
         ///   The FileCopier instance to test.
         /// </summary>
         private FileCopier fileCopierUnderTest = null;
+
+        #endregion
+
+        #region Test Plumbing
 
         /// <summary>
         /// Handles initialization before each test.
@@ -73,6 +79,10 @@
             }
         }
 
+        #endregion
+
+        #region Test Methods
+
         /// <summary>
         /// Tests a file copier with no flags set
         /// </summary>
@@ -109,7 +119,7 @@
         [TestMethod]
         public void TestFlagReadOnlyOverwritable()
         {
-            this.fileCopierUnderTest = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination | 
+            this.fileCopierUnderTest = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination |
                                                       FileCopierFlags.AttemptOverwriteReadonlyDest);
 
             Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
@@ -145,6 +155,10 @@
             this.fileCopierUnderTest.TryCopyFile(destDir, destDir);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Copies a file.
         /// </summary>
@@ -171,7 +185,6 @@
         private bool CopyFileToNamedTarget(FileCopier copier)
         {
             string destPath = Path.Combine(destDir, @"out.txt");
-
             return copier.TryCopyFile(sourceFile, destPath);
         }
 
@@ -243,8 +256,9 @@
         private bool CopyToNonExistantDirectory(FileCopier copier)
         {
             string destPath = Path.Combine(destDir, @"newdir\another\out.txt");
-
             return copier.TryCopyFile(sourceFile, destPath);
         }
+
+        #endregion
     }
 }

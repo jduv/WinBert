@@ -110,12 +110,12 @@
             string expectedPath = Path.Combine(archivePath, name, this.versionManagerUnderTest.SequenceNumber.ToString(), testAssemblyV1Name);
             this.versionManagerUnderTest.AddNewSuccessfulBuild(testAssemblyV1Name);
 
-            Assert.AreEqual<string>(this.versionManagerUnderTest.Name, name);
+            Assert.AreEqual(this.versionManagerUnderTest.Name, name);
 
             Build mostRecent = this.versionManagerUnderTest.GetMostRecentBuild();
 
             Assert.IsNotNull(mostRecent);
-            Assert.AreEqual<string>(mostRecent.Path, expectedPath);
+            Assert.AreEqual(mostRecent.Path, expectedPath);
             Assert.IsTrue(File.Exists(expectedPath));
         }
 
@@ -134,14 +134,14 @@
 
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.Count == 1);
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(actualBuild));
-            Assert.AreEqual<string>(actualBuild.Path, expectedPath);
+            Assert.AreEqual(actualBuild.Path, expectedPath);
 
             expectedPath = Path.Combine(archivePath, this.versionManagerUnderTest.SequenceNumber.ToString(), testAssemblyV2Name);
             actualBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(testAssemblyV2Name);
 
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.Count == 2);
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(actualBuild));
-            Assert.AreEqual<string>(actualBuild.Path, expectedPath);
+            Assert.AreEqual(actualBuild.Path, expectedPath);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@
             build = this.versionManagerUnderTest.GetMostRecentBuild();
             Assert.IsTrue(File.Exists(build.Path));
             Assert.IsTrue(File.Exists(expectedPath));
-            Assert.AreEqual<string>(build.Path, expectedPath);
+            Assert.AreEqual(build.Path, expectedPath);
 
             // Add another build and test to see if we get it back
             expectedPath = Path.Combine(archivePath, this.versionManagerUnderTest.SequenceNumber.ToString(), testAssemblyV2Name);
@@ -183,7 +183,7 @@
             build = this.versionManagerUnderTest.GetMostRecentBuild();
             Assert.IsTrue(File.Exists(build.Path));
             Assert.IsTrue(File.Exists(expectedPath));
-            Assert.AreEqual<string>(build.Path, expectedPath);
+            Assert.AreEqual(build.Path, expectedPath);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@
 
             Assert.IsFalse(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected1));
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected2));
-            Assert.AreEqual<int>(1, this.versionManagerUnderTest.BuildArchive.Count);
+            Assert.AreEqual(1, this.versionManagerUnderTest.BuildArchive.Count);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@
 
             Assert.IsFalse(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected1));
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected2));
-            Assert.AreEqual<int>(1, this.versionManagerUnderTest.BuildArchive.Count);
+            Assert.AreEqual(1, this.versionManagerUnderTest.BuildArchive.Count);
         }
     }
 }

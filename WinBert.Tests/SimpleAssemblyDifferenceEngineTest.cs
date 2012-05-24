@@ -14,6 +14,8 @@
     [TestClass]
     public class SimpleAssemblyDifferenceEngineTest
     {
+        #region Test Methods
+        
         /// <summary>
         /// A test for Diff
         /// </summary>
@@ -39,7 +41,7 @@
         /// Test to see if ignore targets parameters work for ignoring types.
         /// </summary>
         [TestMethod]
-        public void IgnoreTargetsTypeTest()
+        public void IgnoreTargetsIgnoreType()
         {
             IgnoreTarget[] targets = new IgnoreTarget[1];
             IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "BankAccount.BankAccount");
@@ -60,7 +62,7 @@
         /// Test to see if ignore targets parameters work for ignoring methods of the specified name.
         /// </summary>
         [TestMethod]
-        public void IgnoreTargetsMethodTest1()
+        public void IgnoreTargetsIsMethodIgnored()
         {
             // create a mixed list of ignore targets
             IgnoreTarget[] targets = new IgnoreTarget[2];
@@ -85,7 +87,7 @@
         /// Test to see if ignore targets parameters work for ignoring methods of the specified name.
         /// </summary>
         [TestMethod]
-        public void IgnoreTargetsMethodTest2()
+        public void IgnoreTargetsValidDifference()
         {
             // create a mixed list of ignore targets
             IgnoreTarget[] targets = new IgnoreTarget[2];
@@ -110,7 +112,7 @@
         /// Test to see if ignore targets parameters work for ignoring methods of the specified name.
         /// </summary>
         [TestMethod]
-        public void IgnoreTargetsMethodTest3()
+        public void IgnoreTargetsValidMethods()
         {
             // create a mixed list of ignore targets
             IgnoreTarget[] targets = new IgnoreTarget[2];
@@ -131,6 +133,10 @@
             Assert.IsFalse(actual.DifferenceResult);
         }
 
+        #endregion
+
+        #region Private Methods
+        
         /// <summary>
         /// This small utility method will load an assembly from the given path. In the event an error occurs, it will
         ///   Assert.Fail()
@@ -158,5 +164,7 @@
 
             return null;
         }
+
+        #endregion
     }
 }
