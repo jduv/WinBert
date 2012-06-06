@@ -196,7 +196,7 @@
                         catch (Exception exception)
                         {
                             Trace.TraceError(
-                                "Unable to remove the last build in the archive list from disk. Exception: {0}", 
+                                "Unable to remove the last build in the archive list from disk. Exception: {0}",
                                 exception.ToString());
                         }
                         finally
@@ -210,8 +210,8 @@
 
                 // handle the error
                 Trace.TraceError(
-                    "Unable to copy the file from path {0} into the build archive at {1}.", 
-                    pathToSuccessfulBuild, 
+                    "Unable to copy the file from path {0} into the build archive at {1}.",
+                    pathToSuccessfulBuild,
                     pathInArchive);
             }
             else
@@ -312,7 +312,7 @@
             {
                 var error =
                     string.Format(
-                        "Potential integer overflow detected! The passed in sequence number is too large! {0}", 
+                        "Potential integer overflow detected! The passed in sequence number is too large! {0}",
                         sequenceNumber);
                 throw new ArgumentException(error);
             }
