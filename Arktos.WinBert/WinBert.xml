@@ -1,0 +1,1295 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Arktos.WinBert</name>
+    </assembly>
+    <members>
+        <member name="T:Arktos.WinBert.Analysis.BertBehavioralAnalyzer">
+            <summary>
+            A basic behavioral analyzer that will
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Analysis.IBehavioralAnalyzer">
+            <summary>
+            Defines the behavior of an implementation that can analyze behavioral differences
+              between two TestRunResult objects generated from the other steps in the behavioral
+              regression testing methodology.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Analysis.IBehavioralAnalyzer.Analyze(Arktos.WinBert.Testing.RegressionTestSuiteRunResult)">
+            <summary>
+            Analyzes and compares the passed in TestSuiteRunResult object and returns an analysis results describing
+              their behavioral differences.
+            </summary>
+            <param name="results">
+            The results of the test run to analyze.
+            </param>
+            <returns>
+            An AnalysisResults object holding the results of the analysis.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Analysis.BertBehavioralAnalyzer.Analyze(Arktos.WinBert.Testing.RegressionTestSuiteRunResult)">
+            <summary>
+            Analyzes and compares the passed in TestSuiteRunResult object and returns an analysis results describing
+              their behavioral differences.
+            </summary>
+            <param name="results">
+            The results of the test run to analyze.
+            </param>
+            <returns>
+            An AnalysisResults object holding the results of the analysis.
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.Exceptions.InvalidConfigurationException">
+            <summary>
+            This exception should be thrown when some piece of configuration is in an invalid state.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Exceptions.InvalidConfigurationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the InvalidConfigurationException class.
+            </summary>
+            <param name="message">
+            The message for the exception.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Exceptions.InvalidConfigurationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the InvalidConfigurationException class.
+            </summary>
+            <param name="message">
+            The message for the exception.
+            </param>
+            <param name="innerException">
+            An inner exception.
+            </param>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.RegressionTestSuiteRunResult">
+            <summary>
+            A TestRunResult contains information about a test run.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Util.BuildVersionManager">
+            <summary>
+            This simply class keeps a list of builds sorted by timestamp in a specified folder. As new builds are added 
+              it will copy the contents of the target to the archive and store an entry in the sorted list. When the 
+              BuildVersionManager reaches it's maximum capacity (defaulted to byte.MaxValue--or 255) it 
+              will begin to drop the oldest build in favor for the new one. This in effect creates a moving window of 
+              assemblies sorted by compile time. Only successful builds (obviously) will be archived.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Util.BuildVersionManager.archivePath">
+            <summary>
+              Path to the archive
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Util.BuildVersionManager.maxArchiveSize">
+            <summary>
+              This is the hidden field holding the actual size for the max number of builds stored. Access this through 
+              the public property only.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the BuildVersionManager class.
+            </summary>
+            <param name="archivePath">
+            The path to where the caller wishes the archive to be constructed.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the BuildVersionManager class.
+            </summary>
+            <param name="archivePath">
+            The path to where the caller wishes the archive to be constructed.
+            </param>
+            <param name="name">
+            The name for this build archive.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.#ctor(System.String,System.Byte,System.String)">
+            <summary>
+            Initializes a new instance of the BuildVersionManager class
+            </summary>
+            <param name="archivePath">
+            The path to where the caller wishes the archive to be constructed. Avoid relative paths here, as that will 
+              likely get you in trouble during the save/load of each build.
+            </param>
+            <param name="maxBuildsArchivable">
+            The maximum number of build history to keep. Lower numbers will result in lower disk space utilization.
+            </param>
+            <param name="name">
+            The name for this build archive.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.AddNewSuccessfulBuild(System.String)">
+            <summary>
+            Adds the target assembly to the builds archive. The path must be to a valid .NET compiled PE or assembly.
+              It will be inserted in order into the sorted list, and it's assumed that this would be an incremental step from
+              the previous add operation. This method will, however, not ensure that this implicit contract is satisfied.
+            </summary>
+            <param name="pathToSuccessfulBuild">
+            The path to the assembly to add.
+            </param>
+            <returns>
+            A copy of the build object that was added to the archive or null on failure.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.GetBuildRevision(System.UInt32)">
+            <summary>
+            Returns a path to the build with the target sequence number. If the target sequence number doesn't 
+              exist in the archive the method will return null.
+            </summary>
+            <param name="sequenceNumber">
+            The sequence number to fetch
+            </param>
+            <returns>
+            A Build object holding the path to the target build.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.GetBuildRevisionPreceding(System.UInt32)">
+            <summary>
+            Grabs the build preceding the target revision, regardless of sequence number (there could be gaps). 
+              This method relies on the fact that everything is sorted inside the collection holding the builds.
+            </summary>
+            <param name="sequenceNumber">
+            The sequence number to fetch the preceding build for.
+            </param>
+            <returns>
+            A build preceding the target sequence number, or null if one doesn't exist. Passing this method zero, for
+              example, will return null because there will never be a build before the zeroth.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.GetMostRecentBuild">
+            <summary>
+            Returns a path to the most recently built assembly according to the archive.
+            </summary>
+            <returns>
+            A path to the most recently built assembly according to the archive.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.LoadBuild(System.UInt32,System.String)">
+            <summary>
+            Call this method when loading a build archive from configuration. It will not copy any files, but instead 
+              rely on the caller to ensure that the file is properly there. If the file path passed to the method doesn't
+              exist, then it will throw an exception. It will also adjust the internal sequence number to be one plus the 
+              maximum sequence number passed to the instance in it's lifetime.
+            </summary>
+            <param name="sequenceNumber">
+            The sequence number to add the build at.
+            </param>
+            <param name="path">
+            The path of the file to add. If this doesn't exist, expect an ArgumentException.
+            </param>
+            <returns>
+            A copy of the build object that was added to the archive or null on failure.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.GetArchivePath(System.String)">
+            <summary>
+            Converts the target path to an in-archive path.
+            </summary>
+            <param name="buildPath">
+            The path to convert.
+            </param>
+            <returns>
+            Returns the archive path for the given build path.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.BuildVersionManager.TrimArchive">
+            <summary>
+            This method prunes the sorted list to within the bounds of the current maxArchiveSize field. This method
+              will be destructive and cause data loss if the current list size is greater than maxArchiveSize.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Util.BuildVersionManager.ArchivePath">
+            <summary>
+              Gets a path to the build archive.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Util.BuildVersionManager.BuildArchive">
+            <summary>
+              Gets a sorted list that holds pointers to the builds as they are archived. The key is a numeric sequence 
+              number and the value is the path to the build assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Util.BuildVersionManager.MaxArchiveSize">
+            <summary>
+              Gets or sets the maximum archive size. Since this class is not designed to be a version control system and 
+              such functionality would be a waste of time and space for such a trivial application, the maximum allowed 
+              number of builds is stored as a byte value. Reducing the size of this value will cause the Manager to 
+              irreversibly drop the last n builds where n = previousSize - newSize.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Util.BuildVersionManager.Name">
+            <summary>
+              Gets the name of this build archive. This value is used to create a separate folder for each build archive 
+              that shares a common archive path. If it is set, then the folder will be created. If not, then all builds will 
+              be copied to the master archive path specified in the archivePath field.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Util.BuildVersionManager.SequenceNumber">
+            <summary>
+              Gets the sequence number for sequential builds that are checked into the version manager.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.IRegressionTestSuite">
+            <summary>
+            Defines a basic property set that all TestSuite's should implement. This is mainly used to provide
+              a common functionality point for running tests.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.IRegressionTestSuite.Diff">
+            <summary>
+              Gets the difference result.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.IRegressionTestSuite.NewTargetAssembly">
+            <summary>
+              Gets the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.IRegressionTestSuite.NewTargetTestAssembly">
+            <summary>
+              Gets an assembly holding the tests for the new assembly target.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.IRegressionTestSuite.OldTargetAssembly">
+            <summary>
+              Gets the old assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.IRegressionTestSuite.OldTargetTestAssembly">
+            <summary>
+              Gets an Assembly holding the tests for the old assembly target.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Xml.IgnoreTarget">
+            <summary>
+            Partial implementation of a auto generated class. This implementation adds a constructor
+              for convenience only.
+            </summary>
+            <remarks/>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.IgnoreTarget.#ctor">
+            <summary>
+              Initializes a new instance of the IgnoreTarget class.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.IgnoreTarget.#ctor(Arktos.WinBert.Xml.IgnoreType,System.String)">
+            <summary>
+            Initializes a new instance of the IgnoreTarget class.
+            </summary>
+            <param name="type">
+            The type for the new IgnoreTarget.
+            </param>
+            <param name="name">
+            The name for the new IgnoreTarget.
+            </param>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.IgnoreTarget.Name">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.IgnoreTarget.Type">
+            <remarks/>
+        </member>
+        <member name="T:Arktos.WinBert.Xml.Build">
+            <summary>
+            Partial implementation of a auto generated class. This implementation adds some basic
+              functionality for convenience only.
+            </summary>
+            <remarks/>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.Build.#ctor">
+            <summary>
+              Initializes a new instance of the Build class.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.Build.#ctor(System.UInt32,System.String)">
+            <summary>
+            Initializes a new instance of the Build class.
+            </summary>
+            <param name="sequenceNumber">
+            The sequence number for the build.
+            </param>
+            <param name="path">
+            The path to the target.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.Build.Equals(System.Object)">
+            <summary>
+            Override of Equals to make comparisons easier.
+            </summary>
+            <param name="obj">
+            The object to compare ourselves to.
+            </param>
+            <returns>
+            True if the objects are equal, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.Build.Equals(Arktos.WinBert.Xml.Build)">
+            <summary>
+            Compares this build to the target build object.
+            </summary>
+            <param name="build">
+            The build to compare to.
+            </param>
+            <returns>
+            True if the builds are equal, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Xml.Build.GetHashCode">
+            <summary>
+            Override of GetHashCode for uniqueness.
+            </summary>
+            <returns>
+            A semi-unique hash code for this object.
+            </returns>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.Build.Path">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.Build.SequenceNumber">
+            <remarks/>
+        </member>
+        <member name="T:Arktos.WinBert.Instrumentation.InstrumentedTestSuite">
+            <summary>
+            Represents a test suite that has been instrumented.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.sourceSuite">
+            <summary>
+              The source TestSuite for this instrumented one.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.#ctor">
+            <summary>
+              Initializes a new instance of the InstrumentedTestSuite class.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.#ctor(Arktos.WinBert.Testing.IRegressionTestSuite)">
+            <summary>
+            Initializes a new instance of the InstrumentedTestSuite class.
+            </summary>
+            <param name="toCopy">
+            A TestSuite to copy.
+            </param>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.InstrumentedNewTargetAssembly">
+            <summary>
+              Gets or sets an instrumented copy of the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.InstrumentedNewTargetTestAssembly">
+            <summary>
+              Gets or sets an instrumented copy of the TestAssembly for the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.InstrumentedOldTargetAssembly">
+            <summary>
+              Gets or sets an instrumented copy of the old assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.InstrumentedOldTargetTestAssembly">
+            <summary>
+              Gets or sets an instrumented copy of the TestAssembly for the old assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.Diff">
+            <summary>
+              Gets the difference result between the old and new assemblies.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.NewTargetAssembly">
+            <summary>
+              Gets the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.NewTargetTestAssembly">
+            <summary>
+              Gets a list of tests for the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.OldTargetAssembly">
+            <summary>
+              Gets the old assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Instrumentation.InstrumentedTestSuite.OldTargetTestAssembly">
+            <summary>
+              Gets a list of tests for the old assembly.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.IDifferenceResult`1">
+            <summary>
+            Implementations of this interface should allow for a concrete representation of a 
+              difference between two objects of type T.
+            </summary>
+            <typeparam name="T">
+            The type of objects this implementation is able to difference.
+            </typeparam>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.IDifferenceResult`1.DifferenceResult">
+            <summary>
+              Gets a value indicating whether a difference exists.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.IDifferenceResult`1.NewObject">
+            <summary>
+              Gets another version of the differenced arguments.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.IDifferenceResult`1.OldObject">
+            <summary>
+              Gets one version of the differenced arguments.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.IDifferenceEngine`2">
+            <summary>
+            An instance of a difference engine will be able to take two compilation units, in most cases
+              a type or an assembly,  and enumerate the differences between the two. Implementations of this
+              interface allow for a diverse differencing mechanism specialized to the tasks needed to be completed.
+            </summary>
+            <typeparam name="T">
+            The type of object that the implementing engine will be able to difference
+            </typeparam>
+            <typeparam name="TResult">
+            The resulting type.
+            </typeparam>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.IDifferenceEngine`2.Diff(`0,`0)">
+            <summary>
+            This method should examine the passed in parameters, determine if they are different, and return
+              a value indicating the state of the operation. This could be as simple as a Boolean value (yes it's
+              different or no it's not) to a complex structure organizing all the differences.
+            </summary>
+            <param name="oldObject">
+            The first object to diff.
+            </param>
+            <param name="newObject">
+            The second object to diff.
+            </param>
+            <returns>
+            A difference result.
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.Analysis.AnalysisResults">
+            <summary>
+            Describes a run of the WinBert analysis engine.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Util.FileCopierFlags">
+            <summary>
+            These flags will define how the FileCopier object behaves in certain situations.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Util.FileCopierFlags.AlwaysOverwriteDestination">
+            <summary>
+              This flag tells the copier to always overwrite the destination file if it can. This results in the proper
+              core API's being used whenever the copy methods are used. This is not a catch all flag that enables
+              the copier to overwrite locked or read only files, there are other flags for that. However specify this flag
+              if you wish to overwrite an existing destination file on copy if the file clearly exists, and
+              isn't read only.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Util.FileCopierFlags.AttemptOverwriteReadonlyDest">
+            <summary>
+              This flag tells the copier to attempt to overwrite a read only file. This flag still does not guarantee
+              a successful overwrite.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Util.FileCopierFlags.CreateDestinationDirectorys">
+            <summary>
+              This flag tells the copier to create all directories that do not exist in the destination file path. For
+              example if copying a file to C:\foo\bar\baz\myfile.txt and the bar and baz directories don't exist, the
+              copier will create them for you.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Util.FileCopier">
+            <summary>
+            This class has the ability to copy files. It uses the standard core libraries, but
+              provides some extra functionality based on the bitmask passed to the constructor. See
+              static members for more information about the features of this class. This class will only
+              copy files, no directories.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Util.FileCopier.flags">
+            <summary>
+              The flags for this file copier.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.#ctor">
+            <summary>
+              Initializes a new instance of the FileCopier class. No flags are set, so the copier will never
+              overwrite destination files and fail if any directories in the destination path don't exist.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.#ctor(Arktos.WinBert.Util.FileCopierFlags)">
+            <summary>
+            Initializes a new instance of the FileCopier class. Set flags for this object based on the public static
+              fields on it.
+            </summary>
+            <param name="flags">
+            Flags for this file copier.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.TryCopyFile(System.String,System.String)">
+            <summary>
+            Copies a file given by the source path to the destination path. This method will not throw exceptions upon
+              errors, but instead return a boolean indicating if the copy was successful or not. If the destination path
+              is an existing directory, then this method will attempt to infer the file name.
+            </summary>
+            <param name="sourcePath">
+            The source path.
+            </param>
+            <param name="destPath">
+            The destination path.
+            </param>
+            <returns>
+            True on a successful copy, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.CopyToNewDirectory(System.String,System.String)">
+            <summary>
+            Copies the source path to the destination path, creating any non-existant directories on the way.
+            </summary>
+            <param name="sourcePath">
+            The source path.
+            </param>
+            <param name="destPath">
+            The destination path.
+            </param>
+            <returns>
+            True if the copy is successful, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.CopyToNewFile(System.String,System.String)">
+            <summary>
+            Copies the source file to the destination path. It is assumed that the destPath is an actual file name
+              and not a directory name. This method will throw an exception if this is not true.
+            </summary>
+            <param name="sourcePath">
+            The path to the source file to copy.
+            </param>
+            <param name="destPath">
+            The destination file name to copy to.
+            </param>
+            <returns>
+            True if the copy is successful, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.InferDestFilePath(System.String,System.String)">
+            <summary>
+            Infers the destination file path from the source path.
+              This method will take a source path (example: C:\test\foo.txt) and a destination path (example: C:\test\hello\) 
+              and infer from the source what the destination should be (e.g. C:\test\hello\foo.txt). This method isn't 
+              incredibly smart, so it should be used with caution.
+            </summary>
+            <example>
+            Example 1:
+              InferDestFilePath("C:\test.txt", "C:\directory\") =&gt; "C:\directory\test.txt"
+              Example 2:
+              InferDestFilePath("C:\text.txt", "C:\out.txt") =&gt; "C:\out.txt"
+            </example>
+            <param name="sourcePath">
+            The source path.
+            </param>
+            <param name="destPath">
+            The destination path.
+            </param>
+            <returns>
+            A path that represents what we think the true destination file path should be based
+              on what the source path looks like.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Util.FileCopier.OverwriteFile(System.String,System.String)">
+            <summary>
+            Copies the source file to the destination file. This will attempt to overwrite the destination file depending 
+              on if the proper flags were set on the construction of this FileCopier object.
+            </summary>
+            <param name="sourcePath">
+            The source path.
+            </param>
+            <param name="destPath">
+            The destination path.
+            </param>
+            <returns>
+            True if the copy is successful, false otherwise.
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.IRegressionTestSuiteRunner">
+            <summary>
+            Implementations of this interface should be able to run a set of tests passed into the
+              object in the form of a TestSuite object.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.IRegressionTestSuiteRunner.RunTests(Arktos.WinBert.Testing.IRegressionTestSuite)">
+            <summary>
+            Runs all tests in the target test type.
+            </summary>
+            <param name="tests">
+            The test suite of which to run the tests from.
+            </param>
+            <returns>
+            A TestRunResult object indicating the results of the test run.
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.ITypeDifferenceResult">
+            <summary>
+            Defines a contract for implementations that calculate differences between types.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.ITypeDifferenceResult.AddedFields">
+            <summary>
+              Gets a list of fields that were added to the new version of the class and didn't exist in the old
+              version.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.ITypeDifferenceResult.MethodNames">
+            <summary>
+              Gets a list of names of methods that have changed between the two target types. This should not include 
+              methods that have the same name but different contracts i.e. foo(x, y) vs foo(x).
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.ITypeDifferenceResult.RemovedFields">
+            <summary>
+              Gets a list of fields that were removed in the new version of the class.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Xml.WinBertConfig">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.WinBertConfig.IgnoreList">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.WinBertConfig.Projects">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.WinBertConfig.EmbeddedConfigurations">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.WinBertConfig.MasterArchivePath">
+            <remarks/>
+        </member>
+        <member name="T:Arktos.WinBert.Xml.EmbeddedConfiguration">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.EmbeddedConfiguration.Any">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.EmbeddedConfiguration.Type">
+            <remarks/>
+        </member>
+        <member name="T:Arktos.WinBert.Xml.WinBertProject">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.WinBertProject.BuildsList">
+            <remarks/>
+        </member>
+        <member name="P:Arktos.WinBert.Xml.WinBertProject.Name">
+            <remarks/>
+        </member>
+        <member name="T:Arktos.WinBert.Xml.IgnoreType">
+            <remarks/>
+        </member>
+        <member name="F:Arktos.WinBert.Xml.IgnoreType.Method">
+            <remarks/>
+        </member>
+        <member name="F:Arktos.WinBert.Xml.IgnoreType.Type">
+            <remarks/>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.RegressionTestSuite">
+            <summary>
+            Represents a pattern of tests that can be executed on new and old versions
+              of a specific assembly as represented by a difference result.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.RegressionTestSuite.#ctor(System.Reflection.Assembly,System.Reflection.Assembly,Arktos.WinBert.Differencing.AssemblyDifferenceResult)">
+            <summary>
+            Initializes a new instance of the TestSuite class.
+            </summary>
+            <param name="newTargetTests">
+            An Assembly containing tests for the new target.
+            </param>
+            <param name="oldTargetTests">
+            An Assembly containing tests for the old target.
+            </param>
+            <param name="diff">
+            The original difference context describing the differences between both
+              assemblies that tests were generated for.
+            </param>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.RegressionTestSuite.Diff">
+            <summary>
+              Gets the difference result.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.RegressionTestSuite.NewTargetAssembly">
+            <summary>
+              Gets the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.RegressionTestSuite.NewTargetTestAssembly">
+            <summary>
+              Gets the TestAssembly for the new assembly target.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.RegressionTestSuite.OldTargetAssembly">
+            <summary>
+              Gets the old assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.RegressionTestSuite.OldTargetTestAssembly">
+            <summary>
+              Gets the TestAssembly for the old assembly target.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.IAssemblyCompiler">
+            <summary>
+            Defines behavior for a component that is able to compile an Assembly
+              from source located at the target path.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.IAssemblyCompiler.AddReference(System.String)">
+            <summary>
+            Adds a reference to the target Assembly or PE to this compiler.
+            </summary>
+            <param name="path">
+            The path to the PE/Assembly to refer to.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.IAssemblyCompiler.ClearReferences">
+            <summary>
+            Clears all references.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.IAssemblyCompiler.CompileTests(System.String)">
+            <summary>
+            Compiles all source at the target path into an Assembly.
+            </summary>
+            <param name="sourcePath">
+            The path to the source to compile.
+            </param>
+            <returns>
+            A TestAssembly, or null on failure.
+            </returns>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.IAssemblyCompiler.References">
+            <summary>
+              Gets a list of the reference assemblies for this compiler to use when compiling
+              the target source.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.TypeDifferenceResult">
+            <summary>
+            This class represents a difference result between two types. The differences between the
+              two types is represented by a list of method names that have changed. Note that this does not
+              truly represent a 'diff' between the two types, as we are only interested in the methods inside
+              the two types that 1) have the same signature and 2) have a different body.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Differencing.TypeDifferenceResult.newType">
+            <summary>
+              The new type (parameter 2 of the constructor).
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Differencing.TypeDifferenceResult.oldType">
+            <summary>
+              The old type (parameter 1 of the constructor).
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.TypeDifferenceResult.#ctor(System.Type,System.Type)">
+            <summary>
+            Initializes a new instance of the TypeDifferenceResult class.
+            </summary>
+            <param name="oldType">
+            The old type.
+            </param>
+            <param name="newType">
+            The new type.
+            </param>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.TypeDifferenceResult.AddedFields">
+            <summary>
+              Gets a list of fields that were added to the new version of the class and didn't exist in the old
+              version.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.TypeDifferenceResult.RemovedFields">
+            <summary>
+              Gets a list of fields that were removed in the new version of the class.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.TypeDifferenceResult.MethodNames">
+            <summary>
+              Gets a list of names of methods that have changed between the two target types. This should not include 
+              methods that have the same name but different contracts i.e. foo(x, y) vs foo(x).
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.TypeDifferenceResult.DifferenceResult">
+            <summary>
+              Gets a value indicating whether there is a difference or not.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.TypeDifferenceResult.NewObject">
+            <summary>
+              Gets the new type.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.TypeDifferenceResult.OldObject">
+            <summary>
+              Gets the old type.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.IAssemblyDifferenceResult">
+            <summary>
+            Defines the contract for a difference result for an assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.IAssemblyDifferenceResult.TypeDifferences">
+            <summary>
+              Gets a list of type differences for the assembly.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.BertAssemblyCompiler">
+            <summary>
+            Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
+              and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Testing.BertAssemblyCompiler.compiler">
+            <summary>
+              The CodeDom compiler for compiling generated tests.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Testing.BertAssemblyCompiler.referencePaths">
+            <summary>
+              A list of reference paths.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the BertAssemblyCompiler class.
+            </summary>
+            <param name="outputPath">
+            The output directory for the compiled assembly.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.AddReference(System.String)">
+            <summary>
+            Adds a reference assembly to the list of assemblies to include during compilation.
+            </summary>
+            <param name="path">
+            The path to the reference.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.ClearReferences">
+            <summary>
+            Clears the reference path cache for this compiler.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.CompileTests(System.String)">
+            <summary>
+            Compiles tests.
+            </summary>
+            <param name="sourcePath">
+            The source path to compile from.
+            </param>
+            <returns>
+            A test assembly containing the compiled source or null on error.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.GetRandomOutputFileName">
+            <summary>
+            Gets a random file name with a ".dll" extension.
+            </summary>
+            <returns>
+            A random file name with the ".dll" extension.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.GetSourceFiles(System.String)">
+            <summary>
+            Grabs a list of source files given a path.
+            </summary>
+            <param name="path">
+            The directory to enumerate all the source files for.
+            </param>
+            <returns>
+            A list of file paths.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.InitializeOutputPath(System.String)">
+            <summary>
+            Initializes the working directory of the compiler.
+            </summary>
+            <param name="pathToWorkingDirectory">
+            The path to the working directory that will be used during compilation.
+            </param>
+        </member>
+        <member name="P:Arktos.WinBert.Testing.BertAssemblyCompiler.References">
+            <summary>
+              Gets a list of reference paths for the compiler to include during compilation.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Instrumentation.BertTestCaseLogger">
+            <summary>
+            A basic test case logging singleton that will handle writing the analysis object model as the instrumented
+              test cases run.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Instrumentation.ITestCaseLogger">
+            <summary>
+            Defines the basic behavior of a state machine that logs test cases. Implementations of this interface should be
+              geared towards instrumentation--hence the begin and end calls. 
+              BMK: Extend this to handle static methods.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.BeginMethodCall(System.String)">
+            <summary>
+            Begins an instrumentation block for a method call.
+            </summary>
+            <param name="signature">
+            The signature of the method called.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.BeginTestCase(System.String)">
+            <summary>
+            Begins an instrumentation block for a test case.
+            </summary>
+            <param name="name">
+            The optional name of the test case.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.BeginVoidMethodCall(System.String)">
+            <summary>
+            Begins an instrumentation block for a void method call.
+            </summary>
+            <param name="signature">
+            The signature of the method called.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.EndMethodCall(System.Object,System.Object)">
+            <summary>
+            Ends an instrumentation block for a method call.
+            </summary>
+            <param name="postCallObjectState">
+            The state of the object that the method was called on after the method call has executed.
+            </param>
+            <param name="returnValue">
+            The return value of the method, if any. If the method signature is void, then the 
+              <see cref="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.EndVoidMethodCall(System.Object)"/> should be used instead.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.EndTestCase">
+            <summary>
+            Ends an instrumentation block for a test case.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.EndVoidMethodCall(System.Object)">
+            <summary>
+            Ends an instrumentation block for a void method call.
+            </summary>
+            <param name="postCallObjectState">
+            The state of the object that the method was called on after the method call has executed.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.ITestCaseLogger.HandleException(System.Exception)">
+            <summary>
+            Writes an instrumentation block for an Exception. This will likely happen during a method call unless 
+              something  goes wrong at the constructor level for the object under test, so it will consequently end 
+              the method call block.
+            </summary>
+            <param name="exception">
+            The offending exception.
+            </param>
+        </member>
+        <member name="F:Arktos.WinBert.Instrumentation.BertTestCaseLogger.Logger">
+            <summary>
+              A static, thread-safe instance of the TestCaseLogger class available for other classes to use.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Instrumentation.BertTestCaseLogger.output">
+            <summary>
+              Temporary this.output.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.#ctor">
+            <summary>
+              Prevents a default instance of the BertTestCaseLogger class from being created.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.BeginMethodCall(System.String)">
+            <summary>
+            Begins an instrumentation block for a method call.
+            </summary>
+            <param name="signature">
+            The signature of the method called.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.BeginTestCase(System.String)">
+            <summary>
+            Begins an instrumentation block for a test case.
+            </summary>
+            <param name="name">
+            The optional name of the test case.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.BeginVoidMethodCall(System.String)">
+            <summary>
+            Begins an instrumentation block for a void method call.
+            </summary>
+            <param name="signature">
+            The signature of the method called.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.EndMethodCall(System.Object,System.Object)">
+            <summary>
+            Ends an instrumentation block for a method call.
+            </summary>
+            <param name="postCallObjectState">
+            The state of the object that the method was called on after the method call has executed.
+            </param>
+            <param name="returnValue">
+            The return value of the method, if any. If the method signature is void, then the 
+              <see cref="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.EndVoidMethodCall(System.Object)"/> should be used instead.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.EndTestCase">
+            <summary>
+            Ends an instrumentation block for a test case.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.EndVoidMethodCall(System.Object)">
+            <summary>
+            Ends an instrumentation block for a void method call.
+            </summary>
+            <param name="postCallObjectState">
+            The state of the object that the method was called on after the method call has executed.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Instrumentation.BertTestCaseLogger.HandleException(System.Exception)">
+            <summary>
+            Writes an instrumentation block for an Exception. This will likely happen during a method call unless 
+              something goes wrong at the constructor level for the object under test, so it will consequently end the 
+              method call block.
+            </summary>
+            <param name="exception">
+            The offending exception.
+            </param>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.BertTypeDifferenceEngine">
+            <summary>
+            This simple type differencing engine will take two types and figure out the difference between them.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Differencing.BertTypeDifferenceEngine.ignoreTargets">
+            <summary>
+              A list of ignore targets applicable to methods.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertTypeDifferenceEngine.#ctor(Arktos.WinBert.Xml.IgnoreTarget[])">
+            <summary>
+            Initializes a new instance of the BertTypeDifferenceEngine class.
+            </summary>
+            <param name="ignoreTargets">
+            A list of ignore targets.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertTypeDifferenceEngine.Diff(System.Type,System.Type)">
+            <summary>
+            Implementation of the Diff method required by the IDifferenceEngine interface. This method will perform
+              a very rudimentary diff on the two passed in types
+            </summary>
+            <param name="oldObject">
+            The first object to compare.
+            </param>
+            <param name="newObject">
+            The second object to compare.
+            </param>
+            <returns>
+            An IDifferenceResult implementation that contains all the differences between the target types in
+              a hierarchical manner. <see cref="T:Arktos.WinBert.Differencing.TypeDifferenceResult"/>
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertTypeDifferenceEngine.GetFilteredMethodListForType(System.Type)">
+            <summary>
+            Returns a list of methods filtered based on the ignore targets for this engine.
+            </summary>
+            <param name="type">
+            he type to filter.
+            </param>
+            <returns>
+            A list that meets the method filter criteria.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertTypeDifferenceEngine.GetMethodDictionaryForType(System.Type)">
+            <summary>
+            Returns a dictionary for the methods of the passed in type. Filters based on declaring type.
+            </summary>
+            <param name="type">
+            The type to build the dictionary for.
+            </param>
+            <returns>
+            A dictionary of the methods for the given type.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertTypeDifferenceEngine.GetMethodDifferences(System.Collections.Generic.Dictionary{System.String,System.Reflection.MethodInfo},System.Collections.Generic.IList{System.Reflection.MethodInfo})">
+            <summary>
+            Returns a list of methods that are different based on their MSIL.
+            </summary>
+            <param name="methodDictionary">
+            A type dictionary to check against. This speeds up comparisons quite a bit.
+            </param>
+            <param name="methods">
+            The new type to check.
+            </param>
+            <returns>
+            A list of methods that are different.
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.IWinBertServiceProvider">
+            <summary>
+            Defines the basic behavior of a ServiceProvider that handles
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.IWinBertServiceProvider.AnalysisResults">
+            <summary>
+              Gets the most recent and valid list of AnalysisResults objects.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Testing.IRegressionTestSuiteGenerator">
+            <summary>
+            Defines the behavior of classes that generate TestSuites.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Testing.IRegressionTestSuiteGenerator.GetCompiledTests(Arktos.WinBert.Differencing.AssemblyDifferenceResult)">
+            <summary>
+            Generates a TestSuite given an assembly diff.
+            </summary>
+            <param name="diff">
+            A static difference context indicating if the object and it's comparator
+              (stored inside the difference object) are different.
+            </param>
+            <returns>
+            A meaningful set of tests, compiled into a TestSuite
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine">
+            <summary>
+            This simple difference engine will take in paths to two assemblies and figure out the difference between them.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.ignoreTargets">
+            <summary>
+              A list of ignore targets applicable to types.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.typeDiffer">
+            <summary>
+              A mechanism for differencing types.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.#ctor(Arktos.WinBert.Xml.IgnoreTarget[])">
+            <summary>
+            Initializes a new instance of the BertAssemblyDifferenceEngine class.
+            </summary>
+            <param name="ignoreTargets">
+            A list of ignore targets.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.Diff(System.Reflection.Assembly,System.Reflection.Assembly)">
+            <summary>
+            Implementation of the Diff method required by the IDifferenceEngine interface. This method will perform
+              a very rudimentary diff on the two passed in assemblies.
+            </summary>
+            <param name="oldObject">
+            The first object to compare.
+            </param>
+            <param name="newObject">
+            The second object to compare.
+            </param>
+            <returns>
+            An IDifferenceResult implementation that contains all the differences between the target assemblies in
+              a hierarchical manner.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.Diff(System.Type,System.Type)">
+            <summary>
+            Returns the difference between the two passed in types as a TypeDifferenceResult.
+            </summary>
+            <param name="oldType">
+            The first type to diff
+            </param>
+            <param name="newType">
+            The second type to diff
+            </param>
+            <returns>
+            An IDifferenceResult implementation that contains all the differences between the target types in
+              a hierarchical manner. <see cref="T:Arktos.WinBert.Differencing.TypeDifferenceResult"/>
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.GetFilteredTypeList(System.Type[])">
+            <summary>
+            Returns a list of types filtered based on the ignore targets for this engine.
+            </summary>
+            <param name="types">
+            The list of types to filter
+            </param>
+            <returns>
+            A list of types that meet the filter criteria.
+            </returns>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.BertAssemblyDifferenceEngine.GetTypeDictionaryForAssembly(System.Reflection.Assembly)">
+            <summary>
+            Returns a dictionary containing a list of all the types in the target assembly. Since there can be, by 
+              definition, only one type of a certain name in existence inside an assembly, this method should never 
+              run into collisions. Note that this method will also filter out any unwanted types based on the ignore 
+              targets for this engine.
+            </summary>
+            <param name="assembly">
+            The assembly to enumerate all the types for.
+            </param>
+            <returns>
+            A dictionary containing references to all the types in the assembly with their names as keys. If no types
+              exist in the assembly (unlikely) then an empty dictionary will be returned.
+            </returns>
+        </member>
+        <member name="T:Arktos.WinBert.Differencing.AssemblyDifferenceResult">
+            <summary>
+            This class represents a difference result between two assemblies.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Differencing.AssemblyDifferenceResult.#ctor(System.Reflection.Assembly,System.Reflection.Assembly)">
+            <summary>
+            Initializes a new instance of the AssemblyDifferenceResult class.
+            </summary>
+            <param name="oldAssembly">
+            The old assembly.
+            </param>
+            <param name="newAssembly">
+            The new assembly.
+            </param>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.AssemblyDifferenceResult.DifferenceResult">
+            <summary>
+              Gets a value indicating whether there is a difference or not.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.AssemblyDifferenceResult.NewObject">
+            <summary>
+              Gets the new assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.AssemblyDifferenceResult.OldObject">
+            <summary>
+              Gets the old assembly.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Differencing.AssemblyDifferenceResult.TypeDifferences">
+            <summary>
+              Gets a list of type differences.
+            </summary>
+        </member>
+    </members>
+</doc>

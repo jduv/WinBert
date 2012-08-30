@@ -5,18 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoopCommon", "RandoopCom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoopImpl", "RandoopImpl\RandoopImpl.csproj", "{596DF464-5F9A-4892-9CFD-6431806CCA73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinBert.RandoopIntegration", "WinBert.RandoopIntegration\WinBert.RandoopIntegration.csproj", "{F0485540-6010-4819-B9D1-D1B767A355BE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinBert", "WinBertPlugin\WinBert.csproj", "{986263EA-6C7F-4AF2-B448-0A1ED8007193}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinBert.VsPackage", "WinBert.VsPackage\WinBert.VsPackage.csproj", "{88D57F99-A678-472C-9C29-F7AFB1142335}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinBert.RandoopIntegration.Tests", "WinBert.RandoopIntegration.Tests\WinBert.RandoopIntegration.Tests.csproj", "{A1619B38-4C70-453A-82A2-525A00B448B5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinBert.Tests", "WinBert.Tests\WinBert.Tests.csproj", "{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11B9C5FF-B089-4882-B5C2-AA3F3775C2B4}"
 	ProjectSection(SolutionItems) = preProject
+		Settings.StyleCop = Settings.StyleCop
 		WinBert.testsettings = WinBert.testsettings
 		WinBert.vsmdi = WinBert.vsmdi
 	EndProjectSection
@@ -26,6 +17,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2C39F9
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert", "Arktos.WinBert\Arktos.WinBert.csproj", "{986263EA-6C7F-4AF2-B448-0A1ED8007193}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.RandoopIntegration", "Arktos.WinBert.RandoopIntegration\Arktos.WinBert.RandoopIntegration.csproj", "{F0485540-6010-4819-B9D1-D1B767A355BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.RandoopIntegration.Tests", "Arktos.WinBert.RandoopIntegration.Tests\Arktos.WinBert.RandoopIntegration.Tests.csproj", "{A1619B38-4C70-453A-82A2-525A00B448B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.Tests", "Arktos.WinBert.Tests\Arktos.WinBert.Tests.csproj", "{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.VsPackage", "Arktos.WinBert.VsPackage\Arktos.WinBert.VsPackage.csproj", "{88D57F99-A678-472C-9C29-F7AFB1142335}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -44,18 +45,14 @@ Global
 		{596DF464-5F9A-4892-9CFD-6431806CCA73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{596DF464-5F9A-4892-9CFD-6431806CCA73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{596DF464-5F9A-4892-9CFD-6431806CCA73}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F0485540-6010-4819-B9D1-D1B767A355BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0485540-6010-4819-B9D1-D1B767A355BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0485540-6010-4819-B9D1-D1B767A355BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F0485540-6010-4819-B9D1-D1B767A355BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{986263EA-6C7F-4AF2-B448-0A1ED8007193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{986263EA-6C7F-4AF2-B448-0A1ED8007193}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{986263EA-6C7F-4AF2-B448-0A1ED8007193}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{986263EA-6C7F-4AF2-B448-0A1ED8007193}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88D57F99-A678-472C-9C29-F7AFB1142335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88D57F99-A678-472C-9C29-F7AFB1142335}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88D57F99-A678-472C-9C29-F7AFB1142335}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88D57F99-A678-472C-9C29-F7AFB1142335}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0485540-6010-4819-B9D1-D1B767A355BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0485540-6010-4819-B9D1-D1B767A355BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0485540-6010-4819-B9D1-D1B767A355BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0485540-6010-4819-B9D1-D1B767A355BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1619B38-4C70-453A-82A2-525A00B448B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1619B38-4C70-453A-82A2-525A00B448B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1619B38-4C70-453A-82A2-525A00B448B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -64,6 +61,10 @@ Global
 		{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88D57F99-A678-472C-9C29-F7AFB1142335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88D57F99-A678-472C-9C29-F7AFB1142335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88D57F99-A678-472C-9C29-F7AFB1142335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88D57F99-A678-472C-9C29-F7AFB1142335}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

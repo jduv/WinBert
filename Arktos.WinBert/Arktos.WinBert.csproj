@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30424</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{986263EA-6C7F-4AF2-B448-0A1ED8007193}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <StartupObject>
+    </StartupObject>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>Arktos.WinBert</AssemblyName>
+    <DeploymentDirectory>.\bin\</DeploymentDirectory>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\WinBert\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <IncrementalBuild>false</IncrementalBuild>
+    <DocumentationFile>WinBert.xml</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineConstants>TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <IncrementalBuild>false</IncrementalBuild>
+    <DocumentationFile>WinBert.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Arktos.WinBert</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Cci.Analysis.ControlAndDataFlowGraph">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.Analysis.ControlAndDataFlowGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.AstsProjectedAsCodeModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.AstsProjectedAsCodeModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.CodeModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.CodeModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.CodeModelToIL">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.CodeModelToIL.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.ContractExtractor">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.ContractExtractor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.CSharpSourceEmitter">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.CSharpSourceEmitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.ILGenerator">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.ILGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.MetadataHelper">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.MetadataHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.MetadataModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.MetadataModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.MutableCodeModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.MutableCodeModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.MutableMetadataModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.MutableMetadataModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.NewILToCodeModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.NewILToCodeModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.PdbReader">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.PdbReader.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.PdbWriter">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.PdbWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.PeReader">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.PeReader.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.PeWriter">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.PeWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.ReflectionEmitter">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.ReflectionEmitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.SourceEmitter">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.SourceEmitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci.SourceModel">
+      <HintPath>..\packages\CCI.1.0.12\lib\net40\Microsoft.Cci.SourceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Analysis\AnalysisResults.cs" />
+    <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
+    <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
+    <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
+    <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
+    <Compile Include="Differencing\IDifferenceEngine.cs" />
+    <Compile Include="Differencing\IDifferenceResult.cs" />
+    <Compile Include="Differencing\BertAssemblyDifferenceEngine.cs" />
+    <Compile Include="Differencing\BertTypeDifferenceEngine.cs" />
+    <Compile Include="Differencing\ITypeDifferenceResult.cs" />
+    <Compile Include="Differencing\TypeDifferenceResult.cs" />
+    <Compile Include="Exceptions\InvalidConfigurationException.cs" />
+    <Compile Include="Instrumentation\ITestCaseLogger.cs" />
+    <Compile Include="Instrumentation\InstrumentedTestSuite.cs" />
+    <Compile Include="Instrumentation\BertTestCaseLogger.cs" />
+    <Compile Include="IWinBertServiceProvider.cs" />
+    <Compile Include="Testing\IAssemblyCompiler.cs" />
+    <Compile Include="Testing\IRegressionTestSuite.cs" />
+    <Compile Include="Testing\IRegressionTestSuiteGenerator.cs" />
+    <Compile Include="Testing\BertAssemblyCompiler.cs" />
+    <Compile Include="Testing\IRegressionTestSuiteRunner.cs" />
+    <Compile Include="Testing\RegressionTestSuiteRunResult.cs" />
+    <Compile Include="Testing\RegressionTestSuite.cs" />
+    <Compile Include="Xml\Build.cs" />
+    <Compile Include="Util\BuildVersionManager.cs" />
+    <Compile Include="Util\FileCopier.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xml\WinBertConfig.cs">
+      <DependentUpon>WinBertConfig.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Xml\IgnoreTarget.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="EnvDTE">
+      <Guid>{80CC9F66-E7D8-4DDD-85B6-D9E6CD0E93E2}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="EnvDTE100">
+      <Guid>{26AD1324-4B7C-44BC-84F8-B86AED45729F}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="EnvDTE80">
+      <Guid>{1A31287A-4D7D-413E-8E32-3B374931BD89}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="EnvDTE90">
+      <Guid>{2CE2370E-D744-4936-A090-3FFFE667B0E1}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.VisualStudio.CommandBars">
+      <Guid>{1CBA492E-7263-47BB-87FE-639000619B15}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagrams\WinBert.cd" />
+    <None Include="packages.config" />
+    <None Include="Xml\WinBertConfig.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions />
+  <Target Name="BeforeBuild">
+    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfig.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
+  </Target>
+  <Target Name="AfterBuild">
+    <PropertyGroup>
+      <DllName>$(AssemblyName).dll</DllName>
+      <PdbName>$(AssemblyName).pdb</PdbName>
+      <DocFileName>$(AssemblyName).xml</DocFileName>
+    </PropertyGroup>
+    <Delete Condition="Exists('$(DeploymentDirectory)$(DllName)')" Files="$(DeploymentDirectory)$(DllName)">
+    </Delete>
+    <Delete Condition="Exists('$(DeploymentDirectory)$(PdbName)')" Files="$(DeploymentDirectory)$(PdbName)">
+    </Delete>
+    <Delete Condition="Exists('$(DeploymentDirectory)$(DocFileName)')" Files="$(DeploymentDirectory)$(DocFileName)">
+    </Delete>
+    <Copy Condition="Exists('$(OutputPath)$(DllName)')" SourceFiles="$(OutputPath)$(DllName)" DestinationFolder="$(DeploymentDirectory)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
+    <Copy Condition="Exists('$(OutputPath)$(PdbName)')" SourceFiles="$(OutputPath)$(PdbName)" DestinationFolder="$(DeploymentDirectory)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
+    <Copy Condition="Exists('$(OutputPath)$(DocFileName)')" SourceFiles="$(OutputPath)$(DocFileName)" DestinationFolder="$(DeploymentDirectory)">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+</Project>
