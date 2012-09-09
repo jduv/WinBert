@@ -25,8 +25,8 @@
           <Configuration>
             <CodeCoverage xmlns="">
               <Regular>
-                <CodeCoverageItem binaryFile="WinBertPlugin\bin\Debug\WinBert.dll" pdbFile="WinBertPlugin\bin\Debug\WinBert.pdb" instrumentInPlace="true" />
-                <CodeCoverageItem binaryFile="WinBert.RandoopIntegration\bin\Debug\WinBert.RandoopIntegration.dll" pdbFile="WinBert.RandoopIntegration\bin\Debug\WinBert.RandoopIntegration.pdb" instrumentInPlace="true" />
+                <CodeCoverageItem binaryFile="Arktos.WinBert\bin\Debug\Arktos.WinBert.dll" pdbFile="Arktos.WinBert\bin\Debug\Arktos.WinBert.pdb" instrumentInPlace="true" />
+                <CodeCoverageItem binaryFile="Arktos.WinBert.RandoopIntegration\bin\Debug\Arktos.WinBert.RandoopIntegration.dll" pdbFile="Arktos.WinBert.RandoopIntegration\bin\Debug\Arktos.WinBert.RandoopIntegration.pdb" instrumentInPlace="true" />
               </Regular>
             </CodeCoverage>
           </Configuration>

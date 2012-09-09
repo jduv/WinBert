@@ -30,6 +30,14 @@
         void AddReference(string path);
 
         /// <summary>
+        /// Adds a list of reference assemblies to the list of assemblies to include during compliation.
+        /// </summary>
+        /// <param name="paths">
+        /// The paths to add.
+        /// </param>
+        void AddReferences(IEnumerable<string> paths);
+
+        /// <summary>
         /// Clears all references.
         /// </summary>
         void ClearReferences();

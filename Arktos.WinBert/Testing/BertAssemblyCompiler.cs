@@ -6,24 +6,30 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Arktos.WinBert.Exceptions;
 
     /// <summary>
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
-    ///   and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
+    ///  and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
     /// </summary>
     public class BertAssemblyCompiler : IAssemblyCompiler
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   The CodeDom compiler for compiling generated tests.
+        /// The CodeDom compiler for compiling generated tests.
         /// </summary>
         private readonly CodeDomProvider compiler = null;
 
         /// <summary>
-        ///   A list of reference paths.
+        /// A list of reference paths.
         /// </summary>
         private readonly IList<string> referencePaths = new List<string>();
+
+        /// <summary>
+        /// The working directory for the compiler.
+        /// </summary>
+        private string workingDir;
 
         #endregion
 
@@ -32,23 +38,33 @@
         /// <summary>
         /// Initializes a new instance of the BertAssemblyCompiler class.
         /// </summary>
-        /// <param name="outputPath">
+        /// <param name="outputDir">
         /// The output directory for the compiled assembly.
         /// </param>
-        public BertAssemblyCompiler(string outputPath)
+        public BertAssemblyCompiler(string outputDir)
         {
-            this.compiler = CodeDomProvider.CreateProvider("CSharp");
+            if (string.IsNullOrEmpty(outputDir))
+            {
+                throw new ArgumentException("Invalid working directory! It cannot be null or empty.");
+            }
 
-            this.InitializeOutputPath(outputPath);
+            if (Directory.Exists(outputDir))
+            {
+                this.workingDir = Path.GetFullPath(outputDir);
+            }
+            else
+            {
+                throw new DirectoryNotFoundException("Invalid working directory! Path: " + outputDir);
+            }
+
+            this.compiler = CodeDomProvider.CreateProvider("CSharp");
         }
 
         #endregion
 
         #region Properties
 
-        /// <summary>
-        ///   Gets a list of reference paths for the compiler to include during compilation.
-        /// </summary>
+        /// <inheritdoc />
         public IEnumerable<string> References
         {
             get
@@ -61,27 +77,30 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Adds a reference assembly to the list of assemblies to include during compilation.
-        /// </summary>
-        /// <param name="path">
-        /// The path to the reference.
-        /// </param>
+        /// <inheritdoc />
         public void AddReference(string path)
         {
-            // ensure that the file exists and it's a library or executable
-            if (File.Exists(path) && (Path.GetExtension(path).Equals(".dll") || Path.GetExtension(path).Equals(".exe")))
+            if (string.IsNullOrEmpty(path))
             {
-                this.referencePaths.Add(Path.GetFullPath(path));
+                throw new ArgumentException("Invalid reference path! It cannot be null or empty.");
             }
+
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException("File not found! Path: " + path);
+            }
+            
+            if (!(Path.GetExtension(path).Equals(".dll", StringComparison.OrdinalIgnoreCase) ||
+                   Path.GetExtension(path).Equals(".exe", StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new ArgumentException("Invalid file type! Only .dll and .exe are supported as references.");
+            }
+
+            // Made it. Whew.
+            this.referencePaths.Add(Path.GetFullPath(path));           
         }
 
-        /// <summary>
-        /// Adds a list of reference assemblies to the list of assemblies to include during compliation.
-        /// </summary>
-        /// <param name="paths">
-        /// The paths to add.
-        /// </param>
+        /// <inheritdoc />
         public void AddReferences(IEnumerable<string> paths)
         {
             foreach (var path in paths)
@@ -90,51 +109,50 @@
             }
         }
 
-        /// <summary>
-        /// Clears the reference path cache for this compiler.
-        /// </summary>
+        /// <inheritdoc />
         public void ClearReferences()
         {
             this.referencePaths.Clear();
         }
 
-        /// <summary>
-        /// Compiles tests.
-        /// </summary>
-        /// <param name="sourcePath">
-        /// The source path to compile from.
-        /// </param>
-        /// <returns>
-        /// A test assembly containing the compiled source or null on error.
-        /// </returns>
+        /// <inheritdoc />
         public Assembly CompileTests(string sourcePath)
         {
-            if (Directory.Exists(sourcePath))
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                throw new ArgumentException("Invalid path.");
+            }
+
+            var fullPath = Path.GetFullPath(sourcePath);
+            if (Directory.Exists(fullPath))
             {
                 var sourceFiles = this.GetSourceFiles(Path.GetFullPath(sourcePath));
-
-                CompilerResults results = null;
+                
                 if (sourceFiles != null && sourceFiles.Length > 0)
                 {
                     var compilerParameters = new CompilerParameters(
-                        this.referencePaths.ToArray(), this.GetRandomOutputFileName(), false);
+                        this.referencePaths.ToArray(), 
+                        this.GetRandomOutputFileName(), 
+                        false);
 
-                    results = this.compiler.CompileAssemblyFromFile(compilerParameters, sourceFiles);
+                    var results = this.compiler.CompileAssemblyFromFile(compilerParameters, sourceFiles);
 
-                    // try and load the compiled assembly.
-                    try
+                    if (results.Errors.Count == 0)
                     {
-                        var assembly = Assembly.LoadFile(Path.GetFullPath(results.PathToAssembly));
-                        return assembly;
+                        // return the loaded assembly.
+                        return Assembly.LoadFile(Path.GetFullPath(results.PathToAssembly));
                     }
-                    catch (Exception)
+                    else
                     {
-                        // BMK handle exception
+                        throw new CompilationException(results);
                     }
                 }
+
+                // Empty directory, nothing to compile.
+                return null;
             }
 
-            return null;
+            throw new DirectoryNotFoundException("Directory not found. Path: " + fullPath);
         }
 
         #endregion
@@ -149,7 +167,7 @@
         /// </returns>
         private string GetRandomOutputFileName()
         {
-            return Path.GetRandomFileName() + ".dll";
+            return Path.Combine(this.workingDir, Path.GetRandomFileName() + ".dll");
         }
 
         /// <summary>
@@ -171,20 +189,6 @@
             }
 
             return pathsList;
-        }
-
-        /// <summary>
-        /// Initializes the working directory of the compiler.
-        /// </summary>
-        /// <param name="pathToWorkingDirectory">
-        /// The path to the working directory that will be used during compilation.
-        /// </param>
-        private void InitializeOutputPath(string pathToWorkingDirectory)
-        {
-            if (Directory.Exists(pathToWorkingDirectory))
-            {
-                Path.GetFullPath(pathToWorkingDirectory);
-            }
         }
 
         #endregion

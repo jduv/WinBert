@@ -131,6 +131,7 @@
     <Compile Include="Differencing\BertTypeDifferenceEngine.cs" />
     <Compile Include="Differencing\ITypeDifferenceResult.cs" />
     <Compile Include="Differencing\TypeDifferenceResult.cs" />
+    <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Instrumentation\ITestCaseLogger.cs" />
     <Compile Include="Instrumentation\InstrumentedTestSuite.cs" />

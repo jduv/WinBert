@@ -759,6 +759,14 @@
             The path to the PE/Assembly to refer to.
             </param>
         </member>
+        <member name="M:Arktos.WinBert.Testing.IAssemblyCompiler.AddReferences(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Adds a list of reference assemblies to the list of assemblies to include during compliation.
+            </summary>
+            <param name="paths">
+            The paths to add.
+            </param>
+        </member>
         <member name="M:Arktos.WinBert.Testing.IAssemblyCompiler.ClearReferences">
             <summary>
             Clears all references.
@@ -855,50 +863,43 @@
         <member name="T:Arktos.WinBert.Testing.BertAssemblyCompiler">
             <summary>
             Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
-              and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
+             and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
             </summary>
         </member>
         <member name="F:Arktos.WinBert.Testing.BertAssemblyCompiler.compiler">
             <summary>
-              The CodeDom compiler for compiling generated tests.
+            The CodeDom compiler for compiling generated tests.
             </summary>
         </member>
         <member name="F:Arktos.WinBert.Testing.BertAssemblyCompiler.referencePaths">
             <summary>
-              A list of reference paths.
+            A list of reference paths.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Testing.BertAssemblyCompiler.workingDir">
+            <summary>
+            The working directory for the compiler.
             </summary>
         </member>
         <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.#ctor(System.String)">
             <summary>
             Initializes a new instance of the BertAssemblyCompiler class.
             </summary>
-            <param name="outputPath">
+            <param name="outputDir">
             The output directory for the compiled assembly.
             </param>
         </member>
         <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.AddReference(System.String)">
-            <summary>
-            Adds a reference assembly to the list of assemblies to include during compilation.
-            </summary>
-            <param name="path">
-            The path to the reference.
-            </param>
+            <inheritdoc />
+        </member>
+        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.AddReferences(System.Collections.Generic.IEnumerable{System.String})">
+            <inheritdoc />
         </member>
         <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.ClearReferences">
-            <summary>
-            Clears the reference path cache for this compiler.
-            </summary>
+            <inheritdoc />
         </member>
         <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.CompileTests(System.String)">
-            <summary>
-            Compiles tests.
-            </summary>
-            <param name="sourcePath">
-            The source path to compile from.
-            </param>
-            <returns>
-            A test assembly containing the compiled source or null on error.
-            </returns>
+            <inheritdoc />
         </member>
         <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.GetRandomOutputFileName">
             <summary>
@@ -919,18 +920,8 @@
             A list of file paths.
             </returns>
         </member>
-        <member name="M:Arktos.WinBert.Testing.BertAssemblyCompiler.InitializeOutputPath(System.String)">
-            <summary>
-            Initializes the working directory of the compiler.
-            </summary>
-            <param name="pathToWorkingDirectory">
-            The path to the working directory that will be used during compilation.
-            </param>
-        </member>
         <member name="P:Arktos.WinBert.Testing.BertAssemblyCompiler.References">
-            <summary>
-              Gets a list of reference paths for the compiler to include during compilation.
-            </summary>
+            <inheritdoc />
         </member>
         <member name="T:Arktos.WinBert.Instrumentation.BertTestCaseLogger">
             <summary>
@@ -1289,6 +1280,63 @@
         <member name="P:Arktos.WinBert.Differencing.AssemblyDifferenceResult.TypeDifferences">
             <summary>
               Gets a list of type differences.
+            </summary>
+        </member>
+        <member name="T:Arktos.WinBert.Exceptions.CompilationException">
+            <summary>
+            Thrown whenever a compiler implementation fails to compile some piece
+            of source code or a comparable error occurs.
+            </summary>
+        </member>
+        <member name="F:Arktos.WinBert.Exceptions.CompilationException.DefaultErrorMessage">
+            <summary>
+            The default error message string for the exception.
+            </summary>
+        </member>
+        <member name="M:Arktos.WinBert.Exceptions.CompilationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Arktos.WinBert.Exceptions.CompilationException"/> class.
+            </summary>
+            <param name="message">
+            A message describing the exception.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Exceptions.CompilationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Arktos.WinBert.Exceptions.CompilationException"/> class.
+            </summary>
+            <param name="message">
+            A message describing the exception.
+            </param>
+            <param name="innerException">
+            An inner exception.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Exceptions.CompilationException.#ctor(System.String,System.CodeDom.Compiler.CompilerResults)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Arktos.WinBert.Exceptions.CompilationException"/> class.
+            </summary>
+            <param name="message">
+            A message describing the exception.
+            </param>
+            <param name="result">
+            The compiler result that caused this exception.
+            </param>
+        </member>
+        <member name="M:Arktos.WinBert.Exceptions.CompilationException.#ctor(System.CodeDom.Compiler.CompilerResults)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Arktos.WinBert.Exceptions.CompilationException"/> class.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Exceptions.CompilationException.Results">
+            <summary>
+            Gets the compiler results.
+            </summary>
+        </member>
+        <member name="P:Arktos.WinBert.Exceptions.CompilationException.CompilerErrors">
+            <summary>
+            Gets an enumeration of the errors contained in the compiler result
+            that caused this exception to be thrown.
             </summary>
         </member>
     </members>
