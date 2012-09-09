@@ -6,7 +6,7 @@
     /// Partial implementation of a generated class.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
-    public partial class WinBertConfig
+    public partial class EmbeddedConfiguration
     {
     }
 }

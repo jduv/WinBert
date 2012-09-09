@@ -8,173 +8,138 @@
     [TestClass]
     public class FileCopierTest
     {
-        #region Fields and Constants
+        ////#region Fields and Constants
 
-        private static readonly string destDir = @"filecopier-test-files-deploy\";
+        ////private static readonly string destDir = @"filecopier-test-files-deploy\";
 
-        private static readonly string sourceFile = @"src.txt";
+        ////private static readonly string sourceFile = @"src.txt";
 
-        private static readonly string existingDestTxt = "existingDest.txt";
+        ////private static readonly string existingDestTxt = "existingDest.txt";
 
-        private static readonly string readOnlyDestTxt = "readOnlyDest.txt";
+        ////private static readonly string readOnlyDestTxt = "readOnlyDest.txt";
 
-        private FileCopier fileCopierUnderTest = null;
+        ////private FileCopier fileCopierUnderTest = null;
 
-        #endregion
+        ////#endregion
 
-        #region Test Plumbing
+        ////#region Test Methods
 
-        [TestInitialize]
-        public void TestInit()
-        {
-            // make sure the destination directory exists
-            if (!Directory.Exists(destDir))
-            {
-                Directory.CreateDirectory(destDir);
-            }
+        ////[TestMethod]
+        ////public void TestWithNoFlags()
+        ////{
+        ////    this.fileCopierUnderTest = new FileCopier();
 
-            File.Copy(existingDestTxt, Path.Combine(destDir, existingDestTxt), true);
-            File.Copy(readOnlyDestTxt, Path.Combine(destDir, readOnlyDestTxt), true);
-        }
+        ////    Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToExistingFile(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
+        ////}
 
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            if (Directory.Exists(destDir))
-            {
-                // set read only to false on the test file or we cannot delete it per deployment
-                string readOnlyFile = Path.Combine(destDir, readOnlyDestTxt);
+        ////[TestMethod]
+        ////public void TestFlagBasicOverwritable()
+        ////{
+        ////    this.fileCopierUnderTest = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination);
 
-                if (File.Exists(readOnlyFile))
-                {
-                    FileInfo info = new FileInfo(readOnlyFile);
-                    info.IsReadOnly = false;
-                }
+        ////    Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyToExistingFile(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
+        ////}
 
-                Directory.Delete(destDir, true);
-            }
-        }
+        ////[TestMethod]
+        ////public void TestFlagReadOnlyOverwritable()
+        ////{
+        ////    this.fileCopierUnderTest = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination |
+        ////                                              FileCopierFlags.AttemptOverwriteReadonlyDest);
 
-        #endregion
+        ////    Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyToExistingFile(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
+        ////}
 
-        #region Test Methods
+        ////[TestMethod]
+        ////public void TestFlagCreateDirectory()
+        ////{
+        ////    this.fileCopierUnderTest = new FileCopier(FileCopierFlags.CreateDestinationDirectorys);
 
-        [TestMethod]
-        public void TestWithNoFlags()
-        {
-            this.fileCopierUnderTest = new FileCopier();
+        ////    Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToExistingFile(this.fileCopierUnderTest));
+        ////    Assert.IsFalse(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
+        ////    Assert.IsTrue(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
+        ////}
 
-            Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToExistingFile(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
-        }
+        ////[TestMethod]
+        ////[ExpectedException(typeof(ArgumentException))]
+        ////public void TestCopySourceDirectory()
+        ////{
+        ////    this.fileCopierUnderTest = new FileCopier();
+        ////    this.fileCopierUnderTest.TryCopyFile(destDir, destDir);
+        ////}
 
-        [TestMethod]
-        public void TestFlagBasicOverwritable()
-        {
-            this.fileCopierUnderTest = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination);
+        ////#endregion
 
-            Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyToExistingFile(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
-        }
+        ////#region Private Methods
 
-        [TestMethod]
-        public void TestFlagReadOnlyOverwritable()
-        {
-            this.fileCopierUnderTest = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination |
-                                                      FileCopierFlags.AttemptOverwriteReadonlyDest);
+        ////private bool CopyToDirectory(FileCopier copier)
+        ////{
+        ////    return copier.TryCopyFile(sourceFile, destDir);
+        ////}
 
-            Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyToExistingFile(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
-        }
+        ////private bool CopyFileToNamedTarget(FileCopier copier)
+        ////{
+        ////    string destPath = Path.Combine(destDir, @"out.txt");
+        ////    return copier.TryCopyFile(sourceFile, destPath);
+        ////}
 
-        [TestMethod]
-        public void TestFlagCreateDirectory()
-        {
-            this.fileCopierUnderTest = new FileCopier(FileCopierFlags.CreateDestinationDirectorys);
+        ////private bool CopyToExistingFile(FileCopier copier)
+        ////{
+        ////    string destPath = Path.Combine(destDir, @"existingDest.txt");
 
-            Assert.IsTrue(this.CopyToDirectory(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyFileToNamedTarget(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToExistingFile(this.fileCopierUnderTest));
-            Assert.IsFalse(this.CopyToReadOnlyFile(this.fileCopierUnderTest));
-            Assert.IsTrue(this.CopyToNonExistantDirectory(this.fileCopierUnderTest));
-        }
+        ////    if (File.Exists(destPath))
+        ////    {
+        ////        return copier.TryCopyFile(sourceFile, destPath);
+        ////    }
+        ////    else
+        ////    {
+        ////        Assert.Fail("The data for this test case has not been properly deployed! Missing file: " + destPath);
+        ////        return false;
+        ////    }
+        ////}
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void TestCopySourceDirectory()
-        {
-            this.fileCopierUnderTest = new FileCopier();
-            this.fileCopierUnderTest.TryCopyFile(destDir, destDir);
-        }
+        ////private bool CopyToReadOnlyFile(FileCopier copier)
+        ////{
+        ////    string destPath = Path.Combine(destDir, @"readOnlyDest.txt");
 
-        #endregion
+        ////    if (File.Exists(destPath))
+        ////    {
+        ////        FileInfo info = new FileInfo(destPath);
 
-        #region Private Methods
+        ////        // ensure that the file is readonly.
+        ////        if (!info.IsReadOnly)
+        ////        {
+        ////            info.IsReadOnly = true;
+        ////        }
 
-        private bool CopyToDirectory(FileCopier copier)
-        {
-            return copier.TryCopyFile(sourceFile, destDir);
-        }
+        ////        return copier.TryCopyFile(sourceFile, destPath);
+        ////    }
+        ////    else
+        ////    {
+        ////        Assert.Fail("The data for this test case has not been properly deployed! Missing file: " + destPath);
+        ////        return false;
+        ////    }
+        ////}
 
-        private bool CopyFileToNamedTarget(FileCopier copier)
-        {
-            string destPath = Path.Combine(destDir, @"out.txt");
-            return copier.TryCopyFile(sourceFile, destPath);
-        }
+        ////private bool CopyToNonExistantDirectory(FileCopier copier)
+        ////{
+        ////    string destPath = Path.Combine(destDir, @"newdir\another\out.txt");
+        ////    return copier.TryCopyFile(sourceFile, destPath);
+        ////}
 
-        private bool CopyToExistingFile(FileCopier copier)
-        {
-            string destPath = Path.Combine(destDir, @"existingDest.txt");
-
-            if (File.Exists(destPath))
-            {
-                return copier.TryCopyFile(sourceFile, destPath);
-            }
-            else
-            {
-                Assert.Fail("The data for this test case has not been properly deployed! Missing file: " + destPath);
-                return false;
-            }
-        }
-
-        private bool CopyToReadOnlyFile(FileCopier copier)
-        {
-            string destPath = Path.Combine(destDir, @"readOnlyDest.txt");
-
-            if (File.Exists(destPath))
-            {
-                FileInfo info = new FileInfo(destPath);
-
-                // ensure that the file is readonly.
-                if (!info.IsReadOnly)
-                {
-                    info.IsReadOnly = true;
-                }
-
-                return copier.TryCopyFile(sourceFile, destPath);
-            }
-            else
-            {
-                Assert.Fail("The data for this test case has not been properly deployed! Missing file: " + destPath);
-                return false;
-            }
-        }
-
-        private bool CopyToNonExistantDirectory(FileCopier copier)
-        {
-            string destPath = Path.Combine(destDir, @"newdir\another\out.txt");
-            return copier.TryCopyFile(sourceFile, destPath);
-        }
-
-        #endregion
+        ////#endregion
     }
 }

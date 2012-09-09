@@ -12,9 +12,9 @@
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
     ///  and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
     /// </summary>
-    public class BertAssemblyCompiler : IAssemblyCompiler
+    public class RandoopTestCompiler : IAssemblyCompiler
     {
-        #region Constants and Fields
+        #region Constants & Fields
 
         /// <summary>
         /// The CodeDom compiler for compiling generated tests.
@@ -33,7 +33,7 @@
 
         #endregion
 
-        #region Constructors and Destructors
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the BertAssemblyCompiler class.
@@ -41,7 +41,7 @@
         /// <param name="outputDir">
         /// The output directory for the compiled assembly.
         /// </param>
-        public BertAssemblyCompiler(string outputDir)
+        public RandoopTestCompiler(string outputDir)
         {
             if (string.IsNullOrEmpty(outputDir))
             {

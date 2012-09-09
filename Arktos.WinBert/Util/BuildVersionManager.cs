@@ -9,23 +9,23 @@
 
     /// <summary>
     /// This simply class keeps a list of builds sorted by timestamp in a specified folder. As new builds are added 
-    ///   it will copy the contents of the target to the archive and store an entry in the sorted list. When the 
-    ///   BuildVersionManager reaches it's maximum capacity (defaulted to byte.MaxValue--or 255) it 
-    ///   will begin to drop the oldest build in favor for the new one. This in effect creates a moving window of 
-    ///   assemblies sorted by compile time. Only successful builds (obviously) will be archived.
+    /// it will copy the contents of the target to the archive and store an entry in the sorted list. When the 
+    /// BuildVersionManager reaches it's maximum capacity (defaulted to byte.MaxValue--or 255) it 
+    /// will begin to drop the oldest build in favor for the new one. This in effect creates a moving window of 
+    /// assemblies sorted by compile time. Only successful builds (obviously) will be archived.
     /// </summary>
     public sealed class BuildVersionManager
     {
         #region Constants and Fields
 
         /// <summary>
-        ///   Path to the archive
+        /// Path to the archive.
         /// </summary>
         private readonly string archivePath;
 
         /// <summary>
-        ///   This is the hidden field holding the actual size for the max number of builds stored. Access this through 
-        ///   the public property only.
+        /// This is the hidden field holding the actual size for the max number of builds stored. Access this through 
+        /// the public property only.
         /// </summary>
         private byte maxArchiveSize;
 
@@ -34,10 +34,12 @@
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the BuildVersionManager class.
+        /// Initializes a new instance of the <see cref="BuildVersionManager"/> class.
         /// </summary>
         /// <param name="archivePath">
-        /// The path to where the caller wishes the archive to be constructed.
+        /// The path to where the caller wishes the archive to be constructed. Avoid relative paths here, as that will 
+        /// likely get you in trouble during the save/load of each build. If this directory doesn't exist, then the archiver
+        /// will create it.
         /// </param>
         public BuildVersionManager(string archivePath)
             : this(archivePath, byte.MaxValue, null)
@@ -45,10 +47,12 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the BuildVersionManager class.
+        /// Initializes a new instance of the <see cref="BuildVersionManager"/> class.
         /// </summary>
         /// <param name="archivePath">
-        /// The path to where the caller wishes the archive to be constructed.
+        /// The path to where the caller wishes the archive to be constructed. Avoid relative paths here, as that will 
+        /// likely get you in trouble during the save/load of each build. If this directory doesn't exist, then the archiver
+        /// will create it.
         /// </param>
         /// <param name="name">
         /// The name for this build archive.
@@ -59,11 +63,12 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the BuildVersionManager class
+        /// Initializes a new instance of the <see cref="BuildVersionManager"/> class.
         /// </summary>
         /// <param name="archivePath">
         /// The path to where the caller wishes the archive to be constructed. Avoid relative paths here, as that will 
-        ///   likely get you in trouble during the save/load of each build.
+        /// likely get you in trouble during the save/load of each build. If this directory doesn't exist, then the archiver
+        /// will create it.
         /// </param>
         /// <param name="maxBuildsArchivable">
         /// The maximum number of build history to keep. Lower numbers will result in lower disk space utilization.
@@ -73,31 +78,30 @@
         /// </param>
         public BuildVersionManager(string archivePath, byte maxBuildsArchivable, string name)
         {
-            // Test comment with hunter green text
+            if (string.IsNullOrEmpty(archivePath))
+            {
+                throw new ArgumentException("Invalid archive path! It cannot be null or empty.");
+            }
+
+            var fullPath = Path.GetFullPath(archivePath);
+
+            // Files not allowed, must be a directory
+            if (File.Exists(fullPath))
+            {                
+                throw new ArgumentException("Invalid archive path! Must be a directory! Path: " + archivePath);
+            }
+
+            // If the directory doesn't exist, attempt to create it.
+            if (!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+
             this.MaxArchiveSize = maxBuildsArchivable;
             this.SequenceNumber = 0;
             this.BuildArchive = new SortedList<uint, Build>();
             this.Name = name;
-
-            if (!Directory.Exists(archivePath))
-            {
-                if (archivePath == null)
-                {
-                    throw new ArgumentNullException("Invalid archive path! It cannot be null!");
-                }
-
-                if (File.Exists(archivePath))
-                {
-                    var msg = string.Format("Invalid archive path! Must be a directory! Path: {0}", archivePath);
-                    throw new ArgumentException();
-                }
-                else
-                {
-                    Directory.CreateDirectory(archivePath);
-                }
-            }
-
-            this.archivePath = archivePath;
+            this.archivePath = fullPath;
         }
 
         #endregion
@@ -166,8 +170,8 @@
 
         /// <summary>
         /// Adds the target assembly to the builds archive. The path must be to a valid .NET compiled PE or assembly.
-        ///   It will be inserted in order into the sorted list, and it's assumed that this would be an incremental step from
-        ///   the previous add operation. This method will, however, not ensure that this implicit contract is satisfied.
+        /// It will be inserted in order into the sorted list, and it's assumed that this would be an incremental step from
+        /// the previous add operation. This method will, however, not ensure that this implicit contract is satisfied.
         /// </summary>
         /// <param name="pathToSuccessfulBuild">
         /// The path to the assembly to add.
@@ -224,7 +228,7 @@
 
         /// <summary>
         /// Returns a path to the build with the target sequence number. If the target sequence number doesn't 
-        ///   exist in the archive the method will return null.
+        /// exist in the archive the method will return null.
         /// </summary>
         /// <param name="sequenceNumber">
         /// The sequence number to fetch
@@ -248,14 +252,14 @@
 
         /// <summary>
         /// Grabs the build preceding the target revision, regardless of sequence number (there could be gaps). 
-        ///   This method relies on the fact that everything is sorted inside the collection holding the builds.
+        /// This method relies on the fact that everything is sorted inside the collection holding the builds.
         /// </summary>
         /// <param name="sequenceNumber">
         /// The sequence number to fetch the preceding build for.
         /// </param>
         /// <returns>
         /// A build preceding the target sequence number, or null if one doesn't exist. Passing this method zero, for
-        ///   example, will return null because there will never be a build before the zeroth.
+        /// example, will return null because there will never be a build before the zeroth.
         /// </returns>
         public Build GetBuildRevisionPreceding(uint sequenceNumber)
         {
@@ -293,9 +297,9 @@
 
         /// <summary>
         /// Call this method when loading a build archive from configuration. It will not copy any files, but instead 
-        ///   rely on the caller to ensure that the file is properly there. If the file path passed to the method doesn't
-        ///   exist, then it will throw an exception. It will also adjust the internal sequence number to be one plus the 
-        ///   maximum sequence number passed to the instance in it's lifetime.
+        /// rely on the caller to ensure that the file is properly there. If the file path passed to the method doesn't
+        /// exist, then it will throw an exception. It will also adjust the internal sequence number to be one plus the 
+        /// maximum sequence number passed to the instance in it's lifetime.
         /// </summary>
         /// <param name="sequenceNumber">
         /// The sequence number to add the build at.

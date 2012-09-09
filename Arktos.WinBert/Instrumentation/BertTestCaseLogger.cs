@@ -5,7 +5,7 @@
 
     /// <summary>
     /// A basic test case logging singleton that will handle writing the analysis object model as the instrumented
-    ///   test cases run.
+    /// test cases run.
     /// </summary>
     public class BertTestCaseLogger : ITestCaseLogger
     {

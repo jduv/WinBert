@@ -1,9 +1,11 @@
 ﻿namespace Arktos.WinBert.Xml
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
-    /// Partial implementation of a auto generated class. This implementation adds a constructor
-    ///   for convenience only.
+    /// Partial implementation of a generated class.
     /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public partial class IgnoreTarget
     {
         #region Constructors and Destructors

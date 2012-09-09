@@ -133,7 +133,7 @@
                 try
                 {
                     // output dir is the same dir the tests are generated in
-                    IAssemblyCompiler compiler = new BertAssemblyCompiler(this.workingDirectory);
+                    IAssemblyCompiler compiler = new RandoopTestCompiler(this.workingDirectory);
                     compiler.AddReference(diff.NewObject.Location);
 
                     // run the tests on the new assembly

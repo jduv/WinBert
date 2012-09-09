@@ -114,16 +114,8 @@
   <Class Name="Arktos.WinBert.Testing.BertAssemblyCompiler" BaseTypeListCollapsed="true">
     <Position X="0.5" Y="0.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAFAAAIAAAAABAAAAAAAACAAQAAIAAgAEAAAAAAA=</HashCode>
+      <HashCode>AIAAAFACAAAAAAABAAAAAAAACAAQAAIAAgAEAAAAAAA=</HashCode>
       <FileName>Testing\BertAssemblyCompiler.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Arktos.WinBert.Testing.TestSuite" BaseTypeListCollapsed="true">
-    <Position X="10" Y="2" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAFAAAgAAIA=</HashCode>
-      <FileName>Testing\TestSuite.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
@@ -158,29 +150,22 @@
   <Interface Name="Arktos.WinBert.Testing.IAssemblyCompiler">
     <Position X="5.25" Y="4.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAFAAAAAAAAAAAAAAAAAAAAAQAAIAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAFACAAAAAAAAAAAAAAAAAAAQAAIAAAAAAAAAAAA=</HashCode>
       <FileName>Testing\IAssemblyCompiler.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Arktos.WinBert.Testing.ITestSuite">
-    <Position X="9.75" Y="4.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAFAAAgAAIA=</HashCode>
-      <FileName>Testing\ITestSuite.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Arktos.WinBert.Testing.ITestSuiteGenerator">
+  <Interface Name="Arktos.WinBert.Testing.IRegressionTestSuiteGenerator">
     <Position X="1.25" Y="4.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
-      <FileName>Testing\ITestSuiteGenerator.cs</FileName>
+      <FileName>Testing\IRegressionTestSuiteGenerator.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Arktos.WinBert.Testing.ITestSuiteRunner">
+  <Interface Name="Arktos.WinBert.Testing.IRegressionTestSuiteRunner">
     <Position X="3.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Testing\ITestSuiteRunner.cs</FileName>
+      <FileName>Testing\IRegressionTestSuiteRunner.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="Arktos.WinBert.Util.FileCopierFlags">

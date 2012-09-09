@@ -73,25 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="test-src\TestSrc04.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="test-src\TestSrc03.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="test-src\TestSrc02.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="test-src\TestSrc01.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="dependent-src-test\Dependent.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="FileCopierTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BuildVersionManagerTest.cs" />
-    <Compile Include="SimpleTestAssemblyCompilerTest.cs" />
+    <Compile Include="BuildVersionManagerTests.cs" />
     <Compile Include="SimpleAssemblyDifferenceEngineTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -105,15 +89,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dependent-src-test\Dependency.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="dependent-src-test\CopyOfDependency.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="dependent-src-test\Dependency.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="filecopier-test-files\existingDest.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

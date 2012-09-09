@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.UnitTests
+﻿namespace Arktos.WinBert.RandoopIntegration.UnitTests
 {
     using System;
     using System.IO;
@@ -8,24 +8,12 @@
     using Arktos.WinBert.Exceptions;
 
     [TestClass]
-    public class RandoopTestCompilerTest
+    public class RandoopTestCompilerTests : RandoopIntegrationUnitTest
     {
-        #region Fields and Constants
+        #region Fields & Constants
 
-        private const string WorkingDirectory = @".\";
+        private RandoopTestCompiler compilerUnderTest;
 
-        private const string DependentSourceDirectory = @"dependent-src-test\";
-
-        private const string DependentSourcePath = DependentSourceDirectory + @"Dependent.cs";
-
-        private const string ReferencedLibraryPath = DependentSourceDirectory + @"Dependency.dll";
-
-        private const string SecondaryReferencedLibraryPath = DependentSourceDirectory + @"CopyOfDependency.dll";
-
-        private const string BadExtensionReference = DependentSourceDirectory + @"Dependency.txt";
-
-        private BertAssemblyCompiler compilerUnderTest;
-        
         #endregion
 
         #region Test Plumbing
@@ -33,12 +21,7 @@
         [TestInitialize]
         public void PreTestInit()
         {
-            if (!Directory.Exists(WorkingDirectory))
-            {
-                Directory.CreateDirectory(WorkingDirectory);
-            }
-
-            this.compilerUnderTest = new BertAssemblyCompiler(WorkingDirectory);
+            this.compilerUnderTest = new RandoopTestCompiler(WorkingDir);
         }
 
         #endregion
@@ -51,14 +34,14 @@
         [ExpectedException(typeof(ArgumentException))]
         public void Ctor_NullPath_ThrowsException()
         {
-            var target = new BertAssemblyCompiler(null);
+            var target = new RandoopTestCompiler(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Ctor_EmptyPath_ThrowsException()
         {
-            var target = new BertAssemblyCompiler(string.Empty);
+            var target = new RandoopTestCompiler(string.Empty);
         }
 
         [TestMethod]
@@ -66,7 +49,7 @@
         public void Ctor_NonExistantPath_ThrowsException()
         {
             var path = @"C:\" + Guid.NewGuid().ToString();
-            var target = new BertAssemblyCompiler(path);
+            var target = new RandoopTestCompiler(path);
         }
 
         #endregion
@@ -96,21 +79,19 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        [DeploymentItem(BadExtensionReference, DependentSourceDirectory)]
+        [ExpectedException(typeof(ArgumentException))]        
         public void AddReference_ExistingPathIncorrectExtension_ThrowsException()
         {
-            this.compilerUnderTest.AddReference(BadExtensionReference);
+            this.compilerUnderTest.AddReference(BadExtensionRef);
         }
 
-        [TestMethod]
-        [DeploymentItem(ReferencedLibraryPath, DependentSourceDirectory)]
+        [TestMethod]        
         public void AddReference_ExistingPathCorrectExtension_IsSuccessful()
         {
-            this.compilerUnderTest.AddReference(ReferencedLibraryPath);
+            this.compilerUnderTest.AddReference(RefLibPath);
             Assert.AreEqual(1, this.compilerUnderTest.References.Count());
             Assert.AreEqual(
-                Path.GetFullPath(ReferencedLibraryPath), 
+                Path.GetFullPath(RefLibPath), 
                 this.compilerUnderTest.References.First(), 
                 true);
         }
@@ -127,26 +108,29 @@
         }
 
         [TestMethod]
-        [DeploymentItem(ReferencedLibraryPath, DependentSourceDirectory)]
-        [DeploymentItem(SecondaryReferencedLibraryPath, DependentSourceDirectory)]
         public void AddReferences_ValidListNoDupes_IsSuccessful()
         {
             this.compilerUnderTest.AddReferences(new string[] 
             { 
-                ReferencedLibraryPath, 
-                SecondaryReferencedLibraryPath
+                RefLibPath, 
+                SecondaryRefLibPath
             });
+
+            var references = this.compilerUnderTest.References.ToList();
+
+            Assert.AreEqual(2, references.Count);
+            Assert.IsTrue(references.Contains(Path.GetFullPath(RefLibPath)));
+            Assert.IsTrue(references.Contains(Path.GetFullPath(SecondaryRefLibPath)));
         }
 
         #endregion
 
         #region ClearReferences
 
-        [TestMethod]
-        [DeploymentItem(ReferencedLibraryPath, DependentSourceDirectory)]
+        [TestMethod]        
         public void ClearReferences_IsSuccessful()
         {
-            this.compilerUnderTest.AddReference(ReferencedLibraryPath);
+            this.compilerUnderTest.AddReference(RefLibPath);
             Assert.AreEqual(1, this.compilerUnderTest.References.Count(), "A precondition for the test failed!");            
 
             this.compilerUnderTest.ClearReferences();
@@ -172,39 +156,42 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(DirectoryNotFoundException))]
-        [DeploymentItem(ReferencedLibraryPath, DependentSourceDirectory)]
+        [ExpectedException(typeof(DirectoryNotFoundException))]        
         public void CompileTests_FilePathInsteadOfDirectory_ThrowsException()
         {
-            var assembly = this.compilerUnderTest.CompileTests(ReferencedLibraryPath);
+            var assembly = this.compilerUnderTest.CompileTests(RefLibPath);
+        }
+
+        [TestMethod]        
+        public void CompileTests_MultipleFiles_ValidAssembly()
+        {
+            var assembly = this.compilerUnderTest.CompileTests(TestSrcDir);
+            Assert.IsNotNull(assembly);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(CompilationException))]
-        [DeploymentItem(DependentSourcePath, DependentSourceDirectory)]
+        [ExpectedException(typeof(CompilationException))]       
         public void CompileTests_MissingReference_ThrowsException()
         {
-            var assembly = this.compilerUnderTest.CompileTests(DependentSourceDirectory);
+            var assembly = this.compilerUnderTest.CompileTests(DependentSrcDir);
             Assert.IsNull(assembly);
         }
 
-        [TestMethod]
-        [DeploymentItem(DependentSourcePath, DependentSourceDirectory)]
-        [DeploymentItem(ReferencedLibraryPath, DependentSourceDirectory)]
+        [TestMethod]        
         public void CompileTests_WithReference_ValidAssembly()
         {
-            this.compilerUnderTest.AddReference(ReferencedLibraryPath);
-            var assembly = this.compilerUnderTest.CompileTests(DependentSourceDirectory);
+            this.compilerUnderTest.AddReference(RefLibPath);
+            var assembly = this.compilerUnderTest.CompileTests(DependentSrcDir);
             Assert.IsNotNull(assembly);
         }
 
         [TestMethod]
         public void CompileTests_EmptyDirectory_ReturnsNull()
         {
-            var emptyDir = Path.Combine(WorkingDirectory, "empty-dir");
+            var emptyDir = Path.Combine(WorkingDir, "empty-dir");
             Directory.CreateDirectory(emptyDir);
             
-            var assembly = this.compilerUnderTest.CompileTests(WorkingDirectory);
+            var assembly = this.compilerUnderTest.CompileTests(emptyDir);
             Assert.IsNull(assembly);
             
             Directory.Delete(emptyDir);
