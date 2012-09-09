@@ -77,6 +77,20 @@
         }
 
         /// <summary>
+        /// Adds a list of reference assemblies to the list of assemblies to include during compliation.
+        /// </summary>
+        /// <param name="paths">
+        /// The paths to add.
+        /// </param>
+        public void AddReferences(IEnumerable<string> paths)
+        {
+            foreach (var path in paths)
+            {
+                this.AddReference(path);
+            }
+        }
+
+        /// <summary>
         /// Clears the reference path cache for this compiler.
         /// </summary>
         public void ClearReferences()

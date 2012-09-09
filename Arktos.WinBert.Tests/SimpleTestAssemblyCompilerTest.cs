@@ -1,22 +1,23 @@
-﻿namespace Arktos.WinBert.RandoopIntegration.Tests
+﻿namespace Arktos.WinBert.UnitTests
 {
     using System.IO;
     using System.Reflection;
     using Arktos.WinBert.Testing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
 
     [TestClass]
     public class RandoopTestCompilerTest
     {
         #region Fields and Constants
 
-        private static readonly string workingDirectory = @".\";
+        private const string WorkingDirectory = @".\";
 
-        private static readonly string dependentSourceDirectory = @".\dependent-src-test";
+        private const string DependentSourceDirectory = @"dependent-src-test\";
 
-        private static readonly string dependentSourceFile = @"Dependent.cs";
+        private const string DependentSourcePath = DependentSourceDirectory + @"Dependent.cs";
 
-        private static readonly string referencedLibraryPath = @"Dependency.dll";
+        private const string ReferencedLibraryPath = DependentSourceDirectory + @"Dependency.dll";
 
         private BertAssemblyCompiler compilerUnderTest;
         
@@ -24,50 +25,44 @@
 
         #region Test Plumbing
 
-        [ClassInitialize]
-        public static void ClassInit(TestContext context)
-        {
-            Directory.CreateDirectory(dependentSourceDirectory);
-            File.Move(dependentSourceFile, Path.Combine(dependentSourceDirectory, dependentSourceFile));
-        }
-
-        [ClassCleanup]
-        public static void ClassTearDown()
-        {
-            if (Directory.Exists(dependentSourceDirectory))
-            {
-                Directory.Delete(dependentSourceDirectory, true);
-            }
-        }
-
         [TestInitialize]
         public void PreTestInit()
         {
-            if (!Directory.Exists(workingDirectory))
+            if (!Directory.Exists(WorkingDirectory))
             {
-                Directory.CreateDirectory(workingDirectory);
+                Directory.CreateDirectory(WorkingDirectory);
             }
 
-            this.compilerUnderTest = new BertAssemblyCompiler(workingDirectory);
+            this.compilerUnderTest = new BertAssemblyCompiler(WorkingDirectory);
         }
 
         #endregion
 
         #region Test Methods
 
-        [TestMethod]
-        public void TestCompileTests()
+        [TestMethod]        
+        [ExpectedException(typeof(ArgumentException))]
+        public void CompileTests_EmptyPath_ExceptionThrown()
         {
-            Assembly assembly = this.compilerUnderTest.CompileTests(workingDirectory);
-            Assert.IsNotNull(assembly);
+            Assembly assembly = this.compilerUnderTest.CompileTests(string.Empty);
+            Assert.IsNull(assembly);
         }
 
         [TestMethod]
-        public void TestAddReferencesAndCompile()
+        [DeploymentItem(DependentSourcePath, DependentSourceDirectory)]
+        public void CompileTests_MissingReference_Null()
         {
-            this.compilerUnderTest.AddReference(referencedLibraryPath);
-            Assembly assembly = this.compilerUnderTest.CompileTests(dependentSourceDirectory);
-            Assert.IsNotNull(assembly);
+            Assembly assembly = this.compilerUnderTest.CompileTests(DependentSourceDirectory);
+            Assert.IsNull(assembly);
+        }
+
+        [TestMethod]
+        [DeploymentItem(DependentSourcePath, DependentSourceDirectory)]
+        [DeploymentItem(ReferencedLibraryPath, DependentSourceDirectory)]
+        public void CompileTests_WithReference_ValidAssembly()
+        {
+            this.compilerUnderTest.AddReference(ReferencedLibraryPath);
+            Assert.IsNull(assembly);
         }
 
         #endregion

@@ -22,9 +22,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert", "Arktos.Wi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.RandoopIntegration", "Arktos.WinBert.RandoopIntegration\Arktos.WinBert.RandoopIntegration.csproj", "{F0485540-6010-4819-B9D1-D1B767A355BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.RandoopIntegration.Tests", "Arktos.WinBert.RandoopIntegration.Tests\Arktos.WinBert.RandoopIntegration.Tests.csproj", "{A1619B38-4C70-453A-82A2-525A00B448B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.RandoopIntegration.UnitTests", "Arktos.WinBert.RandoopIntegration.Tests\Arktos.WinBert.RandoopIntegration.UnitTests.csproj", "{A1619B38-4C70-453A-82A2-525A00B448B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.Tests", "Arktos.WinBert.Tests\Arktos.WinBert.Tests.csproj", "{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.UnitTests", "Arktos.WinBert.Tests\Arktos.WinBert.UnitTests.csproj", "{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert.VsPackage", "Arktos.WinBert.VsPackage\Arktos.WinBert.VsPackage.csproj", "{88D57F99-A678-472C-9C29-F7AFB1142335}"
 EndProject

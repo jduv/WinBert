@@ -9,8 +9,8 @@
     <ProjectGuid>{E0E52D9F-DCCE-47A5-9219-4BD0477CBF91}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Arktos.WinBert.Tests</RootNamespace>
-    <AssemblyName>Arktos.WinBert.Tests</AssemblyName>
+    <RootNamespace>Arktos.WinBert.UnitTests</RootNamespace>
+    <AssemblyName>Arktos.WinBert.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -105,6 +105,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="dependent-src-test\Dependency.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="filecopier-test-files\existingDest.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

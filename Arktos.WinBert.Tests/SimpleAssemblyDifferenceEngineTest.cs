@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBertUnitTests
+﻿namespace Arktos.WinBert.UnitTests
 {
     using System;
     using System.IO;
