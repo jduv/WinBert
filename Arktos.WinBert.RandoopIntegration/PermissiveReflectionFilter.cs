@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Randoop;
     using Arktos.WinBert.RandoopIntegration.Xml;
+    using Randoop;
 
     /// <summary>
     ///   A custom implementation of the IReflectionFilter to support using an in-memory

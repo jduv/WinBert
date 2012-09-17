@@ -7,13 +7,13 @@
     using System.Reflection;
     using System.Xml;
     using System.Xml.Serialization;
-    using Common;
-    using Randoop;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Exceptions;
     using Arktos.WinBert.RandoopIntegration.Xml;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
+    using Common;
+    using Randoop;
 
     /// <summary>
     /// Uses the Randoop framework to generate a set of tests for the target assembly under test.
