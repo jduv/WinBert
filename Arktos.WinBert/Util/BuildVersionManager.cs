@@ -185,7 +185,7 @@
             {
                 var copier =
                     new FileCopier(
-                        FileCopierFlags.AlwaysOverwriteDestination | FileCopierFlags.CreateDestinationDirectorys);
+                        FileCopierFlags.AlwaysOverwriteDestination | FileCopierFlags.CreateDestinationDirectories);
 
                 var pathInArchive = this.GetArchivePath(pathToSuccessfulBuild);
                 if (copier.TryCopyFile(pathToSuccessfulBuild, pathInArchive))
@@ -211,19 +211,9 @@
 
                     return this.LoadBuild(this.SequenceNumber, pathInArchive);
                 }
-
-                // handle the error
-                Trace.TraceError(
-                    "Unable to copy the file from path {0} into the build archive at {1}.",
-                    pathToSuccessfulBuild,
-                    pathInArchive);
-            }
-            else
-            {
-                throw new ArgumentException("The target assembly for the build doesn't exist!");
             }
 
-            return null;
+            throw new ArgumentException("The target assembly for the build doesn't exist!");            
         }
 
         /// <summary>

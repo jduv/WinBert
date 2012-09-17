@@ -29,7 +29,7 @@
         ///   example if copying a file to C:\foo\bar\baz\myfile.txt and the bar and baz directories don't exist, the
         ///   copier will create them for you.
         /// </summary>
-        CreateDestinationDirectorys = 1 << 2
+        CreateDestinationDirectories = 1 << 2
     }
 
     /// <summary>
@@ -52,17 +52,17 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///   Initializes a new instance of the FileCopier class. No flags are set, so the copier will never
-        ///   overwrite destination files and fail if any directories in the destination path don't exist.
+        /// Initializes a new instance of the FileCopier class. No flags are set, so the copier will never
+        /// overwrite destination files and fail if any directories in the destination path don't exist.
         /// </summary>
         public FileCopier()
         {
             this.flags = 0;
         }
-
+        
         /// <summary>
         /// Initializes a new instance of the FileCopier class. Set flags for this object based on the public static
-        ///   fields on it.
+        /// fields on it.
         /// </summary>
         /// <param name="flags">
         /// Flags for this file copier.
@@ -78,8 +78,8 @@
 
         /// <summary>
         /// Copies a file given by the source path to the destination path. This method will not throw exceptions upon
-        ///   errors, but instead return a boolean indicating if the copy was successful or not. If the destination path
-        ///   is an existing directory, then this method will attempt to infer the file name.
+        /// errors, but instead return a boolean indicating if the copy was successful or not. If the destination path
+        /// is an existing directory, then this method will attempt to infer the file name.
         /// </summary>
         /// <param name="sourcePath">
         /// The source path.
@@ -158,8 +158,8 @@
         {
             try
             {
-                if ((this.flags & FileCopierFlags.CreateDestinationDirectorys)
-                    == FileCopierFlags.CreateDestinationDirectorys)
+                if ((this.flags & FileCopierFlags.CreateDestinationDirectories)
+                    == FileCopierFlags.CreateDestinationDirectories)
                 {
                     string directoryString = Path.GetDirectoryName(destPath);
                     Directory.CreateDirectory(directoryString);
@@ -212,16 +212,15 @@
         }
 
         /// <summary>
-        /// Infers the destination file path from the source path.
-        ///   This method will take a source path (example: C:\test\foo.txt) and a destination path (example: C:\test\hello\) 
-        ///   and infer from the source what the destination should be (e.g. C:\test\hello\foo.txt). This method isn't 
-        ///   incredibly smart, so it should be used with caution.
+        /// This method will take a source path (example: C:\test\foo.txt) and a destination path (example: C:\test\hello\) 
+        /// and infer from the source what the destination should be (e.g. C:\test\hello\foo.txt). This method isn't 
+        /// incredibly smart, so it should be used with caution.
         /// </summary>
         /// <example>
         /// Example 1:
-        ///   InferDestFilePath("C:\test.txt", "C:\directory\") =&gt; "C:\directory\test.txt"
-        ///   Example 2:
-        ///   InferDestFilePath("C:\text.txt", "C:\out.txt") =&gt; "C:\out.txt"
+        /// InferDestFilePath("C:\test.txt", "C:\directory\") =&gt; "C:\directory\test.txt"
+        /// Example 2:
+        /// InferDestFilePath("C:\text.txt", "C:\out.txt") =&gt; "C:\out.txt"
         /// </example>
         /// <param name="sourcePath">
         /// The source path.
@@ -231,7 +230,7 @@
         /// </param>
         /// <returns>
         /// A path that represents what we think the true destination file path should be based
-        ///   on what the source path looks like.
+        /// on what the source path looks like.
         /// </returns>
         private string InferDestFilePath(string sourcePath, string destPath)
         {

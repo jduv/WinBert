@@ -19,7 +19,7 @@
         #region Test Plumbing
 
         [TestInitialize]
-        public void PreTestInit()
+        public void TestInit()
         {
             this.compilerUnderTest = new RandoopTestCompiler(WorkingDir);
         }
