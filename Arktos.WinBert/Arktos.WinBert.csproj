@@ -23,7 +23,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>4</WarningLevel>
     <IncrementalBuild>false</IncrementalBuild>
-    <DocumentationFile>WinBert.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
