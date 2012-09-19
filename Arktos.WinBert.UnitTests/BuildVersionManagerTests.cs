@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
     using System;
+    using System.Linq;
     using System.IO;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
@@ -50,7 +51,9 @@
         #endregion
 
         #region Test Methods
-        
+
+        #region Constructors
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Ctor_NullArchivePath_ThrowsException()
@@ -119,18 +122,64 @@
             Assert.IsTrue(File.Exists(expectedPath));
         }
 
+        #endregion
+
+        #region Properties
+
+        [TestMethod]
+        public void MaxArchiveSizeProperty_SetToLessThanBuildCount_TrimsArchive()
+        {
+            Build expected1 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
+            Build expected2 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV2Path);
+
+            Assert.AreEqual(2, this.versionManagerUnderTest.BuildArchive.Count, "Test case not set up properly; unable to add a build.");
+
+            this.versionManagerUnderTest.MaxArchiveSize = 1;
+
+            Assert.IsFalse(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected1));
+            Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected2));
+            Assert.AreEqual(1, this.versionManagerUnderTest.BuildArchive.Count);
+        }
+
+        [TestMethod]
+        public void MaxArchiveSizeProperty_SetToZero_ClearsArchive()
+        {
+            Build expected1 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
+            Build expected2 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV2Path);
+
+            Assert.AreEqual(2, this.versionManagerUnderTest.BuildArchive.Count, "Test case not set up properly; unable to add a build.");
+
+            this.versionManagerUnderTest.MaxArchiveSize = 0;
+
+            Assert.IsFalse(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected1));
+            Assert.IsFalse(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected2));
+            Assert.AreEqual(0, this.versionManagerUnderTest.BuildArchive.Count);
+        }
+
+        #endregion
+
+        #region LoadBuild
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void LoadBuild_MaxUintSequenceNumber()
+        {
+            var pathToBuild = Path.Combine(ArchivePath, "Foo", TestAssemblyV1Path);
+            this.versionManagerUnderTest.LoadBuild(uint.MaxValue, pathToBuild);
+        }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void LoadBuild_NonExistingBuild()
         {
-            string pathToBuild = Path.Combine(ArchivePath, "Foo", TestAssemblyV1Path);
+            var pathToBuild = Path.Combine(ArchivePath, "Foo", TestAssemblyV1Path);
             this.versionManagerUnderTest.LoadBuild(0, pathToBuild);
         }
 
         [TestMethod]
         public void LoadBuild_ExistingBuild()
         {
-            string pathToBuild = Path.Combine(ArchivePath, "Foo", TestAssemblyV1Path);
+            var pathToBuild = Path.Combine(ArchivePath, "Foo", TestAssemblyV1Path);
 
             Directory.CreateDirectory(Path.GetDirectoryName(pathToBuild));
             File.Copy(TestAssemblyV1Path, pathToBuild);
@@ -144,6 +193,17 @@
                 string error = String.Format("Could not copy the test file to the proper directory! Path: {0}", pathToBuild);
                 Assert.Fail(error);
             }
+        }
+
+        #endregion
+
+        #region AddNewSuccessfulBuild
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void AddNewSuccessfulBuild_BadPath()
+        {
+            this.versionManagerUnderTest.AddNewSuccessfulBuild(Guid.NewGuid().ToString().Take(10) + ".dll");
         }
 
         [TestMethod]
@@ -204,19 +264,15 @@
             Assert.AreEqual(1, this.versionManagerUnderTest.BuildArchive.Count);
         }
 
+        #endregion
+
+        #region GetMostRecentBuild
+
         [TestMethod]
-        public void MaxArchiveSizeProperty_SetToLessThanBuildCount_TrimsArchive()
+        public void GetMostRecentBuild_EmptyManager_NullResult()
         {
-            Build expected1 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
-            Build expected2 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV2Path);
-
-            Assert.AreEqual<int>(2, this.versionManagerUnderTest.BuildArchive.Count);
-
-            this.versionManagerUnderTest.MaxArchiveSize = 1;
-
-            Assert.IsFalse(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected1));
-            Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(expected2));
-            Assert.AreEqual(1, this.versionManagerUnderTest.BuildArchive.Count);
+            var build = this.versionManagerUnderTest.GetMostRecentBuild();
+            Assert.IsNull(build);
         }
 
         [TestMethod]
@@ -250,6 +306,86 @@
             Assert.IsTrue(File.Exists(expectedPath));
             Assert.AreEqual(build.Path, Path.GetFullPath(expectedPath));
         }
+
+        #endregion
+
+        #region GetBuildRevision
+
+        [TestMethod]        
+        public void GetBuildRevision_EmptyManager_NullResult()
+        {
+            var build = this.versionManagerUnderTest.GetBuildRevision(0);
+            Assert.IsNull(build);
+        }
+
+        [TestMethod]
+        public void GetBuildRevision_OneBuildLoaded_ValidBuildReturnedAtIndex()
+        {
+            var expectedPath = Path.Combine(
+                ArchivePath,
+                this.versionManagerUnderTest.SequenceNumber.ToString(),
+                TestAssemblyV1Name);
+
+            var expectedBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
+            Assert.IsNotNull(expectedBuild, "Test case not set up properly; unable to create expected build.");
+
+            var actualBuild = this.versionManagerUnderTest.GetBuildRevision(0);
+            Assert.IsNotNull(actualBuild);
+            Assert.AreEqual(expectedBuild, actualBuild);
+        }
+
+        #endregion
+
+        #region GetBuildRevisionPreceding
+
+        [TestMethod]
+        public void GetBuildRevisionPreceding_EmptyManager_NullResult()
+        {
+            var build = this.versionManagerUnderTest.GetBuildRevisionPreceding(0);
+            Assert.IsNull(build);
+        }
+
+        [TestMethod]
+        public void GetBuildRevisionPreceding_OneBuildLoaded_NullResult()
+        {
+            var expectedPath = Path.Combine(
+                ArchivePath,
+                this.versionManagerUnderTest.SequenceNumber.ToString(),
+                TestAssemblyV1Name);
+
+            var expectedBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
+            Assert.IsNotNull(expectedBuild, "Test case not set up properly; unable to create expected build.");
+
+            var nullBuild = this.versionManagerUnderTest.GetBuildRevisionPreceding(0);
+            Assert.IsNull(nullBuild);
+
+            var precedingBuild = this.versionManagerUnderTest.GetBuildRevisionPreceding(expectedBuild.SequenceNumber);
+            Assert.IsNull(precedingBuild);
+        }
+
+        [TestMethod]
+        public void GetBuildRevisionPreceding_MultipleBuildsLoaded()
+        {
+            var path1 = Path.Combine(
+                ArchivePath,
+                this.versionManagerUnderTest.SequenceNumber.ToString(),
+                TestAssemblyV1Name);
+
+            var path2 = Path.Combine(
+                ArchivePath,
+                this.versionManagerUnderTest.SequenceNumber.ToString(),
+                TestAssemblyV2Name);
+            
+            var expectedBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
+            var precedingBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV2Path);
+            Assert.IsNotNull(expectedBuild, "Test case not set up properly; unable to create expected build.");
+            Assert.IsNotNull(precedingBuild, "Test case not set up properly; unable to create preceding build.");
+
+            var target = this.versionManagerUnderTest.GetBuildRevisionPreceding(precedingBuild.SequenceNumber);
+            Assert.AreEqual(expectedBuild, target);
+        }
+
+        #endregion
 
         #endregion
     }

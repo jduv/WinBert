@@ -1,0 +1,90 @@
+﻿namespace Arktos.WinBert.UnitTests
+{
+    using System;
+    using System.Text;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Arktos.WinBert.Xml;
+
+
+    /// <summary>
+    /// Unit tests for the Build class.
+    /// </summary>
+    [TestClass]
+    public class BuildUnitTests
+    {
+        #region Test Methods
+
+        #region Equals
+
+        [TestMethod]
+        public void Equals_SameObject_ReferenceEquals()
+        {
+            var target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            Assert.AreEqual(target, target);            
+        }
+
+        [TestMethod]
+        public void Equals_DifferentObject_Equals()
+        {
+            uint seqNumber = 0;
+            string path = @"C:\my\path\to\victory";
+            var target = new Build() { SequenceNumber = seqNumber, Path = path };
+            var clone = new Build() { SequenceNumber = seqNumber, Path = path };
+            Assert.AreEqual(target, clone);
+        }
+
+        [TestMethod]
+        public void Equals_PathDifferent_DoesNotEqual()
+        {
+            var target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            var other = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory\diff" };
+            Assert.AreNotEqual(target, other);
+        }
+
+        [TestMethod]
+        public void Equals_SequenceDifferent_DoesNotEqual()
+        {
+            var target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            var other = new Build() { SequenceNumber = 1, Path = @"C:\my\path\to\victory" };
+            Assert.AreNotEqual(target, other);
+        }
+
+        [TestMethod]
+        public void Equals_ObjectOverload_Equals()
+        {
+            object target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            object clone = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+
+            Assert.IsTrue(target.Equals(clone));
+        }
+
+        [TestMethod]
+        public void Equals_ObjectOverload_DoesNotEqual()
+        {
+            object target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            Assert.IsFalse(target.Equals(2));
+        }
+
+        #endregion
+
+        #region GetHashCode
+
+        [TestMethod]
+        public void GetHashCode_ComputesCorrectly()
+        {
+            uint seqNumber = 0;
+            string path = @"C:\my\path\to\victory";
+            var target = new Build() { SequenceNumber = seqNumber, Path = path };
+
+            int hashCode = seqNumber.GetHashCode() ^ path.GetHashCode();
+
+            Assert.AreEqual(hashCode, target.GetHashCode());
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

@@ -3,11 +3,13 @@
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Thrown whenever a compiler implementation fails to compile some piece
     /// of source code or a comparable error occurs.
     /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public class CompilationException : Exception
     {
         #region Fields & Constants

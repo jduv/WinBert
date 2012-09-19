@@ -124,8 +124,8 @@
                 // check for a directory path
                 string directoryPath = Path.GetDirectoryName(destPath);
 
-                if (string.IsNullOrEmpty(destFileName)
-                    || !(string.IsNullOrEmpty(directoryPath) || Directory.Exists(directoryPath)))
+                if (string.IsNullOrEmpty(destFileName) || 
+                    !(string.IsNullOrEmpty(directoryPath) || Directory.Exists(directoryPath)))
                 {
                     // No file name means we have a directory structure to create 
                     return this.CopyToNewDirectory(sourcePath, destPath);

@@ -8,7 +8,7 @@
     using Arktos.WinBert.Exceptions;
 
     [TestClass]
-    public class RandoopTestCompilerTests : RandoopIntegrationUnitTest
+    public class RandoopTestCompilerTests : RandoopIntegrationUnitTests
     {
         #region Fields & Constants
 

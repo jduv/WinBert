@@ -73,10 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="BuildUnitTests.cs" />
     <Compile Include="FileCopierTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BuildVersionManagerTests.cs" />
-    <Compile Include="SimpleAssemblyDifferenceEngineTest.cs" />
+    <Compile Include="BertAssemblyDifferenceEngineTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arktos.WinBert.RandoopIntegration\Arktos.WinBert.RandoopIntegration.csproj">

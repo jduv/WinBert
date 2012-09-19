@@ -9,7 +9,7 @@
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
-    public class SimpleAssemblyDifferenceEngineTest
+    public class BertAssemblyDifferenceEngineTest
     {
         #region Fields & Constants
 
@@ -35,10 +35,14 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldObject);
             Assert.IsNotNull(actual.NewObject);
-            Assert.IsInstanceOfType(actual.OldObject, typeof(Assembly));
-            Assert.IsInstanceOfType(actual.NewObject, typeof(Assembly));
             Assert.IsTrue(actual.DifferenceResult);
-            Assert.IsInstanceOfType(actual, typeof(AssemblyDifferenceResult));
+            Assert.IsTrue(actual.TypeDifferences.Count > 0);
+
+            foreach (var typeDiff in actual.TypeDifferences)
+            {
+                Assert.IsNotNull(typeDiff.OldObject);
+                Assert.IsNotNull(typeDiff.NewObject);                
+            }
         }
 
         [TestMethod]
@@ -56,7 +60,7 @@
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.DifferenceResult);
-            Assert.IsTrue(actual.TypeDifferences.Count <= 0);
+            Assert.IsTrue(actual.TypeDifferences.Count == 0);
         }
 
         [TestMethod]

@@ -7,7 +7,7 @@
     /// Defines behavior for a component that is able to compile an Assembly
     ///   from source located at the target path.
     /// </summary>
-    public interface IAssemblyCompiler
+    public interface ITestCompiler
     {
         #region Properties
 

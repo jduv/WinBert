@@ -56,7 +56,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandoopIntegrationUnitTest.cs" />
+    <Compile Include="RandoopIntegrationUnitTests.cs" />
     <Compile Include="RandoopTestCompilerTests.cs" />
     <None Include="test-src\TestSrc04.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

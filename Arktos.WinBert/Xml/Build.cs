@@ -1,12 +1,12 @@
 ﻿namespace Arktos.WinBert.Xml
 {
     using System.Diagnostics.CodeAnalysis;
+    using System;
 
     /// <summary>
     /// Partial implementation of a generated class.
     /// </summary>
-    [ExcludeFromCodeCoverageAttribute]
-    public partial class Build
+    public partial class Build : IEquatable<Build>
     {
         #region Constructors and Destructors
 
@@ -77,7 +77,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return base.GetHashCode() ^ this.SequenceNumber.GetHashCode() ^ this.Path.GetHashCode();
+            return this.SequenceNumber.GetHashCode() ^ this.Path.GetHashCode();
         }
 
         #endregion

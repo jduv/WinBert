@@ -12,7 +12,7 @@
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
     ///  and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
     /// </summary>
-    public class RandoopTestCompiler : IAssemblyCompiler
+    public class RandoopTestCompiler : ITestCompiler
     {
         #region Constants & Fields
 

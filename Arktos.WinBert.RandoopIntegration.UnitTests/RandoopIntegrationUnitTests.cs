@@ -3,10 +3,14 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    [DeploymentItem(@"test-src\", @"test-src\")]
+    //[DeploymentItem(@"test-src\", @"test-src\")]
+    [DeploymentItem(@"test-src\TestSrc01.cs", @"test-src")]
+    [DeploymentItem(@"test-src\TestSrc02.cs", @"test-src")]
+    [DeploymentItem(@"test-src\TestSrc03.cs", @"test-src")]
+    [DeploymentItem(@"test-src\TestSrc04.cs", @"test-src")]
     [DeploymentItem(@"dependent-src\", @"dependent-src\")]
     [DeploymentItem(@"test-configuration\", @"test-configuration\")]
-    public abstract class RandoopIntegrationUnitTest
+    public abstract class RandoopIntegrationUnitTests
     {
         #region Fields and Constants
 

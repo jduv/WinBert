@@ -8,14 +8,7 @@
     [ExcludeFromCodeCoverageAttribute]
     public partial class IgnoreTarget
     {
-        #region Constructors and Destructors
-
-        /// <summary>
-        ///   Initializes a new instance of the IgnoreTarget class.
-        /// </summary>
-        public IgnoreTarget()
-        {
-        }
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the IgnoreTarget class.

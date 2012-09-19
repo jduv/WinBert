@@ -197,11 +197,9 @@
                         {
                             File.Delete(lastElement.Value.Path);
                         }
-                        catch (Exception exception)
+                        catch (Exception)
                         {
-                            Trace.TraceError(
-                                "Unable to remove the last build in the archive list from disk. Exception: {0}",
-                                exception.ToString());
+                                // Unable to remove the last build in the archive list from disk.
                         }
                         finally
                         {
@@ -234,9 +232,6 @@
                 return build;
             }
 
-            var errorMessage = string.Format(
-                "Sequence number {0} could not be found in the build archive.", sequenceNumber);
-            Trace.WriteLine(errorMessage);
             return null;
         }
 
@@ -256,11 +251,7 @@
             if (this.BuildArchive.Count > 1)
             {
                 int index = this.BuildArchive.IndexOfKey(sequenceNumber);
-                if (index >= 0)
-                {
-                    var keyValuePair = this.BuildArchive.ElementAt(index - 1);
-                    return keyValuePair.Value;
-                }
+                return this.BuildArchive.ElementAt(index - 1).Value;                    
             }
 
             return null;
