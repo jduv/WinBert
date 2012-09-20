@@ -16,7 +16,7 @@
     /// </summary>
     public sealed class BuildVersionManager
     {
-        #region Constants and Fields
+        #region Constants & Fields
 
         /// <summary>
         /// Path to the archive.
@@ -31,36 +31,7 @@
 
         #endregion
 
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BuildVersionManager"/> class.
-        /// </summary>
-        /// <param name="archivePath">
-        /// The path to where the caller wishes the archive to be constructed. Avoid relative paths here, as that will 
-        /// likely get you in trouble during the save/load of each build. If this directory doesn't exist, then the archiver
-        /// will create it.
-        /// </param>
-        public BuildVersionManager(string archivePath)
-            : this(archivePath, byte.MaxValue, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BuildVersionManager"/> class.
-        /// </summary>
-        /// <param name="archivePath">
-        /// The path to where the caller wishes the archive to be constructed. Avoid relative paths here, as that will 
-        /// likely get you in trouble during the save/load of each build. If this directory doesn't exist, then the archiver
-        /// will create it.
-        /// </param>
-        /// <param name="name">
-        /// The name for this build archive.
-        /// </param>
-        public BuildVersionManager(string archivePath, string name)
-            : this(archivePath, byte.MaxValue, name)
-        {
-        }
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BuildVersionManager"/> class.
@@ -72,11 +43,12 @@
         /// </param>
         /// <param name="maxBuildsArchivable">
         /// The maximum number of build history to keep. Lower numbers will result in lower disk space utilization.
+        /// Defaults to max byte, or 255.
         /// </param>
         /// <param name="name">
-        /// The name for this build archive.
+        /// The name for this build archive. Defaults to unspecified (null)
         /// </param>
-        public BuildVersionManager(string archivePath, byte maxBuildsArchivable, string name)
+        public BuildVersionManager(string archivePath, byte maxBuildsArchivable = byte.MaxValue, string name = null)
         {
             if (string.IsNullOrEmpty(archivePath))
             {
@@ -87,7 +59,7 @@
 
             // Files not allowed, must be a directory
             if (File.Exists(fullPath))
-            {                
+            {
                 throw new ArgumentException("Invalid archive path! Must be a directory! Path: " + archivePath);
             }
 
@@ -115,7 +87,14 @@
         {
             get
             {
-                return this.archivePath;
+                if (string.IsNullOrEmpty(this.Name))
+                {
+                    return this.archivePath;
+                }
+                else
+                {
+                    return Path.Combine(this.archivePath, this.Name);
+                }
             }
         }
 

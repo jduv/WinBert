@@ -86,6 +86,15 @@
         }
 
         [TestMethod]
+        public void Ctor_ValidPath_AssertDefaults()
+        {
+            var target = new BuildVersionManager(ArchivePath);
+            Assert.IsNull(target.Name);
+            Assert.AreEqual(byte.MaxValue, target.MaxArchiveSize);
+            Assert.AreEqual(Path.GetFullPath(ArchivePath), target.ArchivePath, true);
+        }
+
+        [TestMethod]
         public void Ctor_WithNameAndMaxArchiveSize_PropertiesSet()
         {
             byte maxBuilds = 100;
@@ -96,16 +105,28 @@
                 maxBuilds,
                 name);
 
-            Assert.AreEqual(Path.GetFullPath(ArchivePath), target.ArchivePath, true);
+            var expectedPath = Path.Combine(Path.GetFullPath(ArchivePath), name);
+            Assert.AreEqual(expectedPath, target.ArchivePath, true);
             Assert.AreEqual(maxBuilds, target.MaxArchiveSize);
             Assert.AreEqual(name, target.Name, true);
+        }
+
+        [TestMethod]
+        public void Ctor_NoNameAndMaxArchiveSize_PropertiesSet()
+        {
+            byte maxBuilds = 100;
+            var target = new BuildVersionManager(ArchivePath, maxBuilds);
+
+            Assert.AreEqual(Path.GetFullPath(ArchivePath), target.ArchivePath, true);
+            Assert.AreEqual(maxBuilds, target.MaxArchiveSize);
+            Assert.IsNull(target.Name);
         }
 
         [TestMethod]
         public void Ctor_ValidName_CorrectPathsWhenLoadingRecentBuild()
         {
             string name = "foo";
-            this.versionManagerUnderTest = new BuildVersionManager(ArchivePath, name);
+            this.versionManagerUnderTest = new BuildVersionManager(ArchivePath, name: name);
             
             string expectedPath = Path.Combine(
                 ArchivePath, 

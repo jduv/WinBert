@@ -220,13 +220,13 @@
             {
                 foreach (var buildDictionaryEntry in this.buildDictionary)
                 {
-                    var diff = this.DoDiff(buildDictionaryEntry.Value, differ);
+                    var manager = buildDictionaryEntry.Value;
+                    var diff = this.DoDiff(manager, differ);
 
                     if (diff != null && diff.DifferenceResult)
-                    {
-                        // Fetch configuration from the list of embedded configurations
+                    {                        
                         IRegressionTestSuiteGenerator testGen = new RandoopTestGenerator(
-                            buildDictionaryEntry.Value.ArchivePath,
+                            Path.Combine(manager.ArchivePath, manager.GetMostRecentBuild().SequenceNumber.ToString()),
                             RandoopTestGenerator.GetRandoopConfiguration(this.Config.EmbeddedConfigurations));
 
                         ////IRegressionTestSuiteInstrumenter instrumenter = new RandoopTestSuiteInstrumenter();
@@ -277,7 +277,7 @@
                     {
                         // make a new build manager
                         var fullArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
-                        manager = new BuildVersionManager(fullArchivePath, projectName);
+                        manager = new BuildVersionManager(archivePath: fullArchivePath, name: projectName);
                         this.buildDictionary.Add(projectName, manager);
                     }
 
@@ -365,7 +365,9 @@
             // ick, double for loop
             foreach (WinBertProject project in this.Config.Projects)
             {
-                BuildVersionManager manager = new BuildVersionManager(this.Config.MasterArchivePath, project.Name);
+                BuildVersionManager manager = new BuildVersionManager(
+                    archivePath: this.Config.MasterArchivePath, 
+                    name: project.Name);
 
                 foreach (Build build in project.BuildsList)
                 {
