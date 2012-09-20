@@ -4,8 +4,7 @@
 
     /// <summary>
     /// Defines the basic behavior of a state machine that logs test cases. Implementations of this interface should be
-    ///   geared towards instrumentation--hence the begin and end calls. 
-    ///   BMK: Extend this to handle static methods.
+    /// geared towards instrumentation--hence the begin and end calls. 
     /// </summary>
     public interface ITestCaseLogger
     {
@@ -43,7 +42,7 @@
         /// </param>
         /// <param name="returnValue">
         /// The return value of the method, if any. If the method signature is void, then the 
-        ///   <see cref="EndVoidMethodCall"/> should be used instead.
+        /// <see cref="EndVoidMethodCall"/> should be used instead.
         /// </param>
         void EndMethodCall(object postCallObjectState, object returnValue);
 
@@ -62,8 +61,8 @@
 
         /// <summary>
         /// Writes an instrumentation block for an Exception. This will likely happen during a method call unless 
-        ///   something  goes wrong at the constructor level for the object under test, so it will consequently end 
-        ///   the method call block.
+        /// something  goes wrong at the constructor level for the object under test, so it will consequently end 
+        /// the method call block.
         /// </summary>
         /// <param name="exception">
         /// The offending exception.

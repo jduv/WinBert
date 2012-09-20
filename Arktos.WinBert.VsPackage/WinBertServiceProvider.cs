@@ -15,6 +15,8 @@
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
+    using Arktos.WinBert.Testing;
+    using Arktos.WinBert.RandoopIntegration;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
@@ -223,15 +225,16 @@
                     if (diff != null && diff.DifferenceResult)
                     {
                         // Fetch configuration from the list of embedded configurations
-                        ////ITestSuiteGenerator testGen = new RandoopTestGenerator(
-                        ////    buildDictionaryEntry.Value.ArchivePath, 
-                        ////    RandoopTestGenerator.GetRandoopConfiguration(this.Config.EmbeddedConfigurations));
+                        IRegressionTestSuiteGenerator testGen = new RandoopTestGenerator(
+                            buildDictionaryEntry.Value.ArchivePath,
+                            RandoopTestGenerator.GetRandoopConfiguration(this.Config.EmbeddedConfigurations));
 
-                        ////ITestSuiteInstrumenter instrumenter = new RandoopTestSuiteInstrumenter();
+                        ////IRegressionTestSuiteInstrumenter instrumenter = new RandoopTestSuiteInstrumenter();
                         ////ITestSuiteRunner testRunner = new RandoopTestRunner();
                         ////IBehavioralAnalyzer analyzer = new BertBehavioralAnalyzer();
 
-                        ////ITestSuite generatedTests = testGen.GetCompiledTests(diff);
+                        IRegressionTestSuite generatedTests = testGen.GetCompiledTests(diff);
+
                         ////ITestSuite instrumentedTests = instrumenter.InstrumentTestSuite(generatedTests);
                         ////TestSuiteRunResult result = testRunner.RunTests(instrumentedTests);
                         ////this.AnalysisResults = analyzer.Analyze(result);
@@ -355,7 +358,7 @@
             {
                 string errorMessage = string.Format(
                     "Unable to deserialize the configuration file! {0} stack => {1}", exception.Message, exception.StackTrace);
-                Trace.TraceError(errorMessage);
+                Debug.WriteLine(errorMessage);
                 return;
             }
 
@@ -374,7 +377,7 @@
                     {
                         string errorMessage = string.Format(
                             "Error loading file at path {0} into the build manager for project {1}", build.Path, project.Name);
-                        Trace.TraceError(errorMessage);
+                        Debug.WriteLine(errorMessage);
                     }
                 }
 
@@ -409,7 +412,7 @@
             {
                 var errorMessage = string.Format(
                     "Unable to serialize the configuration file! {0} stack => {1}", exception.Message, exception.StackTrace);
-                Trace.TraceError(errorMessage);
+                Debug.WriteLine(errorMessage);
             }
         }
 
@@ -532,7 +535,7 @@
             {
                 string errorMessage = string.Format(
                     "Unable to extract project guids from file {0}! {1} stack => {2}", pathToConfigFile, exception.Message, exception.StackTrace);
-                Trace.TraceError(errorMessage);
+                Debug.WriteLine(errorMessage);
             }
 
             return null;

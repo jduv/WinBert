@@ -142,7 +142,6 @@
     <Compile Include="Testing\IRegressionTestSuite.cs" />
     <Compile Include="Testing\IRegressionTestSuiteGenerator.cs" />
     <Compile Include="Testing\IRegressionTestSuiteRunner.cs" />
-    <Compile Include="Testing\RegressionTestSuiteRunResult.cs" />
     <Compile Include="Testing\RegressionTestSuite.cs" />
     <Compile Include="Xml\Build.cs" />
     <Compile Include="Util\BuildVersionManager.cs" />

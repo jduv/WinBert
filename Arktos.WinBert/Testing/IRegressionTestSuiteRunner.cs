@@ -8,17 +8,6 @@
     {
         #region Interface Methods
 
-        /// <summary>
-        /// Runs all tests in the target test type.
-        /// </summary>
-        /// <param name="tests">
-        /// The test suite of which to run the tests from.
-        /// </param>
-        /// <returns>
-        /// A TestRunResult object indicating the results of the test run.
-        /// </returns>
-        RegressionTestSuiteRunResult RunTests(IRegressionTestSuite tests);
-
         #endregion
     }
 }

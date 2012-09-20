@@ -13,6 +13,13 @@
         /// <summary>
         /// Initializes a new instance of the IgnoreTarget class.
         /// </summary>
+        public IgnoreTarget()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the IgnoreTarget class.
+        /// </summary>
         /// <param name="type">
         /// The type for the new IgnoreTarget.
         /// </param>

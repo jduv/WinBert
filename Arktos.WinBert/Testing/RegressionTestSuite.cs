@@ -5,11 +5,11 @@
 
     /// <summary>
     /// Represents a pattern of tests that can be executed on new and old versions
-    ///   of a specific assembly as represented by a difference result.
+    /// of a specific assembly as represented by a difference result.
     /// </summary>
     public class RegressionTestSuite : IRegressionTestSuite
     {
-        #region Constructors and Destructors
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the TestSuite class.
@@ -22,7 +22,7 @@
         /// </param>
         /// <param name="diff">
         /// The original difference context describing the differences between both
-        ///   assemblies that tests were generated for.
+        /// assemblies that tests were generated for.
         /// </param>
         public RegressionTestSuite(Assembly newTargetTests, Assembly oldTargetTests, AssemblyDifferenceResult diff)
         {

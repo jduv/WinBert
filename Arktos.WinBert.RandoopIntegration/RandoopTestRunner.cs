@@ -9,7 +9,7 @@
     /// </summary>
     public class RandoopTestRunner : IRegressionTestSuiteRunner
     {
-        #region Constants and Fields
+        #region Constants & Fields
 
         /// <summary>
         ///   The name of the method to execute in each test type. Randoop generates them as Main.
@@ -20,21 +20,21 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Runs all tests in the target test suite.
-        /// </summary>
-        /// <param name="tests">
-        /// The test suite of which to run the tests from.
-        /// </param>
-        /// <returns>
-        /// A TestRunResult object indicating the results of the test run.
-        /// </returns>
-        public RegressionTestSuiteRunResult RunTests(IRegressionTestSuite tests)
-        {
-            this.ExecuteAllTestsInAssembly(tests.OldTargetTestAssembly);
+        /////// <summary>
+        /////// Runs all tests in the target test suite.
+        /////// </summary>
+        /////// <param name="tests">
+        /////// The test suite of which to run the tests from.
+        /////// </param>
+        /////// <returns>
+        /////// A TestRunResult object indicating the results of the test run.
+        /////// </returns>
+        ////public RegressionTestSuiteRunResult RunTests(IRegressionTestSuite tests)
+        ////{
+        ////    this.ExecuteAllTestsInAssembly(tests.OldTargetTestAssembly);
 
-            return null;
-        }
+        ////    return null;
+        ////}
 
         #endregion
 
