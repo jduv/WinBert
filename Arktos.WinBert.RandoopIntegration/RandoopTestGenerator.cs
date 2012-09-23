@@ -80,36 +80,27 @@
 
         /// <summary>
         /// Extracts the Randoop configuration information from a list of embedded configurations--if it exists. 
-        ///   If such configuration doesn't exist, then this method will throw a InvalidConfiguration exception.
+        ///  If such configuration doesn't exist, then this method will throw a InvalidConfiguration exception.
         /// </summary>
-        /// <param name="configs">
-        /// A list of configurations to test.
+        /// <param name="config">
+        /// The configuration object.
         /// </param>
         /// <returns>
         /// Returns a configuration object.
         /// </returns>
-        public static RandoopPluginConfig GetRandoopConfiguration(EmbeddedConfiguration[] configs)
+        public static RandoopPluginConfig GetRandoopConfiguration(WinBertConfig config)
         {
-            foreach (EmbeddedConfiguration embeddedConfig in configs)
+            if (config != null && config.EmbeddedConfigurations != null)
             {
-                if (embeddedConfig.Type.Equals(typeof(RandoopPluginConfig).FullName))
+                foreach (var embeddedConfig in config.EmbeddedConfigurations)
                 {
-                    try
+                    if (embeddedConfig.Type.Equals(typeof(RandoopPluginConfig).FullName))
                     {
-                        using (XmlReader reader = new XmlNodeReader(embeddedConfig.Any))
+                        using (var reader = new XmlNodeReader(embeddedConfig.Any))
                         {
-                            XmlSerializer serializer = new XmlSerializer(typeof(RandoopPluginConfig));
-                            return (RandoopPluginConfig)serializer.Deserialize(reader);                            
+                            var serializer = new XmlSerializer(typeof(RandoopPluginConfig));
+                            return (RandoopPluginConfig)serializer.Deserialize(reader);
                         }
-                    }
-                    catch (Exception exception)
-                    {
-                        var message = string.Format(
-                            "Could not deserialize RandoopConfig! {0} stack => {1}", 
-                            exception.Message, 
-                            exception.StackTrace);
-
-                        Trace.WriteLine(message);
                     }
                 }
             }

@@ -22,7 +22,7 @@ namespace Arktos.WinBert.VsPackage {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Arktos.WinBert.VsPackage {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Arktos.WinBert.VsPackage.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace Arktos.WinBert.VsPackage {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Arktos.WinBert.VsPackage {
         /// <summary>
         ///   Looks up a localized string similar to Can not create tool window..
         /// </summary>
-        internal static string CanNotCreateWindow {
+        public static string CanNotCreateWindow {
             get {
                 return ResourceManager.GetString("CanNotCreateWindow", resourceCulture);
             }
@@ -72,9 +72,26 @@ namespace Arktos.WinBert.VsPackage {
         /// <summary>
         ///   Looks up a localized string similar to WinBert Analysis.
         /// </summary>
-        internal static string ToolWindowTitle {
+        public static string ToolWindowTitle {
             get {
                 return ResourceManager.GetString("ToolWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;WinBertConfig xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; MasterArchivePath=&quot;&quot; xmlns=&quot;http://arktos.org/WinBert.xsd&quot;&gt;
+        ///&lt;IgnoreList /&gt;
+        ///&lt;Projects /&gt;
+        ///&lt;EmbeddedConfigurations&gt;
+        ///&lt;EmbeddedConfiguration Type=&quot;Arktos.WinBert.RandoopIntegration.Xml.RandoopPluginConfig&quot;&gt;&lt;rpc:RandoopPluginConfig xmlns:rpc=&quot;http://arktos.org/RandoopPluginConfig.xsd&quot;&gt;
+        ///        &lt;rpc:ForbiddenTypes /&gt;
+        ///        &lt;rpc:ForbiddenFields /&gt;
+        ///        [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string winbertconfig {
+            get {
+                return ResourceManager.GetString("winbertconfig", resourceCulture);
             }
         }
     }

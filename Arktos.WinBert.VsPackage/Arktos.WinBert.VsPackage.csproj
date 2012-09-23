@@ -139,7 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Package.ico" />
+    <None Include="Resources\winbertconfig.xml" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AnalysisView.xaml">

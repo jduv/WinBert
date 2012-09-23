@@ -6,17 +6,18 @@
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using System.Text;
     using System.Windows.Forms;
     using System.Xml;
     using System.Xml.Serialization;
-    using EnvDTE;
-    using EnvDTE80;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
+    using Arktos.WinBert.RandoopIntegration;
+    using Arktos.WinBert.Testing;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
-    using Arktos.WinBert.Testing;
-    using Arktos.WinBert.RandoopIntegration;
+    using EnvDTE;
+    using EnvDTE80;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
@@ -26,6 +27,21 @@
     public sealed class WinBertServiceProvider : IWinBertServiceProvider, INotifyPropertyChanged
     {
         #region Fields and Constants
+
+        /// <summary>
+        /// Static content for a test project GUID
+        /// </summary>
+        private static readonly string TestProjGuid = @"{3AC096D0-A1C2-E12C-1390-A8335801FDAB}";
+
+        /// <summary>
+        /// Static name of the archive directory
+        /// </summary>
+        private static readonly string ArchiveDir = @".winbert";
+
+        /// <summary>
+        /// Static path of the configuration file relative to the archive directory.
+        /// </summary>
+        private static readonly string ConfigFilePath = Path.Combine(ArchiveDir, @"winbertconfig.xml");
 
         /// <summary>
         /// A list of ignore targets to
@@ -48,21 +64,6 @@
         /// Solution events object. Need a strong reference for delegates and events to fire properly
         /// </summary>
         private readonly SolutionEvents solutionEvents = null;
-
-        /// <summary>
-        /// Static content for a test project GUID
-        /// </summary>
-        private const string TestProjGuid = @"{3AC096D0-A1C2-E12C-1390-A8335801FDAB}";
-
-        /// <summary>
-        /// Static name of the configuration file
-        /// </summary>
-        private const string ConfigFileName = @"winbertconfig.xml";
-
-        /// <summary>
-        /// Static name of the archive directory
-        /// </summary>
-        private const string ArchiveDir = @".winbert";
 
         /// <summary>
         /// The reference to the VS DTE object.
@@ -214,30 +215,38 @@
         /// </param>
         private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
         {
-            var differ = new BertAssemblyDifferenceEngine(this.ignoreTargets);
-
             if (!this.buildFailed)
             {
+                var differ = new BertAssemblyDifferenceEngine(this.ignoreTargets);
+
                 foreach (var buildDictionaryEntry in this.buildDictionary)
                 {
                     var manager = buildDictionaryEntry.Value;
                     var diff = this.DoDiff(manager, differ);
 
                     if (diff != null && diff.DifferenceResult)
-                    {                        
-                        IRegressionTestSuiteGenerator testGen = new RandoopTestGenerator(
-                            Path.Combine(manager.ArchivePath, manager.GetMostRecentBuild().SequenceNumber.ToString()),
-                            RandoopTestGenerator.GetRandoopConfiguration(this.Config.EmbeddedConfigurations));
+                    {
+                        try
+                        {
+                            IRegressionTestSuiteGenerator testGen = new RandoopTestGenerator(
+                                Path.Combine(manager.ArchivePath, manager.GetMostRecentBuild().SequenceNumber.ToString()),
+                                RandoopTestGenerator.GetRandoopConfiguration(this.Config));
 
-                        ////IRegressionTestSuiteInstrumenter instrumenter = new RandoopTestSuiteInstrumenter();
-                        ////ITestSuiteRunner testRunner = new RandoopTestRunner();
-                        ////IBehavioralAnalyzer analyzer = new BertBehavioralAnalyzer();
+                            ////IRegressionTestSuiteInstrumenter instrumenter = new RandoopTestSuiteInstrumenter();
+                            ////ITestSuiteRunner testRunner = new RandoopTestRunner();
+                            ////IBehavioralAnalyzer analyzer = new BertBehavioralAnalyzer();
 
-                        IRegressionTestSuite generatedTests = testGen.GetCompiledTests(diff);
+                            IRegressionTestSuite generatedTests = testGen.GetCompiledTests(diff);
 
-                        ////ITestSuite instrumentedTests = instrumenter.InstrumentTestSuite(generatedTests);
-                        ////TestSuiteRunResult result = testRunner.RunTests(instrumentedTests);
-                        ////this.AnalysisResults = analyzer.Analyze(result);
+                            ////ITestSuite instrumentedTests = instrumenter.InstrumentTestSuite(generatedTests);
+                            ////TestSuiteRunResult result = testRunner.RunTests(instrumentedTests);
+                            ////this.AnalysisResults = analyzer.Analyze(result);
+                        }
+                        catch (Exception exc)
+                        {
+                            var errorMessage = "Error performing WinBert Analysis! " + exc.Message;
+                            MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
+                        }
                     }
                 }
             }
@@ -300,11 +309,11 @@
                         }
                         else
                         {
-                            var error = string.Format(
-                                "Unable to add the build at path {0} to the archive for project {1}. The file doesn't exist.", 
+                            var errorMessage = string.Format(
+                                "Unable to add the build at path {0} to the archive for project {1}. The file doesn't exist.",
                                 buildPath, project);
 
-                            MessageBox.Show(error);
+                            MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
                         }
                     }
                 }
@@ -322,8 +331,67 @@
         {
             if (this.dte.Solution.IsOpen)
             {
-                this.LoadState();
+                string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
+
+                var config = LoadConfigFromPath(path) ?? GetDefaultConfig();
+
+                if (config == null)
+                {
+                    var errorMessage = "Unable to load configuration at path " + path + " or create a new one. ";
+                    errorMessage += "The state of your build archive will not be maintained! ";
+                    MessageBox.Show(errorMessage, "Error!", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    this.Config = config;
+                    this.LoadConfiguration();
+                }
             }
+        }
+
+        /// <summary>
+        /// Attempts to load a configuration file from the target path.
+        /// </summary>
+        /// <param name="path">The path to load.</param>
+        /// <returns>A configuration object, or null on failure.</returns>
+        private static WinBertConfig LoadConfigFromPath(string path)
+        {             
+            if (File.Exists(path))
+            {
+                try
+                {
+                    return WinBertConfig.Deserialize(File.OpenRead(path));
+                }
+                catch (Exception exc)
+                {
+                    var errorMessage = "Unable to deserialize the configuration file!" + Environment.NewLine;
+                    errorMessage += "Exception: " + exc;                        
+                    Debug.WriteLine(errorMessage);                        
+                }
+            }         
+       
+            return null;
+        }
+
+        /// <summary>
+        /// Reads in a default configuration file stored inside the package DLL.
+        /// </summary>
+        /// <returns></returns>
+        private static WinBertConfig GetDefaultConfig()
+        {
+            try
+            {
+                var data = Encoding.ASCII.GetBytes(Resources.winbertconfig);
+                return WinBertConfig.Deserialize(new MemoryStream(data));
+            }
+            catch (Exception exc)
+            {
+                var errorMessage = "Unable to deserialize in-memory configuration file!" + Environment.NewLine;
+                errorMessage += "Exception: " + exc;
+                Debug.WriteLine(errorMessage);   
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -340,33 +408,15 @@
         }
 
         /// <summary>
-        /// Loads a configuration file based on the passed in path.
+        /// Loads up the configuration nodes into real data for the plugin.
         /// </summary>
-        private void LoadState()
+        private void LoadConfiguration()
         {
-            string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFileName);
-
-            try
-            {
-                using (XmlReader reader = XmlReader.Create(path))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(WinBertConfig));
-                    this.Config = (WinBertConfig)serializer.Deserialize(reader);
-                }
-            }
-            catch (Exception exception)
-            {
-                string errorMessage = string.Format(
-                    "Unable to deserialize the configuration file! {0} stack => {1}", exception.Message, exception.StackTrace);
-                Debug.WriteLine(errorMessage);
-                return;
-            }
-
             // ick, double for loop
             foreach (WinBertProject project in this.Config.Projects)
             {
                 BuildVersionManager manager = new BuildVersionManager(
-                    archivePath: this.Config.MasterArchivePath, 
+                    archivePath: this.Config.MasterArchivePath,
                     name: project.Name);
 
                 foreach (Build build in project.BuildsList)
@@ -392,29 +442,32 @@
         /// </summary>
         private void SaveState()
         {
-            string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFileName);
-
-            var config = new WinBertConfig();
-            var projects = this.GetWinBertProjects();
-
-            config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
-            config.Projects = projects;
-            config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
-            config.IgnoreList = this.ignoreTargets ?? new IgnoreTarget[0];
-
-            try
+            if (this.Config != null)
             {
-                using (XmlWriter writer = XmlWriter.Create(path))
+                string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
+
+                var config = new WinBertConfig();
+                var projects = this.GetWinBertProjects();
+
+                config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
+                config.Projects = projects;
+                config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
+                config.IgnoreList = this.ignoreTargets ?? new IgnoreTarget[0];
+
+                try
                 {
-                    var serializer = new XmlSerializer(typeof(WinBertConfig));
-                    serializer.Serialize(writer, config);
+                    using (XmlWriter writer = XmlWriter.Create(path))
+                    {
+                        var serializer = new XmlSerializer(typeof(WinBertConfig));
+                        serializer.Serialize(writer, config);
+                    }
                 }
-            }
-            catch (Exception exception)
-            {
-                var errorMessage = string.Format(
-                    "Unable to serialize the configuration file! {0} stack => {1}", exception.Message, exception.StackTrace);
-                Debug.WriteLine(errorMessage);
+                catch (Exception exception)
+                {
+                    var errorMessage = "Unable to serialize the configuration file!" + Environment.NewLine;
+                    errorMessage += "Exception: " + Environment.NewLine + exception;
+                    MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
+                }
             }
         }
 
