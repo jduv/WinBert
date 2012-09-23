@@ -8,6 +8,7 @@
     /// <summary>
     /// Partial implementation of a generated class.
     /// </summary>    
+    [ExcludeFromCodeCoverage]
     public partial class WinBertConfig
     {
         #region Public Methods
