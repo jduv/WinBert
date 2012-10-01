@@ -110,8 +110,8 @@
     <Compile Include="ForbidExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandoopTestCompiler.cs" />
-    <Compile Include="Xml\RandoopPluginConfig.cs">
-      <DependentUpon>RandoopPluginConfig.xsd</DependentUpon>
+    <Compile Include="Xml\RandoopPluginConfigSchema.cs">
+      <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
     </Compile>
     <Compile Include="RandoopTestSuiteInstrumenter.cs" />
     <Compile Include="RandoopTestGenerator.cs" />
@@ -121,7 +121,7 @@
   <ItemGroup>
     <None Include="ClassDiagrams\WinBert.RandoopIntegration.cd" />
     <None Include="packages.config" />
-    <None Include="Xml\RandoopPluginConfig.xsd">
+    <None Include="Xml\RandoopPluginConfigSchema.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -140,7 +140,7 @@
     </ProjectReference>
   </ItemGroup>
   <Target Name="BeforeBuild">
-    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml RandoopPluginConfig.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
+    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml RandoopPluginConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

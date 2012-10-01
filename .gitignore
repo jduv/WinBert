@@ -84,3 +84,5 @@ UpgradeLog*.XML
 CVS/
 
 WinBertConfigSchema.cs
+RandoopPluginConfigSchema.cs
+
