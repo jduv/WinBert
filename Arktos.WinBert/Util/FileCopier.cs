@@ -286,7 +286,7 @@
                 }
                 catch (Exception)
                 {
-                    return false;
+                    // Fall through
                 }
             }
 
