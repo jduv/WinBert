@@ -5,7 +5,7 @@
 
     /// <summary>
     /// Defines behavior for a component that is able to compile an Assembly
-    ///   from source located at the target path.
+    /// from source located at the target path.
     /// </summary>
     public interface ITestCompiler
     {
@@ -49,9 +49,23 @@
         /// The path to the source to compile.
         /// </param>
         /// <returns>
-        /// A TestAssembly, or null on failure.
+        /// A test assembly or null on failure.
         /// </returns>
         Assembly CompileTests(string sourcePath);
+
+        /// <summary>
+        /// Compiles all source at the target path into an Assembly with the target output name.
+        /// </summary>
+        /// <param name="sourcePath">
+        /// The path to the source to compile.
+        /// </param>
+        /// <param name="outputFileName">
+        /// The output file name.
+        /// </param>
+        /// <returns>
+        /// A test assembly or null on failure.
+        /// </returns>
+        Assembly CompileTests(string sourcePath, string outputFileName);
 
         #endregion
     }

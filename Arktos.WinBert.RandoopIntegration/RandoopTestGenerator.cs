@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
@@ -144,11 +145,15 @@
                     {
                         var srcDir = Path.GetDirectoryName(assemblyPath);
                         this.compiler.AddReference(assemblyPath);
-                        return this.compiler.CompileTests(srcDir);
+                        return this.compiler.CompileTests(srcDir, GetTestAssemblyName(assemblyPath));
                     }
                     catch (Exception exception)
                     {
                         Console.WriteLine(exception);
+                    }
+                    finally
+                    {
+                        this.compiler.ClearReferences();
                     }
                 }
             }
@@ -159,6 +164,29 @@
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Gets a name for a new test assembly.
+        /// </summary>
+        /// <param name="targetAssemblyPath">
+        /// The path to the target test assembly. Assumed to end with a file name with the .exe
+        /// or .dll extension. Anything else will be met with an ArgumentException.
+        /// </param>
+        /// <returns>
+        /// A name for a test assembly.
+        /// </returns>
+        private static string GetTestAssemblyName(string targetAssemblyPath)
+        {
+            var extension = Path.GetExtension(targetAssemblyPath);
+            if (string.IsNullOrEmpty(extension))
+            {
+                    throw new ArgumentException("Target assembly path is invalid!");
+            }
+
+            // Tests are always placed in a library.
+            var replacement = string.Format(".tests.{0}.dll", Guid.NewGuid().ToString().Substring(0, 7));
+            return targetAssemblyPath.Replace(extension, replacement);
+        }
 
         /// <summary>
         /// Generates a suite of tests using Randoop API's.

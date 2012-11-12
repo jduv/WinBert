@@ -15,17 +15,9 @@
     /// </summary>
     public sealed class BuildVersionManager
     {
-        #region Constants & Fields
+        #region Fields & Constants
 
-        /// <summary>
-        /// Path to the archive.
-        /// </summary>
         private readonly string archivePath;
-
-        /// <summary>
-        /// This is the hidden field holding the actual size for the max number of builds stored. Access this through 
-        /// the public property only.
-        /// </summary>
         private byte maxArchiveSize;
 
         #endregion

@@ -14,16 +14,9 @@
     /// </summary>
     public sealed class TestCompiler : ITestCompiler
     {
-        #region Constants & Fields
+        #region Fields & Constants
 
-        /// <summary>
-        /// The CodeDom compiler for compiling generated tests.
-        /// </summary>
         private readonly CodeDomProvider compiler = null;
-
-        /// <summary>
-        /// A list of reference paths.
-        /// </summary>
         private readonly IList<string> referencePaths = new List<string>();
 
         #endregion
@@ -101,6 +94,17 @@
                 throw new ArgumentException("Invalid path.");
             }
 
+            return this.CompileTests(sourcePath, Path.Combine(sourcePath, Path.GetRandomFileName() + ".dll"));
+        }
+
+        /// <inheritdoc />
+        public Assembly CompileTests(string sourcePath, string outputFileName)
+        {
+            if (string.IsNullOrEmpty(sourcePath))
+            {
+                throw new ArgumentException("Invalid path.");
+            }
+
             var fullPath = Path.GetFullPath(sourcePath);
             if (Directory.Exists(fullPath))
             {
@@ -110,7 +114,7 @@
                 {
                     var compilerParameters = new CompilerParameters(
                         this.referencePaths.ToArray(),
-                        Path.Combine(sourcePath, Path.GetRandomFileName() + ".dll"),
+                        outputFileName,
                         false);
 
                     var results = this.compiler.CompileAssemblyFromFile(compilerParameters, sourceFiles);

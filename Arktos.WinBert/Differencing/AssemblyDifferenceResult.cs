@@ -8,7 +8,7 @@
     /// </summary>
     public sealed class AssemblyDifferenceResult : IAssemblyDifferenceResult
     {
-        #region Constructors and Destructors
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the AssemblyDifferenceResult class.

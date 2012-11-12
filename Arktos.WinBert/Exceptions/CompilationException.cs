@@ -14,9 +14,6 @@
     {
         #region Fields & Constants
 
-        /// <summary>
-        /// The default error message string for the exception.
-        /// </summary>
         private static readonly string DefaultErrorMessage = @"There was a compliation error!";
 
         #endregion

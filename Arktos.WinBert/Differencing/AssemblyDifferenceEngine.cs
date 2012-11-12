@@ -11,21 +11,14 @@
     /// </summary>
     public sealed class AssemblyDifferenceEngine : IDifferenceEngine<Assembly, AssemblyDifferenceResult>
     {
-        #region Constants and Fields
+        #region Constants & Fields
 
-        /// <summary>
-        ///   A list of ignore targets applicable to types.
-        /// </summary>
         private readonly IgnoreTarget[] ignoreTargets = null;
-
-        /// <summary>
-        ///   A mechanism for differencing types.
-        /// </summary>
         private readonly TypeDifferenceEngine typeDiffer = null;
 
         #endregion
 
-        #region Constructors and Destructors
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the BertAssemblyDifferenceEngine class.

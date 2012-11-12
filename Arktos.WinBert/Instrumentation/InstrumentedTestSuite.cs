@@ -9,11 +9,8 @@
     /// </summary>
     public class InstrumentedTestSuite : IRegressionTestSuite
     {
-        #region Constants and Fields
+        #region Fields & Constants
 
-        /// <summary>
-        ///   The source TestSuite for this instrumented one.
-        /// </summary>
         private readonly IRegressionTestSuite sourceSuite = null;
 
         #endregion

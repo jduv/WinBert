@@ -87,7 +87,6 @@
     <None Include="dependent-src\Dependent.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="RegressionTestSuiteManagerUnitTests.cs" />
     <Compile Include="TestCompilerUnitTests.cs" />
     <None Include="packages.config" />
     <Compile Include="BuildUnitTests.cs" />

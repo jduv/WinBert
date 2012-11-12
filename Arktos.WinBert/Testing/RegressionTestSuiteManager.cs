@@ -125,8 +125,17 @@
         /// </returns>
         protected AnalysisResult ExecuteTestSuite(IRegressionTestSuite toExecute)
         {
-            // BMK Implement me.
-            return null;
+            AnalysisResult results = null;
+            try
+            {
+                results = this.runner.RunTests(toExecute);
+            }
+            catch (Exception)
+            {
+                // BMK Handle exception.
+            }
+
+            return results;
         }
 
         /// <summary>

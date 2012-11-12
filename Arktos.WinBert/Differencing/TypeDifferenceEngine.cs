@@ -13,11 +13,8 @@
     /// </summary>
     public sealed class TypeDifferenceEngine : IDifferenceEngine<Type, ITypeDifferenceResult>
     {
-        #region Constants and Fields
+        #region Fields & Constants
 
-        /// <summary>
-        ///   A list of ignore targets applicable to methods.
-        /// </summary>
         private readonly IgnoreTarget[] ignoreTargets = null;
 
         #endregion

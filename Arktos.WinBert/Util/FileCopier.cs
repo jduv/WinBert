@@ -34,17 +34,14 @@
 
     /// <summary>
     /// This class has the ability to copy files. It uses the standard core libraries, but
-    ///   provides some extra functionality based on the bitmask passed to the constructor. See
-    ///   static members for more information about the features of this class. This class will only
-    ///   copy files, no directories.
+    /// provides some extra functionality based on the bitmask passed to the constructor. See
+    /// static members for more information about the features of this class. This class will only
+    /// copy files, no directories.
     /// </summary>
     public sealed class FileCopier
     {
-        #region Constants and Fields
+        #region Fields & Constants
 
-        /// <summary>
-        ///   The flags for this file copier.
-        /// </summary>
         private readonly FileCopierFlags flags;
 
         #endregion

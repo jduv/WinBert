@@ -12,16 +12,9 @@
     /// </summary>
     public sealed class TypeDifferenceResult : ITypeDifferenceResult
     {
-        #region Constants and Fields
+        #region Fields & Constants
 
-        /// <summary>
-        ///   The new type (parameter 2 of the constructor).
-        /// </summary>
         private readonly Type newType = null;
-
-        /// <summary>
-        ///   The old type (parameter 1 of the constructor).
-        /// </summary>
         private readonly Type oldType = null;
 
         #endregion
