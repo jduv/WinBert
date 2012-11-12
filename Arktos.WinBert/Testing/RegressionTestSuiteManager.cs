@@ -109,9 +109,10 @@
         /// </returns>
         protected static Assembly LoadAssembly(string assemblyPath, string pdbPath)
         {
-            byte[] assemblyBytes = File.ReadAllBytes(assemblyPath);
-            byte[] pdbBytes = string.IsNullOrEmpty(pdbPath) ? null : File.ReadAllBytes(pdbPath);
-            return Assembly.Load(assemblyBytes, pdbBytes);
+            //byte[] assemblyBytes = File.ReadAllBytes(assemblyPath);
+            //byte[] pdbBytes = string.IsNullOrEmpty(pdbPath) ? null : File.ReadAllBytes(pdbPath);
+            //return Assembly.Load(assemblyBytes, pdbBytes);
+            return Assembly.LoadFile(assemblyPath);
         }
 
         /// <summary>
@@ -125,17 +126,7 @@
         /// </returns>
         protected AnalysisResult ExecuteTestSuite(IRegressionTestSuite toExecute)
         {
-            AnalysisResult results = null;
-            try
-            {
-                results = this.runner.RunTests(toExecute);
-            }
-            catch (Exception)
-            {
-                // BMK Handle exception.
-            }
-
-            return results;
+            return this.runner.RunTests(toExecute);
         }
 
         /// <summary>
