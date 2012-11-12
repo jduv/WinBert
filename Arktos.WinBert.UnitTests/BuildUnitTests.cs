@@ -21,7 +21,7 @@
         [TestMethod]
         public void Equals_SameObject_ReferenceEquals()
         {
-            var target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            var target = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
             Assert.AreEqual(target, target);            
         }
 
@@ -30,32 +30,32 @@
         {
             uint seqNumber = 0;
             string path = @"C:\my\path\to\victory";
-            var target = new Build() { SequenceNumber = seqNumber, Path = path };
-            var clone = new Build() { SequenceNumber = seqNumber, Path = path };
+            var target = new Build() { SequenceNumber = seqNumber, AssemblyPath = path };
+            var clone = new Build() { SequenceNumber = seqNumber, AssemblyPath = path };
             Assert.AreEqual(target, clone);
         }
 
         [TestMethod]
         public void Equals_PathDifferent_DoesNotEqual()
         {
-            var target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
-            var other = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory\diff" };
+            var target = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
+            var other = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory\diff" };
             Assert.AreNotEqual(target, other);
         }
 
         [TestMethod]
         public void Equals_SequenceDifferent_DoesNotEqual()
         {
-            var target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
-            var other = new Build() { SequenceNumber = 1, Path = @"C:\my\path\to\victory" };
+            var target = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
+            var other = new Build() { SequenceNumber = 1, AssemblyPath = @"C:\my\path\to\victory" };
             Assert.AreNotEqual(target, other);
         }
 
         [TestMethod]
         public void Equals_ObjectOverload_Equals()
         {
-            object target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
-            object clone = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            object target = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
+            object clone = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
 
             Assert.IsTrue(target.Equals(clone));
         }
@@ -63,7 +63,7 @@
         [TestMethod]
         public void Equals_ObjectOverload_DoesNotEqual()
         {
-            object target = new Build() { SequenceNumber = 0, Path = @"C:\my\path\to\victory" };
+            object target = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
             Assert.IsFalse(target.Equals(2));
         }
 
@@ -76,7 +76,7 @@
         {
             uint seqNumber = 0;
             string path = @"C:\my\path\to\victory";
-            var target = new Build() { SequenceNumber = seqNumber, Path = path };
+            var target = new Build() { SequenceNumber = seqNumber, AssemblyPath = path };
 
             int hashCode = seqNumber.GetHashCode() ^ path.GetHashCode();
 

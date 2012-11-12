@@ -1,13 +1,12 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Xml;
     using System.Xml.Serialization;
-    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Exceptions;
     using Arktos.WinBert.RandoopIntegration.Xml;
     using Arktos.WinBert.Testing;
@@ -18,29 +17,19 @@
     /// <summary>
     /// Uses the Randoop framework to generate a set of tests for the target assembly under test.
     /// </summary>
-    public class RandoopTestGenerator : IRegressionTestSuiteGenerator
+    public class RandoopTestGenerator
     {
         #region Fields and Constants
 
         /// <summary>
         ///   Hard coded name for the statistics file. This should eventually be moved out into configuration.
         /// </summary>
-        private const string StatsFile = "statistics.txt";
+        private const string StatsFileName = "statistics.txt";
 
         /// <summary>
         ///   Hard coded name for the execution log file.
         /// </summary>
-        private const string ExecutionLog = "log.txt";
-
-        /// <summary>
-        ///   Hard coded name for the assembly.
-        /// </summary>
-        private const string AssemblyName = "tests.dll";
-
-        /// <summary>
-        ///   The path to where the tests will be generated.
-        /// </summary>
-        private string workingDirectory;
+        private const string ExecutionLogName = "log.txt";
 
         /// <summary>
         ///   The configuration information for Randoop. This is different than the configuration that is built
@@ -63,14 +52,22 @@
         /// <param name="config">
         /// The Randoop configuration file for the test generator to pull any needed information from.
         /// </param>
-        public RandoopTestGenerator(string workingDirectory, RandoopPluginConfig config)
+        public RandoopTestGenerator(WinBertConfig config)
         {
-            this.workingDirectory = workingDirectory;
-            this.config = config;
-
-            if (!Directory.Exists(workingDirectory))
+            if (config == null)
             {
-                Directory.CreateDirectory(workingDirectory);
+                throw new ArgumentNullException("Config cannot be null!");
+            }
+
+            var randoopConfig = GetRandoopConfiguration(config);
+
+            if (randoopConfig != null)
+            {
+                this.config = randoopConfig;
+            }
+            else
+            {
+                throw new InvalidConfigurationException("No valid configuration exists!");
             }
         }
         
@@ -111,39 +108,43 @@
         /// <summary>
         /// Gets a TestAssembly containing a set of compiled tests.
         /// </summary>
-        /// <param name="diff">
-        /// The differences result context.
+        /// <param name="target">
+        /// The target assembly to generate tests for.
+        /// </param>
+        /// <param name="validTypes">
+        /// A list of types to generate the tests for.
         /// </param>
         /// <returns>
         /// A compiled test assembly with executable  tests inside it.
         /// </returns>
-        public IRegressionTestSuite GetCompiledTests(AssemblyDifferenceResult diff)
+        public Assembly GetTestAssembly(Assembly target, IList<Type> validTypes, string assemblyPath)
         {
-            if (this.GenerateTests(diff.NewObject, diff))
+            if (target == null)
             {
-                try
+                throw new ArgumentNullException("Difference result cannot be null!");
+            }
+
+            if (validTypes == null)
+            {
+                throw new ArgumentNullException("Types list cannot be null!");
+            }
+
+            if (validTypes.Count > 0)
+            {
+                // First, generate files for the first build.
+                if (this.GenerateTests(target, validTypes, assemblyPath))
                 {
-                    // output dir is the same dir the tests are generated in
-                    ITestCompiler compiler = new RandoopTestCompiler(this.workingDirectory);
-                    compiler.AddReference(diff.NewObject.Location);
-
-                    // run the tests on the new assembly
-                    var newTests = compiler.CompileTests(this.workingDirectory);
-
-                    // kill the references, set up to run the tests on the old assembly
-                    compiler.ClearReferences();
-                    compiler.AddReference(diff.OldObject.Location);
-
-                    // run the tests on the old assembly
-                    var oldTests = compiler.CompileTests(this.workingDirectory);
-
-                    // return the properly built test suite.
-                    return new RegressionTestSuite(newTests, oldTests, diff);
-
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception);
+                    try
+                    {
+                        var workingDir = Path.GetDirectoryName(assemblyPath);
+                        ITestCompiler compiler = new RandoopTestCompiler(workingDir);
+                        compiler.AddReference(assemblyPath);
+                        return compiler.CompileTests(workingDir);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
                 }
             }
 
@@ -166,17 +167,17 @@
         /// <returns>
         /// True if generation was successful, false otherwise.
         /// </returns>
-        private bool GenerateTests(Assembly target, AssemblyDifferenceResult diff)
+        private bool GenerateTests(Assembly target, IList<Type> types, string assemblyPath)
         {
             /* Much of this method is copied directly from the RandoopBare.exe's main method with some minor 
              * modifications. */
 
             // first grab the config file
-            RandoopConfiguration config = this.GenerateRandoopInput(target.Location);
+            RandoopConfiguration config = this.GenerateRandoopInput(assemblyPath);
 
             // Now we need a list of the assemblies to test
             Collection<Assembly> assemblies = Misc.LoadAssemblies(config.assemblies);
-            Collection<Type> typesToExplore = this.GetExplorableTypes(target, diff);
+            Collection<Type> typesToExplore = new Collection<Type>(types);
 
             // no need to continue
             if (typesToExplore.Count <= 0)
@@ -192,7 +193,6 @@
             PlanManager planManager = new PlanManager(config);
             planManager.builderPlans.AddEnumConstantsToPlanDB(typesToExplore);
             this.InjectConstants(planManager);
-            planManager.builderPlans.PrintPrimitives(Console.Out);
 
             // Stats manager
             StatsManager stats = new StatsManager(config);
@@ -233,56 +233,27 @@
         }
 
         /// <summary>
-        /// Gets a list of types that can be explored for the target difference result.
-        /// </summary>
-        /// <param name="target">
-        /// The target.
-        /// </param>
-        /// <param name="diff">
-        /// The difference to explore.
-        /// </param>
-        /// <returns>
-        /// A collection of types.
-        /// </returns>
-        private Collection<Type> GetExplorableTypes(Assembly target, AssemblyDifferenceResult diff)
-        {
-            Collection<Type> collection = new Collection<Type>();
-
-            if (diff.DifferenceResult)
-            {
-                foreach (TypeDifferenceResult typeDiff in diff.TypeDifferences)
-                {
-                    if (typeDiff.DifferenceResult)
-                    {
-                        collection.Add(typeDiff.NewObject);
-                    }
-                }
-            }
-
-            // should have elements added or be empty.
-            return collection;
-        }
-
-        /// <summary>
         /// This method generates a RandoopConfiguration file for use with each test run. Ideally, this should
         ///   be pulled out and stored in the WinBert configuration file, after some parameters are gathered from
         ///   the user of course.
         /// </summary>
         /// <param name="assemblyPath">
-        /// The path to the test assembly that Randoop will use for test generation.
+        /// The path to the test assembly that Randoop will use for test generation. All test files will be generated into this
+        /// directory as well.
         /// </param>
         /// <returns>
         /// A validated RandoopConfiguration file.
         /// </returns>
         private RandoopConfiguration GenerateRandoopInput(string assemblyPath)
         {
-            Random rand = new Random();
+            string workingDirectory = Path.GetDirectoryName(assemblyPath);
 
+            Random rand = new Random();
             RandoopConfiguration config = new RandoopConfiguration();
             config.assemblies.Add(new FileName(assemblyPath));
-            config.outputdir = this.workingDirectory;
-            config.statsFile = new FileName(StatsFile);
-            config.executionLog = Path.Combine(this.workingDirectory, ExecutionLog);
+            config.outputdir = workingDirectory;
+            config.statsFile = new FileName(Path.Combine(workingDirectory, StatsFileName));
+            config.executionLog = Path.Combine(workingDirectory, ExecutionLogName);
             config.singledir = true; // always write to a single directory.
             config.timelimit = 1;    // go with 1 second for now.
             config.singledir = true;

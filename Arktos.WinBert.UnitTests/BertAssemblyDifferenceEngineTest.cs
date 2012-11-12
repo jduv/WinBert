@@ -35,7 +35,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldObject);
             Assert.IsNotNull(actual.NewObject);
-            Assert.IsTrue(actual.DifferenceResult);
+            Assert.IsTrue(actual.IsDifferent);
             Assert.IsTrue(actual.TypeDifferences.Count > 0);
 
             foreach (var typeDiff in actual.TypeDifferences)
@@ -59,34 +59,12 @@
             AssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
-            Assert.IsFalse(actual.DifferenceResult);
+            Assert.IsFalse(actual.IsDifferent);
             Assert.IsTrue(actual.TypeDifferences.Count == 0);
         }
 
         [TestMethod]
         public void Diff_IgnoreTargetsWithMethod_NoDiff()
-        {
-            // create a mixed list of ignore targets
-            IgnoreTarget[] targets = new IgnoreTarget[2];
-
-            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "Nonexistant.Type");
-            targets[0] = target0;
-
-            IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Deposit");
-            targets[1] = target1;
-
-            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(targets);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
-
-            AssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
-
-            Assert.IsNotNull(actual);
-            Assert.IsFalse(actual.DifferenceResult);
-        }
-
-        [TestMethod]
-        public void Diff_IgnoreUnchangedMethodAndNonExistingType_Different()
         {
             // create a mixed list of ignore targets
             IgnoreTarget[] targets = new IgnoreTarget[2];
@@ -104,7 +82,29 @@
             AssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
-            Assert.IsTrue(actual.DifferenceResult);
+            Assert.IsFalse(actual.IsDifferent);
+        }
+
+        [TestMethod]
+        public void Diff_IgnoreUnchangedMethodAndNonExistingType_Different()
+        {
+            // create a mixed list of ignore targets
+            IgnoreTarget[] targets = new IgnoreTarget[2];
+
+            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "Nonexistant.Type");
+            targets[0] = target0;
+
+            IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Deposit");
+            targets[1] = target1;
+
+            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(targets);
+            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
+            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
+
+            AssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+
+            Assert.IsNotNull(actual);
+            Assert.IsTrue(actual.IsDifferent);
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@
             AssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
-            Assert.IsFalse(actual.DifferenceResult);
+            Assert.IsFalse(actual.IsDifferent);
         }
 
         #endregion

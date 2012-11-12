@@ -37,25 +37,5 @@
         }
 
         #endregion
-
-        #region Properties
-
-        /// <summary>
-        ///   Gets or sets the DataContext for the analysis window's child WPF control.
-        /// </summary>
-        public IWinBertServiceProvider DataContext
-        {
-            get
-            {
-                return this.analysisView.DataContext as IWinBertServiceProvider;
-            }
-
-            set
-            {
-                this.analysisView.DataContext = value;
-            }
-        }
-
-        #endregion
     }
 }

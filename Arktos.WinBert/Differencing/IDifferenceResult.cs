@@ -14,7 +14,7 @@
         /// <summary>
         ///   Gets a value indicating whether a difference exists.
         /// </summary>
-        bool DifferenceResult { get; }
+        bool IsDifferent { get; }
 
         /// <summary>
         ///   Gets another version of the differenced arguments.

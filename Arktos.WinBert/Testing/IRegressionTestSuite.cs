@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using Arktos.WinBert.Differencing;
+    using System;
 
     /// <summary>
     /// Defines a basic property set that all TestSuite's should implement. This is mainly used to provide

@@ -82,7 +82,7 @@
                         var oldType = typeDictionary[newType.FullName];
                         var typeDifference = this.Diff(oldType, newType);
 
-                        if (typeDifference != null && typeDifference.DifferenceResult)
+                        if (typeDifference != null && typeDifference.IsDifferent)
                         {
                             assemblyDifferenceResult.TypeDifferences.Add(typeDifference);
                         }

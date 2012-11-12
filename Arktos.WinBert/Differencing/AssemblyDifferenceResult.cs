@@ -33,7 +33,7 @@
         /// <summary>
         ///   Gets a value indicating whether there is a difference or not.
         /// </summary>
-        public bool DifferenceResult
+        public bool IsDifferent
         {
             get
             {

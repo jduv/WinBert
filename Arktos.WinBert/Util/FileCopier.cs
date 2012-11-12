@@ -135,7 +135,7 @@
                 return this.CopyToNewFile(sourcePath, destPath);
             }
 
-            throw new ArgumentException("The source path must exist! Path: " + sourcePath);
+            return false;
         }
 
         #endregion

@@ -162,11 +162,8 @@
 
                     if (methodBody != null && methodBodyInDictionary != null)
                     {
-                        if (
-                            Convert.ToBase64String(methodBody.GetILAsByteArray()).Equals(
-                                Convert.ToBase64String(methodBodyInDictionary.GetILAsByteArray())))
+                        if (this.AreDifferent(methodBody, methodBodyInDictionary))
                         {
-                            // something indeed is different
                             yield return method;
                         }
                     }
@@ -179,6 +176,43 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Compares the two target method bodies and determines if they are different. This method performs a
+        /// binary difference between them by converting both method bodies into byte arrays and then performing a
+        /// bit by bit comparison between the resulting sets.
+        /// </summary>
+        /// <param name="first">
+        /// The first method body to compare.
+        /// </param>
+        /// <param name="second">
+        /// The second method body to compare.
+        /// </param>
+        /// <returns>
+        /// True if the method bodies are different, false otherwise.
+        /// </returns>
+        private bool AreDifferent(MethodBody first, MethodBody second)
+        {
+            var firstBodyBits = first.GetILAsByteArray();
+            var secondBodyBits = second.GetILAsByteArray();
+
+            if (firstBodyBits.Length != secondBodyBits.Length)
+            {
+                return true;
+            }
+            else
+            {
+                for (int i = 0; i < firstBodyBits.Length; i++)
+                {
+                    if (firstBodyBits[i] != secondBodyBits[i])
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         #endregion

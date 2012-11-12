@@ -139,7 +139,7 @@
 
             Assert.AreEqual(this.versionManagerUnderTest.Name, name);
             Assert.IsNotNull(mostRecent);
-            Assert.AreEqual(mostRecent.Path, Path.GetFullPath(expectedPath), true);
+            Assert.AreEqual(mostRecent.AssemblyPath, Path.GetFullPath(expectedPath), true);
             Assert.IsTrue(File.Exists(expectedPath));
         }
 
@@ -242,7 +242,7 @@
 
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.Count == 1);
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(actualBuild));
-            Assert.AreEqual(actualBuild.Path, Path.GetFullPath(expectedPath));
+            Assert.AreEqual(actualBuild.AssemblyPath, Path.GetFullPath(expectedPath));
 
             expectedPath = Path.Combine(
                 ArchivePath, 
@@ -253,7 +253,7 @@
 
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.Count == 2);
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.ContainsValue(actualBuild));
-            Assert.AreEqual(actualBuild.Path, Path.GetFullPath(expectedPath));
+            Assert.AreEqual(actualBuild.AssemblyPath, Path.GetFullPath(expectedPath));
         }
 
         [TestMethod]
@@ -263,8 +263,8 @@
             Build assembly2 = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
 
             Assert.IsTrue(this.versionManagerUnderTest.BuildArchive.Count == 2);
-            Assert.IsTrue(File.Exists(assembly1.Path));
-            Assert.IsTrue(File.Exists(assembly2.Path));
+            Assert.IsTrue(File.Exists(assembly1.AssemblyPath));
+            Assert.IsTrue(File.Exists(assembly2.AssemblyPath));
         }
 
         [TestMethod]
@@ -311,9 +311,9 @@
 
             this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
             build = this.versionManagerUnderTest.GetMostRecentBuild();
-            Assert.IsTrue(File.Exists(build.Path));
+            Assert.IsTrue(File.Exists(build.AssemblyPath));
             Assert.IsTrue(File.Exists(expectedPath));
-            Assert.AreEqual(build.Path, Path.GetFullPath(expectedPath));
+            Assert.AreEqual(build.AssemblyPath, Path.GetFullPath(expectedPath));
 
             // Add another build and test to see if we get it back
             expectedPath = Path.Combine(
@@ -323,9 +323,9 @@
 
             this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV2Path);
             build = this.versionManagerUnderTest.GetMostRecentBuild();
-            Assert.IsTrue(File.Exists(build.Path));
+            Assert.IsTrue(File.Exists(build.AssemblyPath));
             Assert.IsTrue(File.Exists(expectedPath));
-            Assert.AreEqual(build.Path, Path.GetFullPath(expectedPath));
+            Assert.AreEqual(build.AssemblyPath, Path.GetFullPath(expectedPath));
         }
 
         #endregion
@@ -403,6 +403,30 @@
             Assert.IsNotNull(precedingBuild, "Test case not set up properly; unable to create preceding build.");
 
             var target = this.versionManagerUnderTest.GetBuildRevisionPreceding(precedingBuild.SequenceNumber);
+            Assert.AreEqual(expectedBuild, target);
+        }
+
+        [TestMethod]
+        public void GetBuildRevisionPreceding_BuildOverload()
+        {
+            var path1 = Path.Combine(
+               ArchivePath,
+               this.versionManagerUnderTest.SequenceNumber.ToString(),
+               TestAssemblyV1Name);
+
+            var path2 = Path.Combine(
+                ArchivePath,
+                this.versionManagerUnderTest.SequenceNumber.ToString(),
+                TestAssemblyV2Name);
+
+            var expectedBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV1Path);
+            var precedingBuild = this.versionManagerUnderTest.AddNewSuccessfulBuild(TestAssemblyV2Path);
+            Assert.IsNotNull(expectedBuild, "Test case not set up properly; unable to create expected build.");
+            Assert.IsNotNull(precedingBuild, "Test case not set up properly; unable to create preceding build.");
+
+            var build = this.versionManagerUnderTest.GetMostRecentBuild();
+            var target = this.versionManagerUnderTest.GetBuildRevisionPreceding(build);
+
             Assert.AreEqual(expectedBuild, target);
         }
 

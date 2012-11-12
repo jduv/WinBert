@@ -124,15 +124,6 @@
             target.TryCopyFile(DestDir, DestDir);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void TryCopyFile_NonExistingSource()
-        {
-            var target = new FileCopier();
-            var path = Path.Combine(SrcDir, Guid.NewGuid().ToString() + ".txt");
-            target.TryCopyFile(path, DestDir);
-        }
-
         #endregion
 
         #region Private Methods

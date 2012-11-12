@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using Arktos.WinBert.Xml;
@@ -166,27 +165,35 @@
                     new FileCopier(
                         FileCopierFlags.AlwaysOverwriteDestination | FileCopierFlags.CreateDestinationDirectories);
 
+                // Copy the build.
                 var pathInArchive = this.GetArchivePath(pathToSuccessfulBuild);
                 if (copier.TryCopyFile(pathToSuccessfulBuild, pathInArchive))
                 {
+                    // Handle overflow.
                     if (this.BuildArchive.Count == this.MaxArchiveSize)
                     {
                         var lastElement = this.BuildArchive.Last();
-                        try
+                        this.BuildArchive.Remove(lastElement.Key);
+                    }
+
+                    // Attempt to copy the PDB file over as well
+                    string pdbPathInArchive = null;
+                    string pdbPath = this.GetPdbPath(pathToSuccessfulBuild);
+                    if (!string.IsNullOrEmpty(pdbPath))
+                    {
+                        // This logic is a little backwards
+                        pdbPathInArchive = this.GetArchivePath(pdbPath);
+                        if (File.Exists(pdbPath))
                         {
-                            File.Delete(lastElement.Value.Path);
-                        }
-                        catch (Exception)
-                        {
-                                // Unable to remove the last build in the archive list from disk.
-                        }
-                        finally
-                        {
-                            this.BuildArchive.Remove(lastElement.Key);
+                            pdbPathInArchive = copier.TryCopyFile(pdbPath, pdbPathInArchive) ? pdbPathInArchive : null;
                         }
                     }
 
-                    return this.LoadBuild(this.SequenceNumber, pathInArchive);
+                    // Create the build object
+                    var build = this.LoadBuild(this.SequenceNumber, pathInArchive);
+                    build.PdbPath = pdbPathInArchive;
+
+                    return build;
                 }
             }
 
@@ -234,6 +241,25 @@
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Grabs the build preceding the target one.
+        /// </summary>
+        /// <param name="build">
+        /// The build to precede.
+        /// </param>
+        /// <returns>
+        /// A build preceding the target one, or null if one doesn't exist.
+        /// </returns>
+        public Build GetBuildRevisionPreceding(Build build)
+        {
+            if (build == null)
+            {
+                throw new ArgumentNullException("Build cannot be null!");
+            }
+
+            return this.GetBuildRevisionPreceding(build.SequenceNumber);
         }
 
         /// <summary>
@@ -305,6 +331,35 @@
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Gets the PDB path given a PE path.
+        /// </summary>
+        /// <param name="pePath">
+        /// The PE path to build the PDB path by.
+        /// </param>
+        /// <returns>
+        /// The PDB path, or null if one wasn't found (i.e. release builds).
+        /// </returns>
+        private string GetPdbPath(string pePath)
+        {
+            string pdbPath = null;
+            if (!string.IsNullOrEmpty(pePath))
+            {
+                string extension = Path.GetExtension(pePath);
+                switch (extension)
+                {
+                    case ".exe":
+                        pdbPath = pePath.Replace(".exe", ".pdb");
+                        break;
+                    case ".dll":
+                        pdbPath = pePath.Replace(".dll", ".pdb");
+                        break;
+                }
+            }
+
+            return pdbPath;
+        }
 
         /// <summary>
         /// Converts the target path to an in-archive path.

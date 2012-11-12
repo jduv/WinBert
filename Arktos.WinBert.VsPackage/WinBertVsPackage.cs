@@ -47,7 +47,7 @@
         /// <summary>
         ///   Gets an instance of the WinBertServiceProvider for this package.
         /// </summary>
-        public IWinBertServiceProvider WinBertServiceProvider
+        public WinBertServiceProvider WinBertServiceProvider
         {
             get;
             private set;
@@ -108,9 +108,6 @@
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
             }
-
-            // Set the proper data context.
-            window.DataContext = this.WinBertServiceProvider;
 
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());

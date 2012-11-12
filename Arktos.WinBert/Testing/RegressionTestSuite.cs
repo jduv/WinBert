@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using Arktos.WinBert.Differencing;
+    using System;
 
     /// <summary>
     /// Represents a pattern of tests that can be executed on new and old versions

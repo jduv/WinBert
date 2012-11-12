@@ -5,15 +5,14 @@
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Windows.Forms;
     using System.Xml;
     using System.Xml.Serialization;
     using Arktos.WinBert.Analysis;
-    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.RandoopIntegration;
-    using Arktos.WinBert.Testing;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using EnvDTE;
@@ -24,7 +23,7 @@
     /// independent build archives, handling the differencing of target assemblies, kicking off test generation,
     /// and handing information off for analysis.
     /// </summary>
-    public sealed class WinBertServiceProvider : IWinBertServiceProvider, INotifyPropertyChanged
+    public sealed class WinBertServiceProvider : INotifyPropertyChanged
     {
         #region Fields and Constants
 
@@ -78,7 +77,7 @@
         /// <summary>
         /// A list of AnalysisResults describing the most recent run of the engine.
         /// </summary>
-        private AnalysisResults currentRunResults = null;
+        private AnalysisResult currentRunResults = null;
 
         #endregion
 
@@ -114,23 +113,6 @@
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets a list of results returned by the analysis engine after a run of the WinBert engine.
-        /// </summary>
-        public AnalysisResults AnalysisResults
-        {
-            get
-            {
-                return this.currentRunResults;
-            }
-
-            private set
-            {
-                this.currentRunResults = value;
-                this.RaisePropertyChanged("AnalysisResults");
-            }
-        }
 
         /// <summary>
         /// Gets the configuration for this WinBert service provider.
@@ -217,36 +199,19 @@
         {
             if (!this.buildFailed)
             {
-                var differ = new BertAssemblyDifferenceEngine(this.ignoreTargets);
-
-                foreach (var buildDictionaryEntry in this.buildDictionary)
+                foreach (var manager in this.buildDictionary.Values)
                 {
-                    var manager = buildDictionaryEntry.Value;
-                    var diff = this.DoDiff(manager, differ);
+                    // Grab a pointer to the most recent build
+                    var currentBuild = manager.GetMostRecentBuild();
 
-                    if (diff != null && diff.DifferenceResult)
+                    // Get the last build where tests were executed.
+                    var lastTestedBuild = manager.BuildArchive.Values.Reverse().Skip(1).FirstOrDefault(x => !string.IsNullOrEmpty(x.TestAssemblyPath)) ??
+                        manager.GetBuildRevisionPreceding(currentBuild);
+
+                    if (currentBuild != null && lastTestedBuild != null)
                     {
-                        try
-                        {
-                            IRegressionTestSuiteGenerator testGen = new RandoopTestGenerator(
-                                Path.Combine(manager.ArchivePath, manager.GetMostRecentBuild().SequenceNumber.ToString()),
-                                RandoopTestGenerator.GetRandoopConfiguration(this.Config));
-
-                            ////IRegressionTestSuiteInstrumenter instrumenter = new RandoopTestSuiteInstrumenter();
-                            ////ITestSuiteRunner testRunner = new RandoopTestRunner();
-                            ////IBehavioralAnalyzer analyzer = new BertBehavioralAnalyzer();
-
-                            IRegressionTestSuite generatedTests = testGen.GetCompiledTests(diff);
-
-                            ////ITestSuite instrumentedTests = instrumenter.InstrumentTestSuite(generatedTests);
-                            ////TestSuiteRunResult result = testRunner.RunTests(instrumentedTests);
-                            ////this.AnalysisResults = analyzer.Analyze(result);
-                        }
-                        catch (Exception exc)
-                        {
-                            var errorMessage = "Error performing WinBert Analysis! " + exc.Message;
-                            MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
-                        }
+                        var testManager = new RandoopRegressionTestSuiteManager(this.Config);
+                        var results = testManager.BuildAndExecuteTestSuite(currentBuild, lastTestedBuild);
                     }
                 }
             }
@@ -355,7 +320,7 @@
         /// <param name="path">The path to load.</param>
         /// <returns>A configuration object, or null on failure.</returns>
         private static WinBertConfig LoadConfigFromPath(string path)
-        {             
+        {
             if (File.Exists(path))
             {
                 try
@@ -365,11 +330,11 @@
                 catch (Exception exc)
                 {
                     var errorMessage = "Unable to deserialize the configuration file!" + Environment.NewLine;
-                    errorMessage += "Exception: " + exc;                        
-                    Debug.WriteLine(errorMessage);                        
+                    errorMessage += "Exception: " + exc;
+                    Debug.WriteLine(errorMessage);
                 }
-            }         
-       
+            }
+
             return null;
         }
 
@@ -388,7 +353,7 @@
             {
                 var errorMessage = "Unable to deserialize in-memory configuration file!" + Environment.NewLine;
                 errorMessage += "Exception: " + exc;
-                Debug.WriteLine(errorMessage);   
+                Debug.WriteLine(errorMessage);
             }
 
             return null;
@@ -421,14 +386,14 @@
 
                 foreach (Build build in project.BuildsList)
                 {
-                    if (File.Exists(build.Path))
+                    if (File.Exists(build.AssemblyPath))
                     {
-                        manager.LoadBuild(build.SequenceNumber, build.Path);
+                        manager.LoadBuild(build.SequenceNumber, build.AssemblyPath);
                     }
                     else
                     {
                         string errorMessage = string.Format(
-                            "Error loading file at path {0} into the build manager for project {1}", build.Path, project.Name);
+                            "Error loading file at path {0} into the build manager for project {1}", build.AssemblyPath, project.Name);
                         Debug.WriteLine(errorMessage);
                     }
                 }
@@ -452,7 +417,7 @@
                 config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
                 config.Projects = projects;
                 config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
-                config.IgnoreList = this.ignoreTargets ?? new IgnoreTarget[0];
+                config.IgnoreList = this.Config.IgnoreList ?? new IgnoreTarget[0];
 
                 try
                 {
@@ -605,42 +570,6 @@
         private string GetSolutionWorkingDirectory()
         {
             return Path.GetDirectoryName(this.dte.Solution.FullName);
-        }
-
-        /// <summary>
-        /// Handles differencing two builds retrieved from the passed in build version manager with the passed in 
-        ///   differencing engine.
-        /// </summary>
-        /// <param name="manager">
-        /// The build manager to retrieve builds from
-        /// </param>
-        /// <param name="differ">
-        /// The differencing engine to use
-        /// </param>
-        /// <returns>
-        /// An IDifferenceResult for an Assembly type.
-        /// </returns>
-        private AssemblyDifferenceResult DoDiff(BuildVersionManager manager, BertAssemblyDifferenceEngine differ)
-        {
-            if (manager.BuildArchive.Count > 1)
-            {
-                var newBuild = manager.GetMostRecentBuild();
-                var oldBuild = manager.GetBuildRevisionPreceding(newBuild.SequenceNumber);
-
-                try
-                {
-                    var newAssembly = Assembly.LoadFile(newBuild.Path);
-                    var oldAssembly = Assembly.LoadFile(oldBuild.Path);
-
-                    return differ.Diff(oldAssembly, newAssembly);
-                }
-                catch (Exception exception)
-                {
-                    Trace.TraceError("Unable to diff assemblies {0} and {1}. Exception: {2}", oldBuild.Path, newBuild.Path, exception);
-                }
-            }
-
-            return null;
         }
 
         #endregion

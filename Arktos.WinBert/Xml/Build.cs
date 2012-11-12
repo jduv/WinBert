@@ -23,13 +23,13 @@
         /// <param name="sequenceNumber">
         /// The sequence number for the build.
         /// </param>
-        /// <param name="path">
-        /// The path to the target.
+        /// <param name="AssemblyPath">
+        /// The AssemblyPath to the target.
         /// </param>
-        public Build(uint sequenceNumber, string path)
+        public Build(uint sequenceNumber, string AssemblyPath)
         {
             this.SequenceNumber = sequenceNumber;
-            this.Path = path;
+            this.AssemblyPath = AssemblyPath;
         }
 
         #endregion
@@ -66,7 +66,7 @@
         /// </returns>
         public bool Equals(Build build)
         {
-            return this.SequenceNumber == build.SequenceNumber && this.Path.Equals(build.Path);
+            return this.SequenceNumber == build.SequenceNumber && this.AssemblyPath.Equals(build.AssemblyPath);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@
         /// </returns>
         public override int GetHashCode()
         {
-            return this.SequenceNumber.GetHashCode() ^ this.Path.GetHashCode();
+            return this.SequenceNumber.GetHashCode() ^ this.AssemblyPath.GetHashCode();
         }
 
         #endregion

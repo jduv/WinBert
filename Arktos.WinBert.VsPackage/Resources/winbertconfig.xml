@@ -140,7 +140,7 @@
             <rpc:Values>
               <rpc:Value>a</rpc:Value>
               <rpc:Value>z</rpc:Value>
-              <rpc:Value> </rpc:Value>
+              <rpc:Value>9</rpc:Value>
             </rpc:Values>
           </rpc:CharSeedValues>
           
