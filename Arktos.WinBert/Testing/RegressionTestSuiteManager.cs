@@ -3,10 +3,11 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Xml;
+    using Arktos.WinBert.Xml;    
 
     /// <summary>
     /// The abstrct class that ties everything together. An implementation of this should be able to manage
@@ -14,8 +15,15 @@
     /// it, returning an analysis result. This class extends from MarshalByRefObject so that instances can be
     /// remoted into other application domains.
     /// </summary>
-    public abstract class RegressionTestSuiteManager : MarshalByRefObject
+    public class RegressionTestSuiteManager
     {
+        #region Fields & Constants
+
+        private readonly ITestGenerator generator;
+        private readonly ITestRunner runner;
+
+        #endregion
+
         #region Constructors & Destructors
 
         /// <summary>
@@ -24,14 +32,29 @@
         /// <param name="config">
         /// The configuration.
         /// </param>
-        public RegressionTestSuiteManager(WinBertConfig config)
+        public RegressionTestSuiteManager(
+            WinBertConfig config, 
+            ITestGenerator generator, 
+            ITestRunner runner)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("Config cannot be null.");
             }
 
+            if (generator == null)
+            {
+                throw new ArgumentNullException("Test generator cannot be null.");
+            }
+
+            if (runner == null)
+            {
+                throw new ArgumentNullException("Test runner cannot be null.");
+            }
+
             this.Config = config;
+            this.generator = generator;
+            this.runner = runner;
         }
 
         #endregion
@@ -76,6 +99,7 @@
             }
             else
             {
+                // BMK Handle no results here.
                 result = null;
             }
 
@@ -111,7 +135,11 @@
         /// <returns>
         /// An analysis result.
         /// </returns>
-        protected abstract AnalysisResult ExecuteTestSuite(IRegressionTestSuite toExecute);
+        protected AnalysisResult ExecuteTestSuite(IRegressionTestSuite toExecute)
+        {
+            // BMK Implement me.
+            return null;
+        }
 
         /// <summary>
         /// Builds a test suite from the target builds.
@@ -126,7 +154,53 @@
         /// The difference result.
         /// </param>
         /// <returns>A fully compiled regression test suite.</returns>
-        protected abstract IRegressionTestSuite BuildTestSuite(Build current, Build previous, AssemblyDifferenceResult diff);
+        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, AssemblyDifferenceResult diff)
+        {
+            IRegressionTestSuite result = null;
+            var types = diff.TypeDifferences.Select(x => x.NewObject).ToList();
+
+            // Generate tests for the last tested build if we need to
+            Assembly previousBuildTests;
+            if (string.IsNullOrEmpty(previous.TestAssemblyPath))
+            {
+                if (string.IsNullOrEmpty(diff.OldObject.Location))
+                {
+                    previousBuildTests = generator.GetTestAssembly(
+                        diff.OldObject,
+                        types,
+                        previous.AssemblyPath);
+                }
+                else
+                {
+                    previousBuildTests = generator.GetTestAssembly(diff.OldObject, types);
+                }
+            }
+            else
+            {
+                previousBuildTests = LoadAssembly(previous.AssemblyPath, null);
+            }
+
+            // Generate tests for the newest build
+            Assembly currentBuildTests;
+            if (string.IsNullOrEmpty(diff.NewObject.Location))
+            {
+                currentBuildTests = generator.GetTestAssembly(diff.NewObject, types, current.AssemblyPath);
+            }
+            else
+            {
+                currentBuildTests = generator.GetTestAssembly(diff.NewObject, types);
+            }
+
+            // If we have tests for both, we're good to go.
+            if (previousBuildTests != null && currentBuildTests != null)
+            {
+                current.TestAssemblyPath = currentBuildTests.Location;
+                previous.TestAssemblyPath = previousBuildTests.Location;
+                result = new RegressionTestSuite(currentBuildTests, previousBuildTests, diff);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Instruments the target test suite.

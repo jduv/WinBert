@@ -10,9 +10,9 @@
 
     /// <summary>
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
-    ///  and doesn't do much beyond that. It can easily be extended for more specific scenarios through sub classing.
+    ///  and doesn't do much beyond that.
     /// </summary>
-    public class RandoopTestCompiler : ITestCompiler
+    public sealed class TestCompiler : ITestCompiler
     {
         #region Constants & Fields
 
@@ -26,37 +26,15 @@
         /// </summary>
         private readonly IList<string> referencePaths = new List<string>();
 
-        /// <summary>
-        /// The working directory for the compiler.
-        /// </summary>
-        private string workingDir;
-
         #endregion
 
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the BertAssemblyCompiler class.
+        /// Initializes a new instance of the TestCompiler class.
         /// </summary>
-        /// <param name="outputDir">
-        /// The output directory for the compiled assembly.
-        /// </param>
-        public RandoopTestCompiler(string outputDir)
+        public TestCompiler()
         {
-            if (string.IsNullOrEmpty(outputDir))
-            {
-                throw new ArgumentException("Invalid working directory! It cannot be null or empty.");
-            }
-
-            if (Directory.Exists(outputDir))
-            {
-                this.workingDir = Path.GetFullPath(outputDir);
-            }
-            else
-            {
-                throw new DirectoryNotFoundException("Invalid working directory! Path: " + outputDir);
-            }
-
             this.compiler = CodeDomProvider.CreateProvider("CSharp");
         }
 
@@ -89,7 +67,7 @@
             {
                 throw new FileNotFoundException("File not found! Path: " + path);
             }
-            
+
             if (!(Path.GetExtension(path).Equals(".dll", StringComparison.OrdinalIgnoreCase) ||
                    Path.GetExtension(path).Equals(".exe", StringComparison.OrdinalIgnoreCase)))
             {
@@ -97,7 +75,7 @@
             }
 
             // Made it. Whew.
-            this.referencePaths.Add(Path.GetFullPath(path));           
+            this.referencePaths.Add(Path.GetFullPath(path));
         }
 
         /// <inheritdoc />
@@ -127,12 +105,12 @@
             if (Directory.Exists(fullPath))
             {
                 var sourceFiles = this.GetSourceFiles(Path.GetFullPath(sourcePath));
-                
+
                 if (sourceFiles != null && sourceFiles.Length > 0)
                 {
                     var compilerParameters = new CompilerParameters(
-                        this.referencePaths.ToArray(), 
-                        this.GetRandomOutputFileName(), 
+                        this.referencePaths.ToArray(),
+                        Path.Combine(sourcePath, Path.GetRandomFileName() + ".dll"),
                         false);
 
                     var results = this.compiler.CompileAssemblyFromFile(compilerParameters, sourceFiles);
@@ -158,17 +136,6 @@
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// Gets a random file name with a ".dll" extension.
-        /// </summary>
-        /// <returns>
-        /// A random file name with the ".dll" extension.
-        /// </returns>
-        private string GetRandomOutputFileName()
-        {
-            return Path.Combine(this.workingDir, Path.GetRandomFileName() + ".dll");
-        }
 
         /// <summary>
         /// Grabs a list of source files given a path.

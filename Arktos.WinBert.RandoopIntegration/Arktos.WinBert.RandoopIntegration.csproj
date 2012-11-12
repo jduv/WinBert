@@ -109,8 +109,7 @@
   <ItemGroup>
     <Compile Include="ForbidExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandoopRegressionTestSuiteManager.cs" />
-    <Compile Include="RandoopTestCompiler.cs" />
+    <Compile Include="RandoopTestRunner.cs" />
     <Compile Include="Xml\RandoopPluginConfigSchema.cs">
       <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
     </Compile>

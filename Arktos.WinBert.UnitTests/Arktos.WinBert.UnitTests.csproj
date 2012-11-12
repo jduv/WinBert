@@ -72,6 +72,22 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <None Include="test-src\TestSrc04.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="test-src\TestSrc03.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="test-src\TestSrc02.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="test-src\TestSrc01.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dependent-src\Dependent.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="TestCompilerTests.cs" />
     <None Include="packages.config" />
     <Compile Include="BuildUnitTests.cs" />
     <Compile Include="FileCopierTest.cs" />
@@ -90,6 +106,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="test-configuration\WinbertTestConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="dependent-src\CopyOfDependency.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dependent-src\Dependency.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dependent-src\Dependency.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="filecopier-test-files\existingDest.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

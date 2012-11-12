@@ -17,7 +17,7 @@
     /// <summary>
     /// Uses the Randoop framework to generate a set of tests for the target assembly under test.
     /// </summary>
-    public class RandoopTestGenerator
+    public class RandoopTestGenerator : ITestGenerator
     {
         #region Fields and Constants
 
@@ -32,12 +32,17 @@
         private const string ExecutionLogName = "log.txt";
 
         /// <summary>
+        /// Compiles tests.
+        /// </summary>
+        private readonly ITestCompiler compiler;
+
+        /// <summary>
         ///   The configuration information for Randoop. This is different than the configuration that is built
         ///   and used to provide data to the native Randoop framework, but should replace the need for a system of
         ///   files for holding configuration information as is used presently in the Randoop framework.
         /// </summary>
         private RandoopPluginConfig config;
-        
+
         #endregion
 
         #region Constructors
@@ -52,13 +57,19 @@
         /// <param name="config">
         /// The Randoop configuration file for the test generator to pull any needed information from.
         /// </param>
-        public RandoopTestGenerator(WinBertConfig config)
+        public RandoopTestGenerator(WinBertConfig config, ITestCompiler compiler)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("Config cannot be null!");
             }
 
+            if (compiler == null)
+            {
+                throw new ArgumentNullException("Test compiler cannot be null!");
+            }
+
+            this.compiler = compiler;
             var randoopConfig = GetRandoopConfiguration(config);
 
             if (randoopConfig != null)
@@ -70,7 +81,7 @@
                 throw new InvalidConfigurationException("No valid configuration exists!");
             }
         }
-        
+
         #endregion
 
         #region Public Methods
@@ -105,18 +116,13 @@
             throw new InvalidConfigurationException("No valid Randoop configuration was found!");
         }
 
-        /// <summary>
-        /// Gets a TestAssembly containing a set of compiled tests.
-        /// </summary>
-        /// <param name="target">
-        /// The target assembly to generate tests for.
-        /// </param>
-        /// <param name="validTypes">
-        /// A list of types to generate the tests for.
-        /// </param>
-        /// <returns>
-        /// A compiled test assembly with executable  tests inside it.
-        /// </returns>
+        /// <inheritdoc />
+        public Assembly GetTestAssembly(Assembly target, IList<Type> validTypes)
+        {
+            return this.GetTestAssembly(target, validTypes, target.Location);
+        }
+
+        /// <inheritdoc />
         public Assembly GetTestAssembly(Assembly target, IList<Type> validTypes, string assemblyPath)
         {
             if (target == null)
@@ -136,10 +142,9 @@
                 {
                     try
                     {
-                        var workingDir = Path.GetDirectoryName(assemblyPath);
-                        ITestCompiler compiler = new RandoopTestCompiler(workingDir);
-                        compiler.AddReference(assemblyPath);
-                        return compiler.CompileTests(workingDir);
+                        var srcDir = Path.GetDirectoryName(assemblyPath);
+                        this.compiler.AddReference(assemblyPath);
+                        return this.compiler.CompileTests(srcDir);
                     }
                     catch (Exception exception)
                     {
@@ -150,7 +155,7 @@
 
             return null;
         }
-        
+
         #endregion
 
         #region Private Methods

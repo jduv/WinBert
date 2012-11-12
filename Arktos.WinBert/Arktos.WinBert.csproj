@@ -133,6 +133,8 @@
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Instrumentation\InstrumentedTestSuite.cs" />
+    <Compile Include="Testing\ITestRunner.cs" />
+    <Compile Include="Testing\RandoopTestCompiler.cs" />
     <Compile Include="Testing\RegressionTestSuiteManager.cs" />
     <Compile Include="Testing\ITestCompiler.cs" />
     <Compile Include="Testing\IRegressionTestSuite.cs" />

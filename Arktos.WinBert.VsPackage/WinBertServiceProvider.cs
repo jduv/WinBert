@@ -6,7 +6,6 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Text;
     using System.Windows.Forms;
     using System.Xml;
@@ -17,13 +16,14 @@
     using Arktos.WinBert.Xml;
     using EnvDTE;
     using EnvDTE80;
+    using Arktos.WinBert.Testing;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
     /// independent build archives, handling the differencing of target assemblies, kicking off test generation,
     /// and handing information off for analysis.
     /// </summary>
-    public sealed class WinBertServiceProvider : INotifyPropertyChanged
+    public sealed class WinBertServiceProvider
     {
         #region Fields and Constants
 
@@ -41,11 +41,6 @@
         /// Static path of the configuration file relative to the archive directory.
         /// </summary>
         private static readonly string ConfigFilePath = Path.Combine(ArchiveDir, @"winbertconfig.xml");
-
-        /// <summary>
-        /// A list of ignore targets to
-        /// </summary>
-        private readonly IgnoreTarget[] ignoreTargets = null;
 
         /// <summary>
         /// A dictionary that holds the build version manager objects that the currently opened solution
@@ -74,11 +69,6 @@
         /// </summary>
         private bool buildFailed = false;
 
-        /// <summary>
-        /// A list of AnalysisResults describing the most recent run of the engine.
-        /// </summary>
-        private AnalysisResult currentRunResults = null;
-
         #endregion
 
         #region Constructors
@@ -103,15 +93,6 @@
 
         #endregion
 
-        #region Events
-
-        /// <summary>
-        /// Subscribe to this event to receive notifications that a property on this object has changed.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -124,17 +105,48 @@
         #region Private Methods
 
         /// <summary>
-        /// Raises the property changed event.
+        /// Attempts to load a configuration file from the target path.
         /// </summary>
-        /// <param name="propertyName">
-        /// The name of the property that has changed.
-        /// </param>
-        private void RaisePropertyChanged(string propertyName)
+        /// <param name="path">The path to load.</param>
+        /// <returns>A configuration object, or null on failure.</returns>
+        private static WinBertConfig LoadConfigFromPath(string path)
         {
-            if (this.PropertyChanged != null)
+            if (File.Exists(path))
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                try
+                {
+                    return WinBertConfig.Deserialize(File.OpenRead(path));
+                }
+                catch (Exception exc)
+                {
+                    var errorMessage = "Unable to deserialize the configuration file!" + Environment.NewLine;
+                    errorMessage += "Exception: " + exc;
+                    Debug.WriteLine(errorMessage);
+                }
             }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reads in a default configuration file stored inside the package DLL.
+        /// </summary>
+        /// <returns></returns>
+        private static WinBertConfig GetDefaultConfig()
+        {
+            try
+            {
+                var data = Encoding.ASCII.GetBytes(Resources.winbertconfig);
+                return WinBertConfig.Deserialize(new MemoryStream(data));
+            }
+            catch (Exception exc)
+            {
+                var errorMessage = "Unable to deserialize in-memory configuration file!" + Environment.NewLine;
+                errorMessage += "Exception: " + exc;
+                Debug.WriteLine(errorMessage);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -144,7 +156,7 @@
         {
             // Hook up build events.
             this.buildEvents.OnBuildBegin += this.OnBuildBegin;
-            this.buildEvents.OnBuildProjConfigBegin += this.OnBuildProjConfigBegin;
+            //this.buildEvents.OnBuildProjConfigBegin += this.OnBuildProjConfigBegin;
             this.buildEvents.OnBuildDone += this.OnBuildDone;
             this.buildEvents.OnBuildProjConfigDone += this.OnBuildProjConfigDone;
 
@@ -165,25 +177,6 @@
         private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
         {
             this.buildFailed = false;
-        }
-
-        /// <summary>
-        /// Handles build project events.
-        /// </summary>
-        /// <param name="project">
-        /// The name of the project configuration file that just built.
-        /// </param>
-        /// <param name="projectConfig">
-        /// Project configuration.
-        /// </param>
-        /// <param name="platform">
-        /// Project platform.
-        /// </param>
-        /// <param name="solutionConfig">
-        /// Solution configuration.
-        /// </param>
-        private void OnBuildProjConfigBegin(string project, string projectConfig, string platform, string solutionConfig)
-        {
         }
 
         /// <summary>
@@ -210,7 +203,7 @@
 
                     if (currentBuild != null && lastTestedBuild != null)
                     {
-                        var testManager = new RandoopRegressionTestSuiteManager(this.Config);
+                        var testManager = GetTestManager(this.Config);
                         var results = testManager.BuildAndExecuteTestSuite(currentBuild, lastTestedBuild);
                     }
                 }
@@ -312,51 +305,6 @@
                     this.LoadConfiguration();
                 }
             }
-        }
-
-        /// <summary>
-        /// Attempts to load a configuration file from the target path.
-        /// </summary>
-        /// <param name="path">The path to load.</param>
-        /// <returns>A configuration object, or null on failure.</returns>
-        private static WinBertConfig LoadConfigFromPath(string path)
-        {
-            if (File.Exists(path))
-            {
-                try
-                {
-                    return WinBertConfig.Deserialize(File.OpenRead(path));
-                }
-                catch (Exception exc)
-                {
-                    var errorMessage = "Unable to deserialize the configuration file!" + Environment.NewLine;
-                    errorMessage += "Exception: " + exc;
-                    Debug.WriteLine(errorMessage);
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Reads in a default configuration file stored inside the package DLL.
-        /// </summary>
-        /// <returns></returns>
-        private static WinBertConfig GetDefaultConfig()
-        {
-            try
-            {
-                var data = Encoding.ASCII.GetBytes(Resources.winbertconfig);
-                return WinBertConfig.Deserialize(new MemoryStream(data));
-            }
-            catch (Exception exc)
-            {
-                var errorMessage = "Unable to deserialize in-memory configuration file!" + Environment.NewLine;
-                errorMessage += "Exception: " + exc;
-                Debug.WriteLine(errorMessage);
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -570,6 +518,21 @@
         private string GetSolutionWorkingDirectory()
         {
             return Path.GetDirectoryName(this.dte.Solution.FullName);
+        }
+
+        /// <summary>
+        /// Constructs and returns a Regression test suite manager.
+        /// </summary>
+        /// <returns>
+        /// A RegressionTestSuiteManager instance.
+        /// </returns>
+        private static RegressionTestSuiteManager GetTestManager(WinBertConfig config)
+        {
+            var compiler = new TestCompiler();
+            var generator = new RandoopTestGenerator(config, compiler);
+            var runner = new RandoopTestRunner();
+
+            return new RegressionTestSuiteManager(config, generator, runner);
         }
 
         #endregion
