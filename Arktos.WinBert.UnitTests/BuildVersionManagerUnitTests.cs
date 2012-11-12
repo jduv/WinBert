@@ -9,7 +9,7 @@
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
-    public class BuildVersionManagerTests
+    public class BuildVersionManagerUnitTests
     {
         #region Fields and Constants
         

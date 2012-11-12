@@ -25,7 +25,7 @@
         /// The original difference context describing the differences between both
         /// assemblies that tests were generated for.
         /// </param>
-        public RegressionTestSuite(Assembly newTargetTests, Assembly oldTargetTests, AssemblyDifferenceResult diff)
+        public RegressionTestSuite(Assembly newTargetTests, Assembly oldTargetTests, IAssemblyDifferenceResult diff)
         {
             this.NewTargetTestAssembly = newTargetTests;
             this.OldTargetTestAssembly = oldTargetTests;
@@ -39,7 +39,7 @@
         /// <summary>
         ///   Gets the difference result.
         /// </summary>
-        public IDifferenceResult<Assembly> Diff { get; private set; }
+        public IAssemblyDifferenceResult Diff { get; private set; }
 
         /// <summary>
         ///   Gets the new assembly.

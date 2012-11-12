@@ -7,7 +7,7 @@
 
     [TestClass]
     [DeploymentItem("filecopier-test-files", "filecopier-test-files")]
-    public class FileCopierTest
+    public class FileCopierUnitTests
     {
         #region Fields and Constants
 

@@ -87,13 +87,14 @@
     <None Include="dependent-src\Dependent.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="TestCompilerTests.cs" />
+    <Compile Include="RegressionTestSuiteManagerUnitTests.cs" />
+    <Compile Include="TestCompilerUnitTests.cs" />
     <None Include="packages.config" />
     <Compile Include="BuildUnitTests.cs" />
-    <Compile Include="FileCopierTest.cs" />
+    <Compile Include="FileCopierUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BuildVersionManagerTests.cs" />
-    <Compile Include="BertAssemblyDifferenceEngineTest.cs" />
+    <Compile Include="BuildVersionManagerUnitTests.cs" />
+    <Compile Include="AssemblyDifferenceEngineUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arktos.WinBert.RandoopIntegration\Arktos.WinBert.RandoopIntegration.csproj">

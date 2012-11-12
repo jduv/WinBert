@@ -9,7 +9,7 @@
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
     /// </summary>
-    public sealed class BertAssemblyDifferenceEngine : IDifferenceEngine<Assembly, AssemblyDifferenceResult>
+    public sealed class AssemblyDifferenceEngine : IDifferenceEngine<Assembly, AssemblyDifferenceResult>
     {
         #region Constants and Fields
 
@@ -21,7 +21,7 @@
         /// <summary>
         ///   A mechanism for differencing types.
         /// </summary>
-        private readonly BertTypeDifferenceEngine typeDiffer = null;
+        private readonly TypeDifferenceEngine typeDiffer = null;
 
         #endregion
 
@@ -33,9 +33,9 @@
         /// <param name="ignoreTargets">
         /// A list of ignore targets.
         /// </param>
-        public BertAssemblyDifferenceEngine(IgnoreTarget[] ignoreTargets)
+        public AssemblyDifferenceEngine(IgnoreTarget[] ignoreTargets)
         {
-            this.typeDiffer = new BertTypeDifferenceEngine(ignoreTargets);
+            this.typeDiffer = new TypeDifferenceEngine(ignoreTargets);
 
             if (ignoreTargets != null && ignoreTargets.Length > 0)
             {

@@ -15,7 +15,7 @@
         /// <summary>
         ///   Gets the difference result.
         /// </summary>
-        IDifferenceResult<Assembly> Diff { get; }
+        IAssemblyDifferenceResult Diff { get; }
 
         /// <summary>
         ///   Gets the new assembly.

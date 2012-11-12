@@ -109,7 +109,7 @@
         /// </summary>
         /// <param name="path">The path to load.</param>
         /// <returns>A configuration object, or null on failure.</returns>
-        private static WinBertConfig LoadConfigFromPath(string path)
+        private static WinBertConfig LoadState(string path)
         {
             if (File.Exists(path))
             {
@@ -203,7 +203,11 @@
 
                     if (currentBuild != null && lastTestedBuild != null)
                     {
-                        var testManager = GetTestManager(this.Config);
+                        var compiler = new TestCompiler();
+                        var runner = new RandoopTestRunner();
+                        var generator = new RandoopTestGenerator(this.Config, compiler);
+                        var testManager = new RegressionTestSuiteManager(this.Config, generator, runner);
+
                         var results = testManager.BuildAndExecuteTestSuite(currentBuild, lastTestedBuild);
                     }
                 }
@@ -291,7 +295,7 @@
             {
                 string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
 
-                var config = LoadConfigFromPath(path) ?? GetDefaultConfig();
+                var config = LoadState(path) ?? GetDefaultConfig();
 
                 if (config == null)
                 {
@@ -518,21 +522,6 @@
         private string GetSolutionWorkingDirectory()
         {
             return Path.GetDirectoryName(this.dte.Solution.FullName);
-        }
-
-        /// <summary>
-        /// Constructs and returns a Regression test suite manager.
-        /// </summary>
-        /// <returns>
-        /// A RegressionTestSuiteManager instance.
-        /// </returns>
-        private static RegressionTestSuiteManager GetTestManager(WinBertConfig config)
-        {
-            var compiler = new TestCompiler();
-            var generator = new RandoopTestGenerator(config, compiler);
-            var runner = new RandoopTestRunner();
-
-            return new RegressionTestSuiteManager(config, generator, runner);
         }
 
         #endregion

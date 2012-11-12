@@ -7,13 +7,12 @@
     using System.Reflection;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Xml;    
+    using Arktos.WinBert.Xml;
 
     /// <summary>
-    /// The abstrct class that ties everything together. An implementation of this should be able to manage
+    /// The class that ties everything together. An implementation of this should be able to manage
     /// pulling together all the miscellaneous pieces required to build out a regression test suite and execute
-    /// it, returning an analysis result. This class extends from MarshalByRefObject so that instances can be
-    /// remoted into other application domains.
+    /// it, returning an analysis result.
     /// </summary>
     public class RegressionTestSuiteManager
     {
@@ -21,6 +20,7 @@
 
         private readonly ITestGenerator generator;
         private readonly ITestRunner runner;
+        private readonly WinBertConfig config;
 
         #endregion
 
@@ -29,13 +29,10 @@
         /// <summary>
         /// Initializes a new instance of the RegressionTestSuiteManager class.
         /// </summary>
-        /// <param name="config">
-        /// The configuration.
-        /// </param>
-        public RegressionTestSuiteManager(
-            WinBertConfig config, 
-            ITestGenerator generator, 
-            ITestRunner runner)
+        /// <param name="config">The configuration to initialize with.</param>
+        /// <param name="generator">The generator implementation to use when generating test assembiles.</param>
+        /// <param name="runner">The test runner.</param>
+        public RegressionTestSuiteManager(WinBertConfig config, ITestGenerator generator, ITestRunner runner)
         {
             if (config == null)
             {
@@ -52,19 +49,10 @@
                 throw new ArgumentNullException("Test runner cannot be null.");
             }
 
-            this.Config = config;
+            this.config = config;
             this.generator = generator;
             this.runner = runner;
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the currently set configuration
-        /// </summary>
-        protected WinBertConfig Config { get; private set; }
 
         #endregion
 
@@ -154,7 +142,7 @@
         /// The difference result.
         /// </param>
         /// <returns>A fully compiled regression test suite.</returns>
-        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, AssemblyDifferenceResult diff)
+        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, IAssemblyDifferenceResult diff)
         {
             IRegressionTestSuite result = null;
             var types = diff.TypeDifferences.Select(x => x.NewObject).ToList();
@@ -225,7 +213,7 @@
         /// <returns></returns>
         protected AssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
-            var differ = new BertAssemblyDifferenceEngine(this.Config.IgnoreList);
+            var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
 
             try
             {

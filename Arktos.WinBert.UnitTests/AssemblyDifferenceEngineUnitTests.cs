@@ -9,7 +9,7 @@
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
-    public class BertAssemblyDifferenceEngineTest
+    public class AssemblyDifferenceEngineUnitTests
     {
         #region Fields & Constants
 
@@ -26,7 +26,7 @@
         [TestMethod]
         public void Diff_DifferentAssemblies_Difference()
         {
-            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(null);
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(null);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
@@ -52,7 +52,7 @@
             IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "BankAccount.BankAccount");
             targets[0] = target0;
 
-            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(targets);
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
@@ -75,7 +75,7 @@
             IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
-            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(targets);
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
@@ -97,7 +97,7 @@
             IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Deposit");
             targets[1] = target1;
 
-            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(targets);
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
@@ -119,7 +119,7 @@
             IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
-            BertAssemblyDifferenceEngine target = new BertAssemblyDifferenceEngine(targets);
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 

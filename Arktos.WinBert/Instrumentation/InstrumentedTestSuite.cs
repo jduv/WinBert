@@ -65,7 +65,7 @@
         /// <summary>
         ///   Gets the difference result between the old and new assemblies.
         /// </summary>
-        public IDifferenceResult<Assembly> Diff
+        public IAssemblyDifferenceResult Diff
         {
             get
             {

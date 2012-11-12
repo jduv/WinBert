@@ -11,7 +11,7 @@
     /// <summary>
     /// This simple type differencing engine will take two types and figure out the difference between them.
     /// </summary>
-    public sealed class BertTypeDifferenceEngine : IDifferenceEngine<Type, ITypeDifferenceResult>
+    public sealed class TypeDifferenceEngine : IDifferenceEngine<Type, ITypeDifferenceResult>
     {
         #region Constants and Fields
 
@@ -30,7 +30,7 @@
         /// <param name="ignoreTargets">
         /// A list of ignore targets.
         /// </param>
-        public BertTypeDifferenceEngine(IgnoreTarget[] ignoreTargets)
+        public TypeDifferenceEngine(IgnoreTarget[] ignoreTargets)
         {
             if (ignoreTargets != null && ignoreTargets.Length > 0)
             {
