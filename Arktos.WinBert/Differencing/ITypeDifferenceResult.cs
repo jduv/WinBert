@@ -18,10 +18,8 @@
         IList<FieldInfo> AddedFields { get; }
 
         /// <summary>
-        ///   Gets a list of names of methods that have changed between the two target types. This should not include 
-        ///   methods that have the same name but different contracts i.e. foo(x, y) vs foo(x).
-        /// </summary>
-        IList<MethodInfo> MethodNames { get; }
+        ///   Gets a list of methods that have changed between the two target types.
+        IList<MethodInfo> Methods { get; }
 
         /// <summary>
         ///   Gets a list of fields that were removed in the new version of the class.

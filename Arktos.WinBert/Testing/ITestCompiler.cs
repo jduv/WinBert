@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Reflection;
+    using Microsoft.Cci;
 
     /// <summary>
     /// Defines behavior for a component that is able to compile an Assembly
@@ -12,8 +13,8 @@
         #region Properties
 
         /// <summary>
-        ///   Gets a list of the reference assemblies for this compiler to use when compiling
-        ///   the target source.
+        /// Gets a list of the reference assemblies for this compiler to use when compiling
+        /// the target source.
         /// </summary>
         IEnumerable<string> References { get; }
 
@@ -49,9 +50,9 @@
         /// The path to the source to compile.
         /// </param>
         /// <returns>
-        /// A test assembly or null on failure.
+        /// A test assembly.
         /// </returns>
-        Assembly CompileTests(string sourcePath);
+        IAssembly CompileTests(string sourcePath);
 
         /// <summary>
         /// Compiles all source at the target path into an Assembly with the target output name.
@@ -63,9 +64,9 @@
         /// The output file name.
         /// </param>
         /// <returns>
-        /// A test assembly or null on failure.
+        /// A test assembly.
         /// </returns>
-        Assembly CompileTests(string sourcePath, string outputFileName);
+        IAssembly CompileTests(string sourcePath, string outputFileName);
 
         #endregion
     }

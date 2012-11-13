@@ -15,7 +15,7 @@
     {
         #region Fields & Constants
 
-        private readonly IgnoreTarget[] ignoreTargets = null;
+        private readonly IgnoreTarget[] ignoreTargets;
 
         #endregion
 
@@ -52,7 +52,7 @@
         /// </param>
         /// <returns>
         /// An IDifferenceResult implementation that contains all the differences between the target types in
-        ///   a hierarchical manner. <see cref="TypeDifferenceResult"/>
+        /// a hierarchical manner. <see cref="TypeDifferenceResult"/>
         /// </returns>
         public ITypeDifferenceResult Diff(Type oldObject, Type newObject)
         {
@@ -69,7 +69,7 @@
                 var filteredMethodList = this.GetFilteredMethodListForType(newObject);
                 foreach (MethodInfo method in this.GetMethodDifferences(methodDictionary, filteredMethodList))
                 {
-                    typeDifferenceResult.MethodNames.Add(method);
+                    typeDifferenceResult.Methods.Add(method);
                 }
 
                 return typeDifferenceResult;
@@ -145,8 +145,7 @@
         /// <returns>
         /// A list of methods that are different.
         /// </returns>
-        private IEnumerable GetMethodDifferences(
-            Dictionary<string, MethodInfo> methodDictionary, IList<MethodInfo> methods)
+        private IEnumerable GetMethodDifferences(Dictionary<string, MethodInfo> methodDictionary, IList<MethodInfo> methods)
         {
             foreach (var method in methods)
             {

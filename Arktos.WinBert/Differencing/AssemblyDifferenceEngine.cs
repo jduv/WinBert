@@ -9,7 +9,7 @@
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
     /// </summary>
-    public sealed class AssemblyDifferenceEngine : IDifferenceEngine<Assembly, AssemblyDifferenceResult>
+    public sealed class AssemblyDifferenceEngine : IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
     {
         #region Constants & Fields
 
@@ -42,7 +42,7 @@
 
         /// <summary>
         /// Implementation of the Diff method required by the IDifferenceEngine interface. This method will perform
-        ///   a very rudimentary diff on the two passed in assemblies.
+        /// a very rudimentary diff on the two passed in assemblies.
         /// </summary>
         /// <param name="oldObject">
         /// The first object to compare.
@@ -52,9 +52,9 @@
         /// </param>
         /// <returns>
         /// An IDifferenceResult implementation that contains all the differences between the target assemblies in
-        ///   a hierarchical manner.
+        /// a hierarchical manner.
         /// </returns>
-        public AssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
+        public IAssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
         {
             AssemblyDifferenceResult assemblyDifferenceResult = null;
             if (oldObject == null || newObject == null)
@@ -101,7 +101,7 @@
         /// </param>
         /// <returns>
         /// An IDifferenceResult implementation that contains all the differences between the target types in
-        ///   a hierarchical manner. <see cref="TypeDifferenceResult"/>
+        /// a hierarchical manner. <see cref="TypeDifferenceResult"/>
         /// </returns>
         private ITypeDifferenceResult Diff(Type oldType, Type newType)
         {
@@ -138,16 +138,16 @@
 
         /// <summary>
         /// Returns a dictionary containing a list of all the types in the target assembly. Since there can be, by 
-        ///   definition, only one type of a certain name in existence inside an assembly, this method should never 
-        ///   run into collisions. Note that this method will also filter out any unwanted types based on the ignore 
-        ///   targets for this engine.
+        /// definition, only one type of a certain name in existence inside an assembly, this method should never 
+        /// run into collisions. Note that this method will also filter out any unwanted types based on the ignore 
+        /// targets for this engine.
         /// </summary>
         /// <param name="assembly">
         /// The assembly to enumerate all the types for.
         /// </param>
         /// <returns>
         /// A dictionary containing references to all the types in the assembly with their names as keys. If no types
-        ///   exist in the assembly (unlikely) then an empty dictionary will be returned.
+        /// exist in the assembly (unlikely) then an empty dictionary will be returned.
         /// </returns>
         private Dictionary<string, Type> GetTypeDictionaryForAssembly(Assembly assembly)
         {

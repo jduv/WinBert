@@ -1,41 +1,40 @@
 ﻿namespace Arktos.WinBert.Testing
 {
-    using System.Reflection;
-    using Arktos.WinBert.Differencing;
-    using System;
+    using Arktos.WinBert.Differencing.Cci;
+    using Microsoft.Cci;
 
     /// <summary>
     /// Defines a basic property set that all TestSuite's should implement. This is mainly used to provide
-    ///   a common functionality point for running tests.
+    /// a common functionality point for running tests.
     /// </summary>
     public interface IRegressionTestSuite
     {
         #region Properties
 
         /// <summary>
-        ///   Gets the difference result.
+        /// Gets the difference result.
         /// </summary>
-        IAssemblyDifferenceResult Diff { get; }
+        ICciAssemblyDifferenceResult Diff { get; }
 
         /// <summary>
-        ///   Gets the new assembly.
+        /// Gets the new assembly.
         /// </summary>
-        Assembly NewTargetAssembly { get; }
+        IAssembly NewTargetAssembly { get; }
 
         /// <summary>
-        ///   Gets an assembly holding the tests for the new assembly target.
+        /// Gets an assembly holding the tests for the new assembly target.
         /// </summary>
-        Assembly NewTargetTestAssembly { get; }
+        IAssembly NewTargetTestAssembly { get; }
 
         /// <summary>
-        ///   Gets the old assembly.
+        /// Gets the old assembly.
         /// </summary>
-        Assembly OldTargetAssembly { get; }
+        IAssembly OldTargetAssembly { get; }
 
         /// <summary>
-        ///   Gets an Assembly holding the tests for the old assembly target.
+        /// Gets an Assembly holding the tests for the old assembly target.
         /// </summary>
-        Assembly OldTargetTestAssembly { get; }
+        IAssembly OldTargetTestAssembly { get; }
 
         #endregion
     }

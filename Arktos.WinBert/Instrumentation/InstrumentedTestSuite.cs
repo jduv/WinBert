@@ -1,8 +1,8 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
-    using System.Reflection;
-    using Arktos.WinBert.Differencing;
+    using Arktos.WinBert.Differencing.Cci;
     using Arktos.WinBert.Testing;
+    using Microsoft.Cci;
 
     /// <summary>
     /// Represents a test suite that has been instrumented.
@@ -42,27 +42,27 @@
         /// <summary>
         ///   Gets or sets an instrumented copy of the new assembly.
         /// </summary>
-        public Assembly InstrumentedNewTargetAssembly { get; set; }
+        public IAssembly InstrumentedNewTargetAssembly { get; set; }
 
         /// <summary>
         ///   Gets or sets an instrumented copy of the TestAssembly for the new assembly.
         /// </summary>
-        public Assembly InstrumentedNewTargetTestAssembly { get; set; }
+        public IAssembly InstrumentedNewTargetTestAssembly { get; set; }
 
         /// <summary>
         ///   Gets or sets an instrumented copy of the old assembly.
         /// </summary>
-        public Assembly InstrumentedOldTargetAssembly { get; set; }
+        public IAssembly InstrumentedOldTargetAssembly { get; set; }
 
         /// <summary>
         ///   Gets or sets an instrumented copy of the TestAssembly for the old assembly.
         /// </summary>
-        public Assembly InstrumentedOldTargetTestAssembly { get; set; }
+        public IAssembly InstrumentedOldTargetTestAssembly { get; set; }
 
         /// <summary>
         ///   Gets the difference result between the old and new assemblies.
         /// </summary>
-        public IAssemblyDifferenceResult Diff
+        public ICciAssemblyDifferenceResult Diff
         {
             get
             {
@@ -73,7 +73,7 @@
         /// <summary>
         ///   Gets the new assembly.
         /// </summary>
-        public Assembly NewTargetAssembly
+        public IAssembly NewTargetAssembly
         {
             get
             {
@@ -84,7 +84,7 @@
         /// <summary>
         ///   Gets a list of tests for the new assembly.
         /// </summary>
-        public Assembly NewTargetTestAssembly
+        public IAssembly NewTargetTestAssembly
         {
             get
             {
@@ -95,7 +95,7 @@
         /// <summary>
         ///   Gets the old assembly.
         /// </summary>
-        public Assembly OldTargetAssembly
+        public IAssembly OldTargetAssembly
         {
             get
             {
@@ -106,7 +106,7 @@
         /// <summary>
         ///   Gets a list of tests for the old assembly.
         /// </summary>
-        public Assembly OldTargetTestAssembly
+        public IAssembly OldTargetTestAssembly
         {
             get
             {
@@ -116,4 +116,4 @@
 
         #endregion
     }
-} 
+}

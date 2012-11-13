@@ -58,7 +58,7 @@
 
     <xs:complexType name="IgnoreTarget">
         <xs:sequence>
-            <xs:element name="Name" minOccurs="1" />
+            <xs:element name="Name" minOccurs="1" type="xs:string" />
         </xs:sequence>
         <xs:attribute name="Type" type="bert:IgnoreType" use="required"/>
     </xs:complexType>

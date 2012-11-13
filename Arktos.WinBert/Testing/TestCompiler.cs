@@ -5,8 +5,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using Arktos.WinBert.Exceptions;
+    using Arktos.WinBert.Util;
+    using Microsoft.Cci;
 
     /// <summary>
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
@@ -16,8 +17,9 @@
     {
         #region Fields & Constants
 
-        private readonly CodeDomProvider compiler = null;
-        private readonly IList<string> referencePaths = new List<string>();
+        private readonly CodeDomProvider compiler;
+        private readonly IList<string> referencePaths;
+        private readonly IAssemblyResolver resolver;
 
         #endregion
 
@@ -26,9 +28,15 @@
         /// <summary>
         /// Initializes a new instance of the TestCompiler class.
         /// </summary>
-        public TestCompiler()
+        /// <param name="resolver">
+        /// An IAssemblyResolver implementation to use when loading the compiled
+        /// assemblies.
+        /// </param>
+        public TestCompiler(IAssemblyResolver resolver = null)
         {
             this.compiler = CodeDomProvider.CreateProvider("CSharp");
+            this.referencePaths = new List<string>();
+            this.resolver = resolver == null ? new AssemblyResolver() : resolver;
         }
 
         #endregion
@@ -87,7 +95,7 @@
         }
 
         /// <inheritdoc />
-        public Assembly CompileTests(string sourcePath)
+        public IAssembly CompileTests(string sourcePath)
         {
             if (string.IsNullOrEmpty(sourcePath))
             {
@@ -98,7 +106,7 @@
         }
 
         /// <inheritdoc />
-        public Assembly CompileTests(string sourcePath, string outputFileName)
+        public IAssembly CompileTests(string sourcePath, string outputFileName)
         {
             if (string.IsNullOrEmpty(sourcePath))
             {
@@ -122,7 +130,7 @@
                     if (results.Errors.Count == 0)
                     {
                         // return the loaded assembly.
-                        return Assembly.LoadFile(Path.GetFullPath(results.PathToAssembly));
+                        return resolver.LoadMeta(Path.GetFullPath(results.PathToAssembly));
                     }
                     else
                     {

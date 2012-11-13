@@ -1,13 +1,12 @@
 ﻿namespace Arktos.WinBert.Testing
 {
     using System;
-    using System.Diagnostics;
-    using System.IO;
     using System.Linq;
-    using System.Reflection;
     using Arktos.WinBert.Analysis;
-    using Arktos.WinBert.Differencing;
+    using Arktos.WinBert.Differencing.Cci;
+    using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
+    using Microsoft.Cci;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage
@@ -20,6 +19,7 @@
 
         private readonly ITestGenerator generator;
         private readonly ITestRunner runner;
+        private readonly IAssemblyResolver resolver;
         private readonly WinBertConfig config;
 
         #endregion
@@ -32,7 +32,11 @@
         /// <param name="config">The configuration to initialize with.</param>
         /// <param name="generator">The generator implementation to use when generating test assembiles.</param>
         /// <param name="runner">The test runner.</param>
-        public RegressionTestSuiteManager(WinBertConfig config, ITestGenerator generator, ITestRunner runner)
+        public RegressionTestSuiteManager(
+            WinBertConfig config,
+            ITestGenerator generator,
+            ITestRunner runner,
+            IAssemblyResolver resolver = null)
         {
             if (config == null)
             {
@@ -52,6 +56,7 @@
             this.config = config;
             this.generator = generator;
             this.runner = runner;
+            this.resolver = resolver == null ? new AssemblyResolver() : resolver;
         }
 
         #endregion
@@ -71,24 +76,24 @@
         public AnalysisResult BuildAndExecuteTestSuite(Build current, Build previous)
         {
             AnalysisResult result = null;
-            var diff = this.DoDiff(current, previous);
-            if (diff != null && diff.IsDifferent)
+            try
             {
-                try
+                var diff = this.DoDiff(current, previous);
+                if (diff != null && diff.IsDifferent)
                 {
                     var suite = this.BuildTestSuite(current, previous, diff);
                     suite = this.InstrumentTestSuite(suite);
                     result = this.ExecuteTestSuite(suite);
                 }
-                catch (Exception)
+                else
                 {
-                    // BMK Handle exception here.
+                    // BMK Handle no results here.
+                    result = null;
                 }
             }
-            else
+            catch (Exception)
             {
-                // BMK Handle no results here.
-                result = null;
+                // BMK Handle exception here.
             }
 
             return result;
@@ -97,23 +102,6 @@
         #endregion
 
         #region Protected Methods
-
-        /// <summary>
-        /// Loads an assembly without locking it or the PDB.
-        /// </summary>
-        /// <param name="path">
-        /// The path of the assembly to load.
-        /// </param>
-        /// <returns>
-        /// The assembly.
-        /// </returns>
-        protected static Assembly LoadAssembly(string assemblyPath, string pdbPath)
-        {
-            //byte[] assemblyBytes = File.ReadAllBytes(assemblyPath);
-            //byte[] pdbBytes = string.IsNullOrEmpty(pdbPath) ? null : File.ReadAllBytes(pdbPath);
-            //return Assembly.Load(assemblyBytes, pdbBytes);
-            return Assembly.LoadFile(assemblyPath);
-        }
 
         /// <summary>
         /// Executes the target test suite.
@@ -142,42 +130,18 @@
         /// The difference result.
         /// </param>
         /// <returns>A fully compiled regression test suite.</returns>
-        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, IAssemblyDifferenceResult diff)
+        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, ICciAssemblyDifferenceResult diff)
         {
             IRegressionTestSuite result = null;
             var types = diff.TypeDifferences.Select(x => x.NewObject).ToList();
 
             // Generate tests for the last tested build if we need to
-            Assembly previousBuildTests;
-            if (string.IsNullOrEmpty(previous.TestAssemblyPath))
-            {
-                if (string.IsNullOrEmpty(diff.OldObject.Location))
-                {
-                    previousBuildTests = generator.GetTestAssembly(
-                        diff.OldObject,
-                        types,
-                        previous.AssemblyPath);
-                }
-                else
-                {
-                    previousBuildTests = generator.GetTestAssembly(diff.OldObject, types);
-                }
-            }
-            else
-            {
-                previousBuildTests = LoadAssembly(previous.AssemblyPath, null);
-            }
+            IAssembly previousBuildTests = string.IsNullOrEmpty(previous.TestAssemblyPath) ?
+                generator.GetTestsFor(diff.OldObject, types) :
+                resolver.LoadMeta(previous.AssemblyPath);
 
             // Generate tests for the newest build
-            Assembly currentBuildTests;
-            if (string.IsNullOrEmpty(diff.NewObject.Location))
-            {
-                currentBuildTests = generator.GetTestAssembly(diff.NewObject, types, current.AssemblyPath);
-            }
-            else
-            {
-                currentBuildTests = generator.GetTestAssembly(diff.NewObject, types);
-            }
+            IAssembly currentBuildTests = generator.GetTestsFor(diff.NewObject, types);
 
             // If we have tests for both, we're good to go.
             if (previousBuildTests != null && currentBuildTests != null)
@@ -208,25 +172,21 @@
         /// <summary>
         /// Performs a diff between the two builds.
         /// </summary>
-        /// <param name="current">The current build.</param>
-        /// <param name="previous">The previous build.</param>
-        /// <returns></returns>
-        protected AssemblyDifferenceResult DoDiff(Build current, Build previous)
+        /// <param name="current">
+        /// The current build.
+        /// </param>
+        /// <param name="previous">
+        /// The previous build.
+        /// </param>
+        /// <returns>
+        /// A difference result.
+        /// </returns>
+        protected ICciAssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
-            var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
-
-            try
-            {
-                var currentAssembly = LoadAssembly(current.AssemblyPath, current.PdbPath);
-                var previousAssembly = LoadAssembly(previous.AssemblyPath, previous.PdbPath);
-                return differ.Diff(previousAssembly, currentAssembly);
-            }
-            catch (Exception exception)
-            {
-                Trace.TraceError("Unable to diff assemblies {0} and {1}. Exception: {2}", previous.AssemblyPath, current.AssemblyPath, exception);
-            }
-
-            return null;
+            var differ = new CciAssemblyDifferenceEngine(this.config.IgnoreList);
+            var currentAssembly = resolver.LoadMeta(current.AssemblyPath);
+            var previousAssembly = resolver.LoadMeta(previous.AssemblyPath);
+            return differ.Diff(previousAssembly, currentAssembly);
         }
 
         #endregion

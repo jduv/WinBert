@@ -12,13 +12,6 @@
     /// </summary>
     public sealed class TypeDifferenceResult : ITypeDifferenceResult
     {
-        #region Fields & Constants
-
-        private readonly Type newType = null;
-        private readonly Type oldType = null;
-
-        #endregion
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -32,9 +25,9 @@
         /// </param>
         public TypeDifferenceResult(Type oldType, Type newType)
         {
-            this.oldType = oldType;
-            this.newType = newType;
-            this.MethodNames = new List<MethodInfo>();
+            this.OldObject = oldType;
+            this.NewObject = newType;
+            this.Methods = new List<MethodInfo>();
             this.RemovedFields = new List<FieldInfo>();
             this.AddedFields = new List<FieldInfo>();
         }
@@ -43,55 +36,29 @@
 
         #region Properties
 
-        /// <summary>
-        ///   Gets a list of fields that were added to the new version of the class and didn't exist in the old
-        ///   version.
-        /// </summary>
-        public IList<FieldInfo> AddedFields { get; private set; }
-
-        /// <summary>
-        ///   Gets a list of fields that were removed in the new version of the class.
-        /// </summary>
-        public IList<FieldInfo> RemovedFields { get; private set; }
-
-        /// <summary>
-        ///   Gets a list of names of methods that have changed between the two target types. This should not include 
-        ///   methods that have the same name but different contracts i.e. foo(x, y) vs foo(x).
-        /// </summary>
-        public IList<MethodInfo> MethodNames { get; private set; }
-
-        /// <summary>
-        ///   Gets a value indicating whether there is a difference or not.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsDifferent
         {
             get
             {
-                return this.MethodNames.Count > 0 || this.oldType == null || this.newType == null;
+                return this.Methods.Count > 0 || this.OldObject == null || this.NewObject == null;
             }
         }
 
-        /// <summary>
-        ///   Gets the new type.
-        /// </summary>
-        public Type NewObject
-        {
-            get
-            {
-                return this.newType;
-            }
-        }
+        /// <inheritdoc />
+        public IList<FieldInfo> AddedFields { get; private set; }
 
-        /// <summary>
-        ///   Gets the old type.
-        /// </summary>
-        public Type OldObject
-        {
-            get
-            {
-                return this.oldType;
-            }
-        }
+        /// <inheritdoc />
+        public IList<FieldInfo> RemovedFields { get; private set; }
+
+        /// <inheritdoc />
+        public IList<MethodInfo> Methods { get; private set; }
+
+        /// <inheritdoc />
+        public Type NewObject { get; private set; }
+
+        /// <inheritdoc />
+        public Type OldObject { get; private set; }
 
         #endregion
     }

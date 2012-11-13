@@ -17,12 +17,6 @@
 
         public AnalysisResult RunTests(IRegressionTestSuite testSuite)
         {
-            // Execute tests in the old assembly
-            this.RunTestsInAssembly(testSuite.OldTargetTestAssembly);
-
-            // Execute tests in the new assembly
-            this.RunTestsInAssembly(testSuite.NewTargetTestAssembly);
-
             return null;
         }
 

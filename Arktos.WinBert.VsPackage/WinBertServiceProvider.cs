@@ -206,6 +206,8 @@
                         var compiler = new TestCompiler();
                         var runner = new RandoopTestRunner();
                         var generator = new RandoopTestGenerator(this.Config, compiler);
+                        
+                        // Use the default assembly resolver.
                         var testManager = new RegressionTestSuiteManager(this.Config, generator, runner);
 
                         var results = testManager.BuildAndExecuteTestSuite(currentBuild, lastTestedBuild);

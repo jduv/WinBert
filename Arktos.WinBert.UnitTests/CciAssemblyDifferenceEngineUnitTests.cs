@@ -1,15 +1,14 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Arktos.WinBert.Differencing.Cci;
+    using Microsoft.Cci;
+    using Arktos.WinBert.Xml;
+    using System;
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
-    public class AssemblyDifferenceEngineUnitTests
+    public class CciAssemblyDifferenceEngineUnitTests
     {
         #region Fields & Constants
 
@@ -19,18 +18,33 @@
 
         private static readonly string diffAssembly2Path = srcDir + @"DiffTestAssembly2.dll";
 
+        private readonly IMetadataHost peHost;
+
         #endregion
 
         #region Test Methods
 
+        #region Ctor
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_NullArgument()
+        {
+            var target = new CciAssemblyDifferenceEngine(null);
+        }
+
+        #endregion
+
+        #region Diff
+
         [TestMethod]
         public void Diff_DifferentAssemblies_Difference()
         {
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(null);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
+            CciAssemblyDifferenceEngine target = new CciAssemblyDifferenceEngine();
+            IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
+            IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldObject);
@@ -41,7 +55,7 @@
             foreach (var typeDiff in actual.TypeDifferences)
             {
                 Assert.IsNotNull(typeDiff.OldObject);
-                Assert.IsNotNull(typeDiff.NewObject);                
+                Assert.IsNotNull(typeDiff.NewObject);
             }
         }
 
@@ -52,11 +66,11 @@
             IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "BankAccount.BankAccount");
             targets[0] = target0;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
+            CciAssemblyDifferenceEngine target = new CciAssemblyDifferenceEngine(targets);
+            IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
+            IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);
@@ -75,11 +89,11 @@
             IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
+            CciAssemblyDifferenceEngine target = new CciAssemblyDifferenceEngine(targets);
+            IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
+            IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);
@@ -97,11 +111,11 @@
             IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Deposit");
             targets[1] = target1;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
+            CciAssemblyDifferenceEngine target = new CciAssemblyDifferenceEngine(targets);
+            IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
+            IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsTrue(actual.IsDifferent);
@@ -119,11 +133,11 @@
             IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
+            CciAssemblyDifferenceEngine target = new CciAssemblyDifferenceEngine(targets);
+            IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
+            IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);
@@ -131,23 +145,13 @@
 
         #endregion
 
+        #endregion
+
         #region Private Methods
 
-        private Assembly LoadAssembly(string path)
+        private IAssembly LoadAssembly(string path)
         {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    return Assembly.LoadFile(Path.GetFullPath(path));
-                }
-            }
-            catch (Exception exception)
-            {
-                string errorMsg = string.Format("Error loading assembly with path {0}. {1}", path, exception.ToString());
-                Assert.Fail(errorMsg);
-            }
-
+            // BMK Implement me.
             return null;
         }
 

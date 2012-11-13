@@ -30,9 +30,7 @@
 
         #region Properties
 
-        /// <summary>
-        ///   Gets a value indicating whether there is a difference or not.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsDifferent
         {
             get
@@ -41,19 +39,13 @@
             }
         }
 
-        /// <summary>
-        ///   Gets the new assembly.
-        /// </summary>
+        /// <inheritdoc />
         public Assembly NewObject { get; private set; }
 
-        /// <summary>
-        ///   Gets the old assembly.
-        /// </summary>
+        /// <inheritdoc />
         public Assembly OldObject { get; private set; }
 
-        /// <summary>
-        ///   Gets a list of type differences.
-        /// </summary>
+        /// <inheritdoc />
         public IList<ITypeDifferenceResult> TypeDifferences { get; private set; }
 
         #endregion

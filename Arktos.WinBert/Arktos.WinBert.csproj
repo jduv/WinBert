@@ -123,7 +123,13 @@
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
+    <Compile Include="Differencing\Cci\CciAssemblyDifferenceEngine.cs" />
+    <Compile Include="Differencing\Cci\CciAssemblyDifferenceResult.cs" />
+    <Compile Include="Differencing\Cci\CciTypeDifferenceEngine.cs" />
+    <Compile Include="Differencing\Cci\CciTypeDifferenceResult.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
+    <Compile Include="Differencing\Cci\ICciAssemblyDifferenceResult.cs" />
+    <Compile Include="Differencing\Cci\ICciTypeDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceEngine.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />
     <Compile Include="Differencing\AssemblyDifferenceEngine.cs" />
@@ -133,6 +139,7 @@
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Instrumentation\InstrumentedTestSuite.cs" />
+    <Compile Include="Remoting\Isolated.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
     <Compile Include="Testing\TestCompiler.cs" />
     <Compile Include="Testing\RegressionTestSuiteManager.cs" />
@@ -140,6 +147,8 @@
     <Compile Include="Testing\IRegressionTestSuite.cs" />
     <Compile Include="Testing\ITestGenerator.cs" />
     <Compile Include="Testing\RegressionTestSuite.cs" />
+    <Compile Include="Util\IAssemblyResolver.cs" />
+    <Compile Include="Util\AssemblyResolver.cs" />
     <Compile Include="Xml\Build.cs" />
     <Compile Include="Util\BuildVersionManager.cs" />
     <Compile Include="Util\FileCopier.cs" />

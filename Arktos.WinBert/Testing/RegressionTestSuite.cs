@@ -3,6 +3,8 @@
     using System.Reflection;
     using Arktos.WinBert.Differencing;
     using System;
+    using Arktos.WinBert.Differencing.Cci;
+    using Microsoft.Cci;
 
     /// <summary>
     /// Represents a pattern of tests that can be executed on new and old versions
@@ -25,7 +27,7 @@
         /// The original difference context describing the differences between both
         /// assemblies that tests were generated for.
         /// </param>
-        public RegressionTestSuite(Assembly newTargetTests, Assembly oldTargetTests, IAssemblyDifferenceResult diff)
+        public RegressionTestSuite(IAssembly newTargetTests, IAssembly oldTargetTests, ICciAssemblyDifferenceResult diff)
         {
             this.NewTargetTestAssembly = newTargetTests;
             this.OldTargetTestAssembly = oldTargetTests;
@@ -39,12 +41,12 @@
         /// <summary>
         ///   Gets the difference result.
         /// </summary>
-        public IAssemblyDifferenceResult Diff { get; private set; }
+        public ICciAssemblyDifferenceResult Diff { get; private set; }
 
         /// <summary>
         ///   Gets the new assembly.
         /// </summary>
-        public Assembly NewTargetAssembly
+        public IAssembly NewTargetAssembly
         {
             get
             {
@@ -55,12 +57,12 @@
         /// <summary>
         ///   Gets the TestAssembly for the new assembly target.
         /// </summary>
-        public Assembly NewTargetTestAssembly { get; private set; }
+        public IAssembly NewTargetTestAssembly { get; private set; }
 
         /// <summary>
         ///   Gets the old assembly.
         /// </summary>
-        public Assembly OldTargetAssembly
+        public IAssembly OldTargetAssembly
         {
             get
             {
@@ -71,7 +73,7 @@
         /// <summary>
         ///   Gets the TestAssembly for the old assembly target.
         /// </summary>
-        public Assembly OldTargetTestAssembly { get; private set; }
+        public IAssembly OldTargetTestAssembly { get; private set; }
 
         #endregion
     }
