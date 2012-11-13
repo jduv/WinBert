@@ -1,17 +1,17 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Xml;
     using System.Xml.Serialization;
+    using Arktos.WinBert.Environment;
     using Arktos.WinBert.Exceptions;
     using Arktos.WinBert.RandoopIntegration.Xml;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
     using Microsoft.Cci;
-    using Arktos.WinBert.Remoting;
 
     /// <summary>
     /// Uses the Randoop framework to generate a set of tests for the target assembly under test.
@@ -160,7 +160,7 @@
             bool success = false;
             var assemblyPath = assembly.Location;
             var typeNames = validTypes.Select(x => x.Name.Value).ToList();
-            using (var isolated = new Isolated<RemoteTestGenerator>(this.config))
+            using (var isolated = new Remote<RemoteTestGenerator>(this.config))
             {
                 success = isolated.Value.GenerateTests(typeNames, assemblyPath);
             }

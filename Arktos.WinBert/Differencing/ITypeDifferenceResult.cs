@@ -12,19 +12,19 @@
         #region Properties
 
         /// <summary>
-        ///   Gets a list of fields that were added to the new version of the class and didn't exist in the old
+        ///   Gets a list of field names that were added to the new version of the class and didn't exist in the old
         ///   version.
         /// </summary>
-        IList<FieldInfo> AddedFields { get; }
+        IList<string> AddedFields { get; }
 
         /// <summary>
-        ///   Gets a list of methods that have changed between the two target types.
-        IList<MethodInfo> Methods { get; }
+        ///   Gets a list of method names that have changed between the two target types.
+        IList<string> Methods { get; }
 
         /// <summary>
-        ///   Gets a list of fields that were removed in the new version of the class.
+        ///   Gets a list of field names that were removed in the new version of the class.
         /// </summary>
-        IList<FieldInfo> RemovedFields { get; }
+        IList<string> RemovedFields { get; }
 
         #endregion
     }

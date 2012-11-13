@@ -20,7 +20,7 @@
 
         #endregion
 
-        #region Interface Methods
+        #region Methods
 
         /// <summary>
         /// Adds a reference to the target Assembly or PE to this compiler.

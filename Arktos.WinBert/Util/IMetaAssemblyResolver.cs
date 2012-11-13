@@ -8,7 +8,7 @@
     /// </summary>
     public interface IMetaAssemblyResolver
     {
-        #region Interface Methods
+        #region Methods
 
         /// <summary>
         /// Loads the metadata for the assembly at the target path.

@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.Remoting
+﻿namespace Arktos.WinBert.Environment
 {
     using System;
     using System.Reflection;
@@ -10,7 +10,7 @@
     /// <typeparam name="T">
     /// The type of object to import. Must be a deriviative of MarshalByRefObject.
     /// </typeparam>
-    public sealed class Isolated<T> : IDisposable where T : MarshalByRefObject
+    public sealed class Remote<T> : IDisposable where T : MarshalByRefObject
     {
         #region Fields & Constants
 
@@ -24,7 +24,7 @@
         /// <summary>
         /// Initializes a new instance of the Isolated class.
         /// </summary>
-        public Isolated()
+        public Remote()
             : this(null)
         {
         }
@@ -37,10 +37,10 @@
         /// <param name="constructorArgs">
         /// Constructor arguments.
         /// </param>
-        public Isolated(params Object[] constructorArgs)
+        public Remote(params Object[] constructorArgs)
         {
             this.domain = AppDomain.CreateDomain(
-                "Isolated:" + Guid.NewGuid(),
+                "Remote " + Guid.NewGuid(),
                 null,
                 AppDomain.CurrentDomain.SetupInformation);
 

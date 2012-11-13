@@ -14,7 +14,7 @@
     public interface IDifferenceEngine<T, TResult>
         where TResult : IDifferenceResult<T>
     {
-        #region Interface Methods
+        #region Methods
 
         /// <summary>
         /// This method should examine the passed in parameters, determine if they are different, and return

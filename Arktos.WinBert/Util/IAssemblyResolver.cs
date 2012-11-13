@@ -10,7 +10,7 @@
     /// </summary>
     public interface IAssemblyResolver
     {
-        #region Interface Methods
+        #region Methods
 
         /// <summary>
         /// This should be same as calling Assembly.LoadFile.

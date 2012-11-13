@@ -136,10 +136,15 @@
     <Compile Include="Differencing\TypeDifferenceEngine.cs" />
     <Compile Include="Differencing\ITypeDifferenceResult.cs" />
     <Compile Include="Differencing\TypeDifferenceResult.cs" />
+    <Compile Include="Environment\AppDomainAssemblyEnvironment.cs" />
+    <Compile Include="Environment\IAppDomainAssemblyEnvironment.cs" />
+    <Compile Include="Environment\IAssemblyLoader.cs" />
+    <Compile Include="Environment\IMetadataHostAssemblyEnvironment.cs" />
+    <Compile Include="Environment\MetadataHostAssemblyEnvironment.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Instrumentation\InstrumentedTestSuite.cs" />
-    <Compile Include="Remoting\Isolated.cs" />
+    <Compile Include="Environment\Remote.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
     <Compile Include="Testing\TestCompiler.cs" />
     <Compile Include="Testing\RegressionTestSuiteManager.cs" />
