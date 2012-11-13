@@ -147,8 +147,10 @@
     <Compile Include="Testing\IRegressionTestSuite.cs" />
     <Compile Include="Testing\ITestGenerator.cs" />
     <Compile Include="Testing\RegressionTestSuite.cs" />
+    <Compile Include="Util\MetaAssemblyResolver.cs" />
     <Compile Include="Util\IAssemblyResolver.cs" />
     <Compile Include="Util\AssemblyResolver.cs" />
+    <Compile Include="Util\IMetaAssemblyResolver.cs" />
     <Compile Include="Xml\Build.cs" />
     <Compile Include="Util\BuildVersionManager.cs" />
     <Compile Include="Util\FileCopier.cs" />

@@ -19,7 +19,7 @@
 
         private readonly CodeDomProvider compiler;
         private readonly IList<string> referencePaths;
-        private readonly IAssemblyResolver resolver;
+        private readonly IMetaAssemblyResolver resolver;
 
         #endregion
 
@@ -36,7 +36,7 @@
         {
             this.compiler = CodeDomProvider.CreateProvider("CSharp");
             this.referencePaths = new List<string>();
-            this.resolver = resolver == null ? new AssemblyResolver() : resolver;
+            this.resolver = new MetaAssemblyResolver();
         }
 
         #endregion

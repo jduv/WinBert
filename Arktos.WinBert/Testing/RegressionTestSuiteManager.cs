@@ -19,7 +19,7 @@
 
         private readonly ITestGenerator generator;
         private readonly ITestRunner runner;
-        private readonly IAssemblyResolver resolver;
+        private readonly IMetaAssemblyResolver resolver;
         private readonly WinBertConfig config;
 
         #endregion
@@ -35,8 +35,7 @@
         public RegressionTestSuiteManager(
             WinBertConfig config,
             ITestGenerator generator,
-            ITestRunner runner,
-            IAssemblyResolver resolver = null)
+            ITestRunner runner)
         {
             if (config == null)
             {
@@ -56,7 +55,7 @@
             this.config = config;
             this.generator = generator;
             this.runner = runner;
-            this.resolver = resolver == null ? new AssemblyResolver() : resolver;
+            this.resolver = new MetaAssemblyResolver();
         }
 
         #endregion
@@ -184,8 +183,8 @@
         protected ICciAssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
             var differ = new CciAssemblyDifferenceEngine(this.config.IgnoreList);
-            var currentAssembly = new AssemblyResolver().LoadMeta(current.AssemblyPath);
-            var previousAssembly = new AssemblyResolver().LoadMeta(previous.AssemblyPath);
+            var currentAssembly = new MetaAssemblyResolver().LoadMeta(current.AssemblyPath);
+            var previousAssembly = new MetaAssemblyResolver().LoadMeta(previous.AssemblyPath);
             return differ.Diff(previousAssembly, currentAssembly);
         }
 
