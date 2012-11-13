@@ -88,14 +88,61 @@
         /// </returns>
         private bool AreDifferent(IMethodBody first, IMethodBody second)
         {
+            bool different = false;
             if (first.Size != second.Size)
             {
-                return true;
+                different = true;
             }
             else
             {
-                return first.Operations.SequenceEqual(second.Operations);
+                different = this.CompareOperations(first.Operations.ToList(), second.Operations.ToList());
             }
+
+            return different;
+        }
+
+        /// <summary>
+        /// Compares the two target lists of operations.
+        /// </summary>
+        /// <param name="firstList">
+        /// The first list.
+        /// </param>
+        /// <param name="secondList">
+        /// The second list.
+        /// </param>
+        /// <returns>
+        /// True if the operations lists are the same, false otherwise.
+        /// </returns>
+        private bool CompareOperations(IList<IOperation> firstList, IList<IOperation> secondList)
+        {
+            bool different = false;
+            if (firstList.Count != secondList.Count)
+            {
+                different = true;
+            }
+            else
+            {
+                int i = 0;
+                IOperation first, second;
+                while (!different && i < firstList.Count)
+                {
+                    first = firstList[i];
+                    second = secondList[i];
+
+                    // Use this to break the loop.
+                    if (first.Offset != second.Offset ||
+                        first.OperationCode != second.OperationCode ||
+                        first.Value != second.Value)
+                    {
+                        different = true;
+                    }
+
+                    // Increment.
+                    i++;
+                }
+            }
+
+            return different;
         }
 
         #endregion

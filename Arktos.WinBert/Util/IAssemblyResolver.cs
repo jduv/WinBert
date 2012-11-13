@@ -18,6 +18,9 @@
         /// <param name="path">
         /// The path to the assembly to load.
         /// </param>
+        /// <param name="host">
+        /// The host used to load the assembly.
+        /// </param>
         /// <returns>
         /// The metadata for the assembly.
         /// </returns>

@@ -62,14 +62,14 @@
             }
 
             var diffResult = new CciAssemblyDifferenceResult(oldObject, newObject);
-            var oldTypesDict = oldObject.GetAllTypes().ToDictionary(x => x.Name);
-            var newTypes = newObject.GetAllTypes().Where(x => this.ignoreTargets.Any(y => y.Name.Equals(y.Name)));
+            var oldTypes = oldObject.GetAllTypes().ToDictionary(x => x.Name.Value);
+            var newTypes = newObject.GetAllTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(y.Name)));
 
             foreach (var newType in newTypes)
             {
-                if (oldTypesDict.ContainsKey(newType.Name))
+                if (oldTypes.ContainsKey(newType.Name.Value))
                 {
-                    var oldType = oldTypesDict[newType.Name];
+                    var oldType = oldTypes[newType.Name.Value];
                     var typeDiff = this.typeDiffer.Diff(oldType, newType);
 
                     if (typeDiff.IsDifferent)

@@ -184,8 +184,8 @@
         protected ICciAssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
             var differ = new CciAssemblyDifferenceEngine(this.config.IgnoreList);
-            var currentAssembly = resolver.LoadMeta(current.AssemblyPath);
-            var previousAssembly = resolver.LoadMeta(previous.AssemblyPath);
+            var currentAssembly = new AssemblyResolver().LoadMeta(current.AssemblyPath);
+            var previousAssembly = new AssemblyResolver().LoadMeta(previous.AssemblyPath);
             return differ.Diff(previousAssembly, currentAssembly);
         }
 
