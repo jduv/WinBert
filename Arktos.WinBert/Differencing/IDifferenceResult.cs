@@ -1,13 +1,9 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
     /// <summary>
-    /// Implementations of this interface should allow for a concrete representation of a 
-    ///   difference between two objects of type T.
+    /// Defines behavior for an object that describes a difference between two objects.
     /// </summary>
-    /// <typeparam name="T">
-    /// The type of objects this implementation is able to difference.
-    /// </typeparam>
-    public interface IDifferenceResult<T>
+    public interface IDifferenceResult
     {
         #region Properties
 
@@ -15,16 +11,6 @@
         ///   Gets a value indicating whether a difference exists.
         /// </summary>
         bool IsDifferent { get; }
-
-        /// <summary>
-        ///   Gets another version of the differenced arguments.
-        /// </summary>
-        T NewObject { get; }
-
-        /// <summary>
-        ///   Gets one version of the differenced arguments.
-        /// </summary>
-        T OldObject { get; }
 
         #endregion
     }

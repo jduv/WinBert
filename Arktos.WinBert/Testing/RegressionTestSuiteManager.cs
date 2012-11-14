@@ -1,8 +1,8 @@
 ﻿namespace Arktos.WinBert.Testing
 {
     using System;
-    using System.Linq;
     using Arktos.WinBert.Analysis;
+    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Differencing.Cci;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
@@ -129,26 +129,26 @@
         /// The difference result.
         /// </param>
         /// <returns>A fully compiled regression test suite.</returns>
-        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, ICciAssemblyDifferenceResult diff)
+        protected IRegressionTestSuite BuildTestSuite(Build current, Build previous, IAssemblyDifferenceResult diff)
         {
             IRegressionTestSuite result = null;
-            var types = diff.TypeDifferences.Select(x => x.NewObject).ToList();
+            ////var types = diff.TypeDifferences.Select(x => x.NewObject).ToList();
 
-            // Generate tests for the last tested build if we need to
-            IAssembly previousBuildTests = string.IsNullOrEmpty(previous.TestAssemblyPath) ?
-                generator.GetTestsFor(diff.OldObject, types) :
-                resolver.LoadMeta(previous.AssemblyPath);
+            ////// Generate tests for the last tested build if we need to
+            ////IAssembly previousBuildTests = string.IsNullOrEmpty(previous.TestAssemblyPath) ?
+            ////    generator.GetTestsFor(diff.OldObject, types) :
+            ////    resolver.LoadMeta(previous.AssemblyPath);
 
-            // Generate tests for the newest build
-            IAssembly currentBuildTests = generator.GetTestsFor(diff.NewObject, types);
+            ////// Generate tests for the newest build
+            ////IAssembly currentBuildTests = generator.GetTestsFor(diff.NewObject, types);
 
-            // If we have tests for both, we're good to go.
-            if (previousBuildTests != null && currentBuildTests != null)
-            {
-                current.TestAssemblyPath = currentBuildTests.Location;
-                previous.TestAssemblyPath = previousBuildTests.Location;
-                result = new RegressionTestSuite(currentBuildTests, previousBuildTests, diff);
-            }
+            ////// If we have tests for both, we're good to go.
+            ////if (previousBuildTests != null && currentBuildTests != null)
+            ////{
+            ////    current.TestAssemblyPath = currentBuildTests.Location;
+            ////    previous.TestAssemblyPath = previousBuildTests.Location;
+            ////    result = new RegressionTestSuite(currentBuildTests, previousBuildTests, diff);
+            ////}
 
             return result;
         }
@@ -180,7 +180,7 @@
         /// <returns>
         /// A difference result.
         /// </returns>
-        protected ICciAssemblyDifferenceResult DoDiff(Build current, Build previous)
+        protected IAssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
             var differ = new CciAssemblyDifferenceEngine(this.config.IgnoreList);
             var currentAssembly = new MetaAssemblyResolver().LoadMeta(current.AssemblyPath);

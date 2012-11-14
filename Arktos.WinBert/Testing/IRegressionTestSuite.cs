@@ -1,6 +1,6 @@
 ﻿namespace Arktos.WinBert.Testing
 {
-    using Arktos.WinBert.Differencing.Cci;
+    using Arktos.WinBert.Differencing;
     using Microsoft.Cci;
 
     /// <summary>
@@ -14,7 +14,7 @@
         /// <summary>
         /// Gets the difference result.
         /// </summary>
-        ICciAssemblyDifferenceResult Diff { get; }
+        IAssemblyDifferenceResult Diff { get; }
 
         /// <summary>
         /// Gets the new assembly.

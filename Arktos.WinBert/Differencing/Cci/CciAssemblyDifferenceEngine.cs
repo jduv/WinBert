@@ -1,15 +1,15 @@
 ﻿namespace Arktos.WinBert.Differencing.Cci
 {
     using System;
-    using System.Linq;
-    using Microsoft.Cci;
-    using Arktos.WinBert.Xml;
     using System.Collections.Generic;
+    using System.Linq;
+    using Arktos.WinBert.Xml;
+    using Microsoft.Cci;
 
     /// <summary>
     /// A difference engine based on the CCI metadata API.
     /// </summary>
-    public class CciAssemblyDifferenceEngine : IDifferenceEngine<IAssembly, ICciAssemblyDifferenceResult>
+    public class CciAssemblyDifferenceEngine : IDifferenceEngine<IAssembly, IAssemblyDifferenceResult>
     {
         #region Fields & Constants
 
@@ -23,7 +23,8 @@
         /// <summary>
         /// /// Initializes a new instance of the CciAssemblyDifferenceEngine class.
         /// </summary>
-        public CciAssemblyDifferenceEngine() : this(new IgnoreTarget[0])
+        public CciAssemblyDifferenceEngine()
+            : this(new IgnoreTarget[0])
         {
         }
 
@@ -49,7 +50,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public ICciAssemblyDifferenceResult Diff(IAssembly oldObject, IAssembly newObject)
+        public IAssemblyDifferenceResult Diff(IAssembly oldObject, IAssembly newObject)
         {
             if (oldObject == null)
             {
@@ -61,7 +62,7 @@
                 throw new ArgumentNullException("newObject");
             }
 
-            var diffResult = new CciAssemblyDifferenceResult(oldObject, newObject);
+            var diffResult = AssemblyDifferenceResult.Create(oldObject, newObject);
             var oldTypes = oldObject.GetAllTypes().ToDictionary(x => x.Name.Value);
             var newTypes = newObject.GetAllTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(y.Name)));
 

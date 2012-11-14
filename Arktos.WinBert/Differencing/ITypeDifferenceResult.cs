@@ -7,9 +7,15 @@
     /// <summary>
     /// Defines a contract for implementations that calculate differences between types.
     /// </summary>
-    public interface ITypeDifferenceResult : IDifferenceResult<Type>
+    public interface ITypeDifferenceResult : IDifferenceResult
     {
         #region Properties
+
+        /// <summary>
+        /// Gets the name of the type. This should be the same in both target assembly 
+        /// representations.
+        /// </summary>
+        string Name { get; }
 
         /// <summary>
         ///   Gets a list of field names that were added to the new version of the class and didn't exist in the old

@@ -23,26 +23,33 @@
 
         #region Test Methods
 
+        #region Ctor
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Ctor_NullArgument()
+        {
+            var target = new AssemblyDifferenceEngine(null);
+        }
+
+        #endregion
+
+        #region Diff
+
         [TestMethod]
         public void Diff_DifferentAssemblies_Difference()
         {
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(null);
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine();
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
             IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
-            Assert.IsNotNull(actual.OldObject);
-            Assert.IsNotNull(actual.NewObject);
+            Assert.IsNotNull(actual.OldAssembly);
+            Assert.IsNotNull(actual.NewAssembly);
             Assert.IsTrue(actual.IsDifferent);
             Assert.IsTrue(actual.TypeDifferences.Count > 0);
-
-            foreach (var typeDiff in actual.TypeDifferences)
-            {
-                Assert.IsNotNull(typeDiff.OldObject);
-                Assert.IsNotNull(typeDiff.NewObject);                
-            }
         }
 
         [TestMethod]
@@ -128,6 +135,8 @@
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);
         }
+
+        #endregion
 
         #endregion
 

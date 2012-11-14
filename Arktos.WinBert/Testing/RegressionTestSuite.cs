@@ -1,9 +1,7 @@
 ﻿namespace Arktos.WinBert.Testing
 {
-    using System.Reflection;
-    using Arktos.WinBert.Differencing;
     using System;
-    using Arktos.WinBert.Differencing.Cci;
+    using Arktos.WinBert.Differencing;
     using Microsoft.Cci;
 
     /// <summary>
@@ -27,9 +25,41 @@
         /// The original difference context describing the differences between both
         /// assemblies that tests were generated for.
         /// </param>
-        public RegressionTestSuite(IAssembly newTargetTests, IAssembly oldTargetTests, ICciAssemblyDifferenceResult diff)
+        public RegressionTestSuite(
+            IAssembly newTarget,
+            IAssembly newTargetTests,
+            IAssembly oldTarget,
+            IAssembly oldTargetTests,
+            IAssemblyDifferenceResult diff)
         {
+            if (newTarget == null)
+            {
+                throw new ArgumentNullException("newTarget");
+            }
+
+            if (newTargetTests == null)
+            {
+                throw new ArgumentNullException("newTargetTests");
+            }
+
+            if (oldTarget == null)
+            {
+                throw new ArgumentNullException("oldTarget");
+            }
+
+            if (oldTargetTests == null)
+            {
+                throw new ArgumentNullException("oldTargetTests");
+            }
+
+            if (diff == null)
+            {
+                throw new ArgumentNullException("diff");
+            }
+
+            this.NewTargetAssembly = newTarget;
             this.NewTargetTestAssembly = newTargetTests;
+            this.OldTargetAssembly = oldTarget;
             this.OldTargetTestAssembly = oldTargetTests;
             this.Diff = diff;
         }
@@ -41,18 +71,12 @@
         /// <summary>
         ///   Gets the difference result.
         /// </summary>
-        public ICciAssemblyDifferenceResult Diff { get; private set; }
+        public IAssemblyDifferenceResult Diff { get; private set; }
 
         /// <summary>
         ///   Gets the new assembly.
         /// </summary>
-        public IAssembly NewTargetAssembly
-        {
-            get
-            {
-                return this.Diff.NewObject;
-            }
-        }
+        public IAssembly NewTargetAssembly { get; private set; }
 
         /// <summary>
         ///   Gets the TestAssembly for the new assembly target.
@@ -62,13 +86,7 @@
         /// <summary>
         ///   Gets the old assembly.
         /// </summary>
-        public IAssembly OldTargetAssembly
-        {
-            get
-            {
-                return this.Diff.OldObject;
-            }
-        }
+        public IAssembly OldTargetAssembly { get; private set; }
 
         /// <summary>
         ///   Gets the TestAssembly for the old assembly target.

@@ -9,7 +9,7 @@
     /// <summary>
     /// Performs type differences in a CCI metadata context.
     /// </summary>
-    public class CciTypeDifferenceEngine : IDifferenceEngine<INamedTypeDefinition, ICciTypeDifferenceResult>
+    public class CciTypeDifferenceEngine : IDifferenceEngine<INamedTypeDefinition, ITypeDifferenceResult>
     {
         #region Fields & Constants
 
@@ -40,7 +40,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public ICciTypeDifferenceResult Diff(INamedTypeDefinition oldObject, INamedTypeDefinition newObject)
+        public ITypeDifferenceResult Diff(INamedTypeDefinition oldObject, INamedTypeDefinition newObject)
         {
             if (oldObject == null)
             {
@@ -51,7 +51,7 @@
                 throw new ArgumentNullException("newObject");
             }
 
-            var diffResult = new CciTypeDifferenceResult(oldObject, newObject);
+            var diffResult = TypeDifferenceResult.FromNamedTypeDefinition(newObject);
             var oldTypeDict = oldObject.Methods.ToDictionary(x => x.Name.Value);
             var newTypes = newObject.Methods.Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
 
@@ -62,7 +62,7 @@
                     var toCompare = oldTypeDict[method.Name.Value];
                     if (AreDifferent(method.Body, toCompare.Body))
                     {
-                        diffResult.Methods.Add(method);
+                        diffResult.Methods.Add(method.Name.Value);
                     }
                 }
             }

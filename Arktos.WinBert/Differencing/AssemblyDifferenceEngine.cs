@@ -13,12 +13,20 @@
     {
         #region Constants & Fields
 
-        private readonly IgnoreTarget[] ignoreTargets = null;
+        private readonly IList<IgnoreTarget> ignoreTargets = null;
         private readonly TypeDifferenceEngine typeDiffer = null;
 
         #endregion
 
         #region Constructors & Destructors
+
+        /// <summary>
+        /// Initializes a new instance of the AssemblyDifferenceEngine class.
+        /// </summary>
+        public AssemblyDifferenceEngine()
+            : this(new IgnoreTarget[0])
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the BertAssemblyDifferenceEngine class.
@@ -28,12 +36,13 @@
         /// </param>
         public AssemblyDifferenceEngine(IgnoreTarget[] ignoreTargets)
         {
-            this.typeDiffer = new TypeDifferenceEngine(ignoreTargets);
-
-            if (ignoreTargets != null && ignoreTargets.Length > 0)
+            if (ignoreTargets == null)
             {
-                this.ignoreTargets = (from it in ignoreTargets where it.Type == IgnoreType.Type select it).ToArray();                
+                throw new ArgumentNullException("ignoreTargets");
             }
+
+            this.typeDiffer = new TypeDifferenceEngine(ignoreTargets);
+            this.ignoreTargets = ignoreTargets.Where(x => x.Type == IgnoreType.Type).ToList();
         }
 
         #endregion
@@ -56,102 +65,35 @@
         /// </returns>
         public IAssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
         {
-            AssemblyDifferenceResult assemblyDifferenceResult = null;
-            if (oldObject == null || newObject == null)
+            if (oldObject == null)
             {
-                return null;
+                throw new ArgumentNullException("oldObject");
             }
-            else
+
+            if (newObject == null)
             {
-                assemblyDifferenceResult = new AssemblyDifferenceResult(oldObject, newObject);
-                var typeDictionary = this.GetTypeDictionaryForAssembly(oldObject);
+                throw new ArgumentNullException("newObject");
+            }
 
-                // dictionary is filtered in GetTypeDictionaryForAssembly, filter our new type's list for consistency
-                var filteredTypeList = this.GetFilteredTypeList(newObject.GetTypes());
-                foreach (Type newType in filteredTypeList)
+            var diffResult = AssemblyDifferenceResult.Create(oldObject, newObject);
+            var oldTypes = oldObject.GetTypes().ToDictionary(x => x.Name);
+            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.Name))).ToList();
+
+            foreach (var newType in newTypes)
+            {
+                if (oldTypes.ContainsKey(newType.Name))
                 {
-                    if (typeDictionary.ContainsKey(newType.FullName))
-                    {
-                        var oldType = typeDictionary[newType.FullName];
-                        var typeDifference = this.Diff(oldType, newType);
+                    var oldType = oldTypes[newType.Name];
+                    var typeDiff = this.typeDiffer.Diff(oldType, newType);
 
-                        if (typeDifference != null && typeDifference.IsDifferent)
-                        {
-                            assemblyDifferenceResult.TypeDifferences.Add(typeDifference);
-                        }
+                    if (typeDiff.IsDifferent)
+                    {
+                        diffResult.TypeDifferences.Add(typeDiff);
                     }
                 }
-
-                return assemblyDifferenceResult;
             }
-        }
 
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Returns the difference between the two passed in types as a TypeDifferenceResult.
-        /// </summary>
-        /// <param name="oldType">
-        /// The first type to diff
-        /// </param>
-        /// <param name="newType">
-        /// The second type to diff
-        /// </param>
-        /// <returns>
-        /// An IDifferenceResult implementation that contains all the differences between the target types in
-        /// a hierarchical manner. <see cref="TypeDifferenceResult"/>
-        /// </returns>
-        private ITypeDifferenceResult Diff(Type oldType, Type newType)
-        {
-            return this.typeDiffer.Diff(oldType, newType);
-        }
-
-        /// <summary>
-        /// Returns a list of types filtered based on the ignore targets for this engine.
-        /// </summary>
-        /// <param name="types">
-        /// The list of types to filter
-        /// </param>
-        /// <returns>
-        /// A list of types that meet the filter criteria.
-        /// </returns>
-        private IList<Type> GetFilteredTypeList(Type[] types)
-        {
-            if (this.ignoreTargets != null)
-            {
-                var availableTypes = from t in types
-                                                   let ignoreTargets = 
-                                                   from target in this.ignoreTargets 
-                                                   select target.Name
-                                                   where ignoreTargets.Contains(t.FullName) == false
-                                                   select t;
-
-                return availableTypes.ToList();
-            }
-            else
-            {
-                return types;
-            }
-        }
-
-        /// <summary>
-        /// Returns a dictionary containing a list of all the types in the target assembly. Since there can be, by 
-        /// definition, only one type of a certain name in existence inside an assembly, this method should never 
-        /// run into collisions. Note that this method will also filter out any unwanted types based on the ignore 
-        /// targets for this engine.
-        /// </summary>
-        /// <param name="assembly">
-        /// The assembly to enumerate all the types for.
-        /// </param>
-        /// <returns>
-        /// A dictionary containing references to all the types in the assembly with their names as keys. If no types
-        /// exist in the assembly (unlikely) then an empty dictionary will be returned.
-        /// </returns>
-        private Dictionary<string, Type> GetTypeDictionaryForAssembly(Assembly assembly)
-        {
-            return this.GetFilteredTypeList(assembly.GetTypes()).ToDictionary(x => x.FullName);
+            return diffResult;
         }
 
         #endregion

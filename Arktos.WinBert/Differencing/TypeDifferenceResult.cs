@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
+    using Microsoft.Cci;
 
     /// <summary>
     /// This class represents a difference result between two types. The differences between the
@@ -23,13 +23,17 @@
         /// <param name="newType">
         /// The new type.
         /// </param>
-        public TypeDifferenceResult(Type oldType, Type newType)
+        public TypeDifferenceResult(string name)
         {
-            this.OldObject = oldType;
-            this.NewObject = newType;
-            this.Methods = new List<MethodInfo>();
-            this.RemovedFields = new List<FieldInfo>();
-            this.AddedFields = new List<FieldInfo>();
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Name cannot be null or empty!");
+            }
+
+            this.Name = name;
+            this.Methods = new List<string>();
+            this.RemovedFields = new List<string>();
+            this.AddedFields = new List<string>();
         }
 
         #endregion
@@ -41,24 +45,63 @@
         {
             get
             {
-                return this.Methods.Count > 0 || this.OldObject == null || this.NewObject == null;
+                return this.Methods.Count > 0 || this.AddedFields.Count > 0 || this.RemovedFields.Count > 0;
             }
         }
 
         /// <inheritdoc />
-        public IList<FieldInfo> AddedFields { get; private set; }
+        public string Name { get; private set; }
 
         /// <inheritdoc />
-        public IList<FieldInfo> RemovedFields { get; private set; }
+        public IList<string> AddedFields { get; private set; }
 
         /// <inheritdoc />
-        public IList<MethodInfo> Methods { get; private set; }
+        public IList<string> Methods { get; private set; }
 
         /// <inheritdoc />
-        public Type NewObject { get; private set; }
+        public IList<string> RemovedFields { get; private set; }
 
-        /// <inheritdoc />
-        public Type OldObject { get; private set; }
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Creates a new TypeDifferenceResult instance from the target type.
+        /// </summary>
+        /// <param name="type">
+        /// The type.
+        /// </param>
+        /// <returns>
+        /// A new TypeDifferenceResult from the target type.
+        /// </returns>
+        public static TypeDifferenceResult FromType(Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
+            return new TypeDifferenceResult(type.Name);
+        }
+
+        /// <summary>
+        /// Creates a new TypeDifferenceResult instance from the target CCI named type.
+        /// </summary>
+        /// <param name="type">
+        /// The type.
+        /// </param>
+        /// <returns>
+        /// A new TypeDifferenceResult from the target type.
+        /// </returns>
+        public static TypeDifferenceResult FromNamedTypeDefinition(INamedTypeDefinition type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
+            return new TypeDifferenceResult(type.Name.Value);
+        }
 
         #endregion
     }

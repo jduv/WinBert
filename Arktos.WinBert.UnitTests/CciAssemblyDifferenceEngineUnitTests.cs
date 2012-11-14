@@ -1,10 +1,11 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Arktos.WinBert.Differencing.Cci;
-    using Microsoft.Cci;
-    using Arktos.WinBert.Xml;
     using System;
+    using Arktos.WinBert.Differencing;
+    using Arktos.WinBert.Differencing.Cci;
+    using Arktos.WinBert.Xml;
+    using Microsoft.Cci;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
@@ -44,19 +45,13 @@
             IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
             IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
-            Assert.IsNotNull(actual.OldObject);
-            Assert.IsNotNull(actual.NewObject);
+            Assert.IsNotNull(actual.OldAssembly);
+            Assert.IsNotNull(actual.NewAssembly);
             Assert.IsTrue(actual.IsDifferent);
             Assert.IsTrue(actual.TypeDifferences.Count > 0);
-
-            foreach (var typeDiff in actual.TypeDifferences)
-            {
-                Assert.IsNotNull(typeDiff.OldObject);
-                Assert.IsNotNull(typeDiff.NewObject);
-            }
         }
 
         [TestMethod]
@@ -70,7 +65,7 @@
             IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
             IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);
@@ -93,7 +88,7 @@
             IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
             IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);
@@ -115,7 +110,7 @@
             IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
             IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsTrue(actual.IsDifferent);
@@ -137,7 +132,7 @@
             IAssembly oldObject = this.LoadAssembly(diffAssembly1Path);
             IAssembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            ICciAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsFalse(actual.IsDifferent);

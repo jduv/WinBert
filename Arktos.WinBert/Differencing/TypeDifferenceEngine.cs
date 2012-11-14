@@ -1,12 +1,10 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using Arktos.WinBert.Xml;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This simple type differencing engine will take two types and figure out the difference between them.
@@ -15,7 +13,7 @@
     {
         #region Fields & Constants
 
-        private readonly IgnoreTarget[] ignoreTargets;
+        private readonly IList<IgnoreTarget> ignoreTargets;
 
         #endregion
 
@@ -29,16 +27,17 @@
         /// </param>
         public TypeDifferenceEngine(IgnoreTarget[] ignoreTargets)
         {
-            if (ignoreTargets != null && ignoreTargets.Length > 0)
+            if (ignoreTargets == null)
             {
-                var methodIgnoreTargets = from it in ignoreTargets where it.Type == IgnoreType.Method select it;
-                this.ignoreTargets = methodIgnoreTargets.ToArray();
+                throw new ArgumentNullException("ignoreTargets");
             }
+
+            this.ignoreTargets = ignoreTargets.Where(x => x.Type == IgnoreType.Method).ToList();
         }
 
         #endregion
 
-        #region Public Methods        
+        #region Public Methods
 
         /// <summary>
         /// Implementation of the Diff method required by the IDifferenceEngine interface. This method will perform
@@ -56,123 +55,38 @@
         /// </returns>
         public ITypeDifferenceResult Diff(Type oldObject, Type newObject)
         {
-            TypeDifferenceResult typeDifferenceResult = null;
-            if (oldObject == null || newObject == null)
+            if (oldObject == null)
             {
-                return null;
+                throw new ArgumentNullException("oldObject");
             }
-            else
+            if (newObject == null)
             {
-                typeDifferenceResult = new TypeDifferenceResult(oldObject, newObject);
-                var methodDictionary = this.GetMethodDictionaryForType(oldObject);
+                throw new ArgumentNullException("newObject");
+            }
 
-                var filteredMethodList = this.GetFilteredMethodListForType(newObject);
-                foreach (MethodInfo method in this.GetMethodDifferences(methodDictionary, filteredMethodList))
+            var diffResult = TypeDifferenceResult.FromType(newObject);
+
+            var oldTypeDict = oldObject.GetMethods().ToDictionary(x => x.Name);
+            var newTypes = newObject.GetMethods().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
+
+            foreach (var method in newTypes)
+            {
+                if (oldTypeDict.ContainsKey(method.Name))
                 {
-                    typeDifferenceResult.Methods.Add(method);
+                    var toCompare = oldTypeDict[method.Name];
+                    if (AreDifferent(method.GetMethodBody(), toCompare.GetMethodBody()))
+                    {
+                        diffResult.Methods.Add(method.Name);
+                    }
                 }
-
-                return typeDifferenceResult;
             }
+
+            return diffResult;
         }
 
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// Returns a list of methods filtered based on the ignore targets for this engine.
-        /// </summary>
-        /// <param name="type">
-        /// he type to filter.
-        /// </param>
-        /// <returns>
-        /// A list that meets the method filter criteria.
-        /// </returns>
-        private IList<MethodInfo> GetFilteredMethodListForType(Type type)
-        {
-            IEnumerable<MethodInfo> methods = Enumerable.TakeWhile(
-                type.GetMethods(), (m) => m.DeclaringType.FullName.Equals(type.FullName));
-
-            if (this.ignoreTargets != null)
-            {
-                var availableTypes = from m in methods
-                                     let ignoreTargets = 
-                                     from target in this.ignoreTargets 
-                                     select target.Name
-                                     where ignoreTargets.Contains(m.Name) == false
-                                     select m;
-
-                return Enumerable.ToList(availableTypes);
-            }
-            else
-            {
-                return Enumerable.ToArray(methods);
-            }
-        }
-
-        /// <summary>
-        /// Returns a dictionary for the methods of the passed in type. Filters based on declaring type.
-        /// </summary>
-        /// <param name="type">
-        /// The type to build the dictionary for.
-        /// </param>
-        /// <returns>
-        /// A dictionary of the methods for the given type.
-        /// </returns>
-        private Dictionary<string, MethodInfo> GetMethodDictionaryForType(Type type)
-        {
-            var methodDictionary = new Dictionary<string, MethodInfo>();
-
-            var filteredMethodList = this.GetFilteredMethodListForType(type);
-            foreach (var m in filteredMethodList)
-            {
-                methodDictionary.Add(m.ToString(), m);
-            }
-
-            return methodDictionary;
-        }
-
-        /// <summary>
-        /// Returns a list of methods that are different based on their MSIL.
-        /// </summary>
-        /// <param name="methodDictionary">
-        /// A type dictionary to check against. This speeds up comparisons quite a bit.
-        /// </param>
-        /// <param name="methods">
-        /// The new type to check.
-        /// </param>
-        /// <returns>
-        /// A list of methods that are different.
-        /// </returns>
-        private IEnumerable GetMethodDifferences(Dictionary<string, MethodInfo> methodDictionary, IList<MethodInfo> methods)
-        {
-            foreach (var method in methods)
-            {
-                MethodInfo methodInDictionary = null;
-                if (methodDictionary.TryGetValue(method.ToString(), out methodInDictionary))
-                {
-                    // if the method exists in the dictionary, then compare their method bodies
-                    var methodBody = method.GetMethodBody();
-                    var methodBodyInDictionary = methodInDictionary.GetMethodBody();
-
-                    if (methodBody != null && methodBodyInDictionary != null)
-                    {
-                        if (this.AreDifferent(methodBody, methodBodyInDictionary))
-                        {
-                            yield return method;
-                        }
-                    }
-                    else
-                    {
-                        Trace.TraceError(
-                            "Error attempting to compare methods {0} and {1}. One of the method bodies is null.", 
-                            methodInDictionary, 
-                            method);
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Compares the two target method bodies and determines if they are different. This method performs a

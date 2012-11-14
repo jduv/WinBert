@@ -12,7 +12,6 @@
     /// The resulting type.
     /// </typeparam>
     public interface IDifferenceEngine<T, TResult>
-        where TResult : IDifferenceResult<T>
     {
         #region Methods
 
