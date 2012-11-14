@@ -77,7 +77,7 @@
 
             var diffResult = AssemblyDifferenceResult.Create(oldObject, newObject);
             var oldTypes = oldObject.GetTypes().ToDictionary(x => x.Name);
-            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.Name))).ToList();
+            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName))).ToList();
 
             foreach (var newType in newTypes)
             {

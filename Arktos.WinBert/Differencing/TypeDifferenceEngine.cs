@@ -1,10 +1,10 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Arktos.WinBert.Xml;
-    using System.Collections.Generic;
 
     /// <summary>
     /// This simple type differencing engine will take two types and figure out the difference between them.
@@ -65,9 +65,8 @@
             }
 
             var diffResult = TypeDifferenceResult.FromType(newObject);
-
-            var oldTypeDict = oldObject.GetMethods().ToDictionary(x => x.Name);
-            var newTypes = newObject.GetMethods().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
+            var oldTypeDict = oldObject.GetMethods().Where(x => x.DeclaringType.Name == oldObject.Name).ToDictionary(x => x.Name);
+            var newTypes = newObject.GetMethods().Where(x => x.DeclaringType.Name == newObject.Name && !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
 
             foreach (var method in newTypes)
             {
