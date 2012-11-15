@@ -8,6 +8,7 @@
     using Arktos.WinBert.Exceptions;
     using Arktos.WinBert.Util;
     using Microsoft.Cci;
+    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,

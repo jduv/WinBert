@@ -6,6 +6,7 @@
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using Microsoft.Cci;
+    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage

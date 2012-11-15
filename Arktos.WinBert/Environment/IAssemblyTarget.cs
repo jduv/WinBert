@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Environment
 {
     /// <summary>
     /// Defines a basic wrapper around an assembly for CCI and reflection based assembly representations.

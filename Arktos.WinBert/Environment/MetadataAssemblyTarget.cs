@@ -1,28 +1,28 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Environment
 {
     using System;
-    using System.Reflection;
+    using Microsoft.Cci;
 
     /// <summary>
-    /// A thin wrapper on top of a reflection assembly.
+    /// A thin wrapper on top of a CCI metadata assembly.
     /// </summary>
-    public sealed class AssemblyTarget : IAssemblyTarget
+    public sealed class MetadataAssemblyTarget : IAssemblyTarget
     {
         #region Fields & Constants
 
-        private readonly Assembly assembly;
+        private readonly IAssembly assembly;
 
         #endregion
 
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the AssemblyTarget class.
+        /// Initializes a new instance of the MetadataAssemblyTarget class.
         /// </summary>
         /// <param name="assembly">
         /// The assembly.
         /// </param>
-        public AssemblyTarget(Assembly assembly)
+        public MetadataAssemblyTarget(IAssembly assembly)
         {
             if (assembly == null)
             {
