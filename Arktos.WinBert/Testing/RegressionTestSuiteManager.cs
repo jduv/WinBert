@@ -3,7 +3,6 @@
     using System;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Differencing.Cci;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using Microsoft.Cci;
@@ -182,9 +181,9 @@
         /// </returns>
         protected IAssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
-            var differ = new CciAssemblyDifferenceEngine(this.config.IgnoreList);
-            var currentAssembly = new MetaAssemblyResolver().LoadMeta(current.AssemblyPath);
-            var previousAssembly = new MetaAssemblyResolver().LoadMeta(previous.AssemblyPath);
+            var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
+            var currentAssembly = new AssemblyResolver().LoadFile(current.AssemblyPath);
+            var previousAssembly = new AssemblyResolver().LoadFile(previous.AssemblyPath);
             return differ.Diff(previousAssembly, currentAssembly);
         }
 

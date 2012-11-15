@@ -124,8 +124,6 @@
     <Compile Include="Analysis\AnalysisResult.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\AssemblyTarget.cs" />
-    <Compile Include="Differencing\Cci\CciAssemblyDifferenceEngine.cs" />
-    <Compile Include="Differencing\Cci\CciTypeDifferenceEngine.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceEngine.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />
