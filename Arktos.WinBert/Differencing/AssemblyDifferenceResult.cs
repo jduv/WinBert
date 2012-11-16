@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using Arktos.WinBert.Environment;
     using Microsoft.Cci;
 
     /// <summary>

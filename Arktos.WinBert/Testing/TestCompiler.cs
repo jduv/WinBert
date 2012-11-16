@@ -6,9 +6,7 @@
     using System.IO;
     using System.Linq;
     using Arktos.WinBert.Exceptions;
-    using Arktos.WinBert.Util;
     using Microsoft.Cci;
-    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
@@ -20,7 +18,6 @@
 
         private readonly CodeDomProvider compiler;
         private readonly IList<string> referencePaths;
-        private readonly IMetaAssemblyResolver resolver;
 
         #endregion
 
@@ -33,11 +30,10 @@
         /// An IAssemblyResolver implementation to use when loading the compiled
         /// assemblies.
         /// </param>
-        public TestCompiler(IAssemblyResolver resolver = null)
+        public TestCompiler()
         {
             this.compiler = CodeDomProvider.CreateProvider("CSharp");
             this.referencePaths = new List<string>();
-            this.resolver = new MetaAssemblyResolver();
         }
 
         #endregion
@@ -131,7 +127,8 @@
                     if (results.Errors.Count == 0)
                     {
                         // return the loaded assembly.
-                        return resolver.LoadMeta(Path.GetFullPath(results.PathToAssembly));
+                        //return resolver.LoadMeta(Path.GetFullPath(results.PathToAssembly));
+                        return null;
                     }
                     else
                     {

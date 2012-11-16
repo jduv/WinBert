@@ -3,10 +3,7 @@
     using System;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
-    using Microsoft.Cci;
-    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage
@@ -19,7 +16,6 @@
 
         private readonly ITestGenerator generator;
         private readonly ITestRunner runner;
-        private readonly IMetaAssemblyResolver resolver;
         private readonly WinBertConfig config;
 
         #endregion
@@ -55,7 +51,6 @@
             this.config = config;
             this.generator = generator;
             this.runner = runner;
-            this.resolver = new MetaAssemblyResolver();
         }
 
         #endregion
@@ -182,10 +177,12 @@
         /// </returns>
         protected IAssemblyDifferenceResult DoDiff(Build current, Build previous)
         {
-            var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
-            var currentAssembly = new AssemblyResolver().LoadFile(current.AssemblyPath);
-            var previousAssembly = new AssemblyResolver().LoadFile(previous.AssemblyPath);
-            return differ.Diff(previousAssembly, currentAssembly);
+            ////var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
+            ////var currentAssembly = new AssemblyResolver().LoadFile(current.AssemblyPath);
+            ////var previousAssembly = new AssemblyResolver().LoadFile(previous.AssemblyPath);
+            ////return differ.Diff(previousAssembly, currentAssembly);
+
+            return null;
         }
 
         #endregion

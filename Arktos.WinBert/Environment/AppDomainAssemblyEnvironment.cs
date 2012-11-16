@@ -196,6 +196,12 @@
                 byte[] pdbBits = File.ReadAllBytes(pdbPath);
                 return Assembly.Load(assemblyBits, pdbBits);
             }
+
+            /// <inheritdoc />
+            public Assembly LoadFileWithReferences(string path)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion

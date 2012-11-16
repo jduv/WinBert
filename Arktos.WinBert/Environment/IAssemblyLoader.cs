@@ -1,6 +1,5 @@
 ﻿namespace Arktos.WinBert.Environment
 {
-    using System;
     using System.Reflection;
 
     /// <summary>
@@ -58,6 +57,18 @@
         /// The target assembly.
         /// </returns>
         Assembly LoadBits(string assemblyPath, string pdbPath);
+
+        /// <summary>
+        /// Loads the assembly at the target path along with all referenced assemblies into the
+        /// contained application domain.
+        /// </summary>
+        /// <param name="path">
+        /// The path to the assembly to load.
+        /// </param>
+        /// <returns>
+        /// The assembly that was loaded.
+        /// </returns>
+        Assembly LoadFileWithReferences(string path);
 
         #endregion
     }
