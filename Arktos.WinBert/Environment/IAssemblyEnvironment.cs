@@ -66,6 +66,17 @@
         /// </returns>
         ILoadedAssemblyTarget LoadBits(string assemblyPath, string pdbPath);
 
+        /// <summary>
+        /// Loads the assembly at the target path with all it's references, if possible.
+        /// </summary>
+        /// <param name="path">
+        /// The path to the assembly to load.
+        /// </param>
+        /// <returns>
+        /// The target assembly.
+        /// </returns>
+        public ILoadedAssemblyTarget LoadFileWithReferences(string path);
+
         #endregion
     }
 }

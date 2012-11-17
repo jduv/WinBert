@@ -7,7 +7,7 @@
     /// <summary>
     /// This inner class exists to pull assemblies into whatever application domain it's loaded into.
     /// </summary>
-    private class AssemblyLoader : MarshalByRefObject, IAssemblyLoader
+    private class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
         /// <inheritdoc/>
         public Assembly LoadFile(string path)

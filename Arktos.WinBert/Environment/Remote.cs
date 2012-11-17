@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets the wrapped value.
         /// </summary>
-        public T Proxy { get; private set; }
+        public T RemoteObject { get; private set; }
 
         /// <summary>
         /// Gets the application domain where the wrapped value lives.
@@ -72,7 +72,7 @@
                 return new Remote<T>()
                 {
                     Domain = targetDomain,
-                    Proxy = proxy
+                    RemoteObject = proxy
                 };
             }
 

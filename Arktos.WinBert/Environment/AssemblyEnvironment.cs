@@ -12,7 +12,7 @@
         #region Fields & Constants
 
         private readonly AppDomain domain;
-        private readonly Remote<AssemblyLoader> loader;
+        private readonly Remote<RemotableAssemblyLoader> loaderProxy;
         private readonly Guid domainName;
 
         #endregion
@@ -33,7 +33,7 @@
                 AppDomain.CurrentDomain.SetupInformation);
 
             // Create a remote for an assembly loader.
-            this.loader = Remote<AssemblyLoader>.Create(this.domain);
+            this.loaderProxy = Remote<RemotableAssemblyLoader>.Create(this.domain);
         }
 
         #endregion
@@ -90,21 +90,12 @@
                 throw new ArgumentException("Path cannot be null or empty!");
             }
 
-            return this.proxy.LoadFile(path);
-        }
-
-        /// <inheritdoc/>
-        /// <remarks>
-        /// This method will load the target assembly into the application domain wrapped by an instance
-        /// of this class instead of the current one.
-        /// </remarks>
-        public ILoadedAssemblyTarget LoadFileWithReferences(string path)
-        {
-            if (string.IsNullOrEmpty(path))
+            if (!File.Exists(path))
             {
-                throw new ArgumentException("Path cannot be null or empty!");
+                throw new ArgumentException("Path must be an existing file!");
             }
 
+            var assembly = this.loaderProxy.RemoteObject.LoadFile(path);
             throw new NotImplementedException();
         }
 
@@ -120,7 +111,13 @@
                 throw new ArgumentException("Path cannot be null or empty!");
             }
 
-            return this.proxy.LoadFrom(path);
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
+            var assembly = this.loaderProxy.RemoteObject.LoadFrom(path);
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
@@ -135,7 +132,13 @@
                 throw new ArgumentException("Path cannot be null or empty!");
             }
 
-            return this.proxy.LoadBits(path);
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
+            var assembly = this.loaderProxy.RemoteObject.LoadBits(path);
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
@@ -150,12 +153,43 @@
                 throw new ArgumentException("Assembly path cannot be null or empty!");
             }
 
+            if (!File.Exists(assemblyPath))
+            {
+                throw new ArgumentException("Assembly path must be an existing file!");
+            }
+
             if (string.IsNullOrEmpty(pdbPath))
             {
                 throw new ArgumentException("Pdb path cannot be null or empty!");
             }
 
-            return this.proxy.LoadBits(assemblyPath, pdbPath);
+            if (!File.Exists(pdbPath))
+            {
+                throw new ArgumentException("Pdb path must be an existing file!");
+            }
+
+            var assembly = this.loaderProxy.RemoteObject.LoadBits(assemblyPath, pdbPath);
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        /// <remarks>
+        /// This method will load the target assembly into the application domain wrapped by an instance
+        /// of this class instead of the current one.
+        /// </remarks>
+        public ILoadedAssemblyTarget LoadFileWithReferences(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Path cannot be null or empty!");
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
+            throw new NotImplementedException();
         }
 
         #endregion

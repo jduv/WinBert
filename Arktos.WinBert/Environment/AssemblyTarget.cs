@@ -3,7 +3,7 @@
     /// <summary>
     /// Simple class representing an assembly target.
     /// </summary>
-    public sealed class AssemblyTarget : IAssemblyTarget
+    public class AssemblyTarget : IAssemblyTarget
     {
         #region Constructors & Destructors
 
