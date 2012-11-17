@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Microsoft.Cci;
+    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// Represents an implementation that generates tests.
@@ -20,8 +21,8 @@
         /// A list of valid types to generate tests for.
         /// </param>
         /// <returns>
-        /// A reference to the metadata for a compiled assembly containing the tests.
+        /// A reference to the compiled assembly containing the tests.
         /// </returns>
-        IAssembly GetTestsFor(IAssembly target, IList<INamedTypeDefinition> validTypes);
+        IAssemblyTarget GetTestsFor(IAssemblyTarget target, IList<string> validTypeNames);
     }
 }

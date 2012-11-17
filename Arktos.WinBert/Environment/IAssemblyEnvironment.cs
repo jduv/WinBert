@@ -1,13 +1,21 @@
 ﻿namespace Arktos.WinBert.Environment
 {
-    using System.Reflection;
+    using System;
 
     /// <summary>
-    /// Defines behavior for a class that acts exactly the same as the static methods on
-    /// the Assembly class.
+    /// Defines behavior for implementations that load assemblies into a built-in application domain.
     /// </summary>
-    public interface IAssemblyLoader
+    public interface IAssemblyEnvironment : IDisposable
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the contained application domain.
+        /// </summary>
+        AppDomain Domain { get; }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -19,7 +27,7 @@
         /// <returns>
         /// The target assembly.
         /// </returns>
-        Assembly LoadFile(string path);
+        ILoadedAssemblyTarget LoadFile(string path);
 
         /// <summary>
         /// This call should be the same as calling Assembly.LoadFrom().
@@ -30,7 +38,7 @@
         /// <returns>
         /// The target assembly.
         /// </returns>
-        Assembly LoadFrom(string path);
+        ILoadedAssemblyTarget LoadFrom(string path);
 
         /// <summary>
         /// Loads the bits of the assembly at the target path into the current application domain.
@@ -41,7 +49,7 @@
         /// <returns>
         /// The target assembly.
         /// </returns>
-        Assembly LoadBits(string path);
+        ILoadedAssemblyTarget LoadBits(string path);
 
         /// <summary>
         /// Loads the bits of the assembly at the target path into the current application domain along with
@@ -56,7 +64,7 @@
         /// <returns>
         /// The target assembly.
         /// </returns>
-        Assembly LoadBits(string assemblyPath, string pdbPath);
+        ILoadedAssemblyTarget LoadBits(string assemblyPath, string pdbPath);
 
         #endregion
     }

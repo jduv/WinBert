@@ -1,49 +1,29 @@
 ﻿namespace Arktos.WinBert.Environment
 {
-    using System;
-    using System.Reflection;
-
     /// <summary>
-    /// A thin wrapper on top of a reflection assembly.
+    /// Simple class representing an assembly target.
     /// </summary>
     public sealed class AssemblyTarget : IAssemblyTarget
     {
-        #region Fields & Constants
-
-        private readonly Assembly assembly;
-
-        #endregion
-
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the AssemblyTarget class.
+        /// Initializes a new instnce of the AssemblyTarget class.
         /// </summary>
-        /// <param name="assembly">
-        /// The assembly.
+        /// <param name="target">
+        /// The path to the assembly.
         /// </param>
-        public AssemblyTarget(Assembly assembly)
+        public AssemblyTarget(string target)
         {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException("assembly");
-            }
-
-            this.assembly = assembly;
-        }
+            this.Location = target;            
+        }        
 
         #endregion
 
         #region Properties
 
-        /// <inheritdoc/>
-        public string Location
-        {
-            get
-            {
-                return this.assembly.Location;
-            }
-        }
+        /// <inheritdoc />
+        public string Location { get; private set; }
 
         #endregion
     }

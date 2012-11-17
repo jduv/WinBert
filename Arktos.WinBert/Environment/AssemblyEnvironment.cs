@@ -7,12 +7,12 @@
     /// <summary>
     /// Loads assemblies into the contained application domain.
     /// </summary>
-    public class AppDomainAssemblyEnvironment : IAppDomainAssemblyEnvironment
+    public class AssemblyEnvironment : IAssemblyEnvironment
     {
         #region Fields & Constants
 
         private readonly AppDomain domain;
-        private readonly AssemblyLoaderProxy proxy;
+        private readonly Remote<AssemblyLoader> loader;
         private readonly Guid domainName;
 
         #endregion
@@ -22,7 +22,7 @@
         /// <summary>
         /// Initializes a new instance of the AppDomainAssemblyLoader class.
         /// </summary>
-        public AppDomainAssemblyEnvironment()
+        public AssemblyEnvironment()
         {
             this.domainName = Guid.NewGuid();
 
@@ -32,11 +32,8 @@
                 null,
                 AppDomain.CurrentDomain.SetupInformation);
 
-            // Create the proxy.
-            var type = typeof(AssemblyLoaderProxy);
-            this.proxy = (AssemblyLoaderProxy)this.domain.CreateInstanceAndUnwrap(
-                type.Assembly.FullName,
-                type.FullName);
+            // Create a remote for an assembly loader.
+            this.loader = Remote<AssemblyLoader>.Create(this.domain);
         }
 
         #endregion
@@ -86,7 +83,7 @@
         /// This method will load the target assembly into the application domain wrapped by an instance
         /// of this class instead of the current one.
         /// </remarks>
-        public Assembly LoadFile(string path)
+        public ILoadedAssemblyTarget LoadFile(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -101,7 +98,7 @@
         /// This method will load the target assembly into the application domain wrapped by an instance
         /// of this class instead of the current one.
         /// </remarks>
-        public Assembly LoadFileWithReferences(string path)
+        public ILoadedAssemblyTarget LoadFileWithReferences(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -116,7 +113,7 @@
         /// This method will load the target assembly into the application domain wrapped by an instance
         /// of this class instead of the current one.
         /// </remarks>
-        public Assembly LoadFrom(string path)
+        public ILoadedAssemblyTarget LoadFrom(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -131,7 +128,7 @@
         /// This method will load the target assembly into the application domain wrapped by an instance
         /// of this class instead of the current one.
         /// </remarks>
-        public Assembly LoadBits(string path)
+        public ILoadedAssemblyTarget LoadBits(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -146,7 +143,7 @@
         /// This method will load the target assembly into the application domain wrapped by an instance
         /// of this class instead of the current one.
         /// </remarks>
-        public Assembly LoadBits(string assemblyPath, string pdbPath)
+        public ILoadedAssemblyTarget LoadBits(string assemblyPath, string pdbPath)
         {
             if (string.IsNullOrEmpty(assemblyPath))
             {
@@ -159,49 +156,6 @@
             }
 
             return this.proxy.LoadBits(assemblyPath, pdbPath);
-        }
-
-        #endregion
-
-        #region Private Inner Class
-
-        /// <summary>
-        /// This inner class exists to pull assemblies into whatever application domain it's loaded into.
-        /// </summary>
-        private class AssemblyLoaderProxy : MarshalByRefObject, IAssemblyLoader
-        {
-            /// <inheritdoc/>
-            public Assembly LoadFile(string path)
-            {
-                return Assembly.LoadFile(path);
-            }
-
-            /// <inheritdoc/>
-            public Assembly LoadFrom(string path)
-            {
-                return Assembly.LoadFrom(path);
-            }
-
-            /// <inheritdoc/>
-            public Assembly LoadBits(string path)
-            {
-                byte[] bits = File.ReadAllBytes(path);
-                return Assembly.Load(bits);
-            }
-
-            /// <inheritdoc/>
-            public Assembly LoadBits(string assemblyPath, string pdbPath)
-            {
-                byte[] assemblyBits = File.ReadAllBytes(assemblyPath);
-                byte[] pdbBits = File.ReadAllBytes(pdbPath);
-                return Assembly.Load(assemblyBits, pdbBits);
-            }
-
-            /// <inheritdoc />
-            public Assembly LoadFileWithReferences(string path)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         #endregion

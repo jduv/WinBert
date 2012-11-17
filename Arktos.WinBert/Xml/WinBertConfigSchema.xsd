@@ -50,7 +50,6 @@
     <xs:complexType name="Build">
         <xs:sequence>
             <xs:element name="AssemblyPath" type="xs:string"/>
-            <xs:element name="TestAssemblyPath" type="xs:string" />
             <xs:element name="PdbPath" type="xs:string" />
         </xs:sequence>
         <xs:attribute name="SequenceNumber" type="xs:unsignedInt" use="required"/>

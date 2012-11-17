@@ -162,7 +162,7 @@
             var typeNames = validTypes.Select(x => x.Name.Value).ToList();
             using (var isolated = new Remote<RemoteTestGenerator>(this.config))
             {
-                success = isolated.Value.GenerateTests(typeNames, assemblyPath);
+                success = isolated.Proxy.GenerateTests(typeNames, assemblyPath);
             }
 
             return success;

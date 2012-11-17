@@ -5,11 +5,12 @@
     using System.Linq;
     using System.Reflection;
     using Arktos.WinBert.Xml;
+    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
     /// </summary>
-    public sealed class AssemblyDifferenceEngine : IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
+    public sealed class AssemblyDifferenceEngine : IDifferenceEngine<ILoadedAssemblyTarget, IAssemblyDifferenceResult>
     {
         #region Constants & Fields
 
@@ -63,7 +64,7 @@
         /// An IDifferenceResult implementation that contains all the differences between the target assemblies in
         /// a hierarchical manner.
         /// </returns>
-        public IAssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
+        public IAssemblyDifferenceResult Diff(ILoadedAssemblyTarget oldObject, ILoadedAssemblyTarget newObject)
         {
             if (oldObject == null)
             {
@@ -76,8 +77,8 @@
             }
 
             var diffResult = AssemblyDifferenceResult.Create(oldObject, newObject);
-            var oldTypes = oldObject.GetTypes().ToDictionary(x => x.Name);
-            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName))).ToList();
+            var oldTypes = oldObject.Assembly.GetTypes().ToDictionary(x => x.Name);
+            var newTypes = newObject.Assembly.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName))).ToList();
 
             foreach (var newType in newTypes)
             {

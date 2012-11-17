@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Microsoft.Cci;
+    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// Defines behavior for a component that is able to compile an Assembly
@@ -52,7 +53,7 @@
         /// <returns>
         /// A test assembly.
         /// </returns>
-        IAssembly CompileTests(string sourcePath);
+        IAssemblyTarget CompileTests(string sourcePath);
 
         /// <summary>
         /// Compiles all source at the target path into an Assembly with the target output name.
@@ -64,9 +65,9 @@
         /// The output file name.
         /// </param>
         /// <returns>
-        /// A test assembly.
+        /// An 
         /// </returns>
-        IAssembly CompileTests(string sourcePath, string outputFileName);
+        IAssemblyTarget CompileTests(string sourcePath, string outputFileName);
 
         #endregion
     }

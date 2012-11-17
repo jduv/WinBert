@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Arktos.WinBert.Environment;
+    using System.Reflection;
 
     /// <summary>
     /// Defines the contract for a difference result for an assembly.
@@ -18,12 +19,12 @@
         /// <summary>
         /// Gets the new assembly target.
         /// </summary>
-        IAssemblyTarget NewAssembly { get; }
+        ILoadedAssemblyTarget NewAssembly { get; }
 
         /// <summary>
         /// Gets the old assembly target.
         /// </summary>
-        IAssemblyTarget OldAssembly { get; }
+        ILoadedAssemblyTarget OldAssembly { get; }
 
         #endregion
     }
