@@ -122,7 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
+    <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
+    <Compile Include="Environment\RemotableAssemblyLoader.cs" />
     <Compile Include="Environment\AssemblyTarget.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceEngine.cs" />
@@ -139,9 +141,10 @@
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Environment\Remote.cs" />
+    <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="Testing\IRegressionTestManager.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
-    <Compile Include="Testing\RegressionTestSuiteManager.cs" />
+    <Compile Include="Testing\RegressionTestManager.cs" />
     <Compile Include="Testing\TestCompiler.cs" />
     <Compile Include="Testing\ITestCompiler.cs" />
     <Compile Include="Testing\ITestGenerator.cs" />
@@ -212,9 +215,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Instrumentation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />

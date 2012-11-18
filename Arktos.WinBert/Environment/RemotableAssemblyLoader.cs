@@ -7,23 +7,53 @@
     /// <summary>
     /// This inner class exists to pull assemblies into whatever application domain it's loaded into.
     /// </summary>
-    private class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
+    public class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
         /// <inheritdoc/>
         public Assembly LoadFile(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Path cannot be null or empty!");
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
             return Assembly.LoadFile(path);
         }
 
         /// <inheritdoc/>
         public Assembly LoadFrom(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Path cannot be null or empty!");
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
             return Assembly.LoadFrom(path);
         }
 
         /// <inheritdoc/>
         public Assembly LoadBits(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Path cannot be null or empty!");
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
             byte[] bits = File.ReadAllBytes(path);
             return Assembly.Load(bits);
         }
@@ -31,6 +61,26 @@
         /// <inheritdoc/>
         public Assembly LoadBits(string assemblyPath, string pdbPath)
         {
+            if (string.IsNullOrEmpty(assemblyPath))
+            {
+                throw new ArgumentException("Assembly path cannot be null or empty!");
+            }
+
+            if (!File.Exists(assemblyPath))
+            {
+                throw new ArgumentException("Assembly path must be an existing file!");
+            }
+
+            if (string.IsNullOrEmpty(pdbPath))
+            {
+                throw new ArgumentException("Pdb path cannot be null or empty!");
+            }
+
+            if (!File.Exists(pdbPath))
+            {
+                throw new ArgumentException("Pdb path must be an existing file!");
+            }
+
             byte[] assemblyBits = File.ReadAllBytes(assemblyPath);
             byte[] pdbBits = File.ReadAllBytes(pdbPath);
             return Assembly.Load(assemblyBits, pdbBits);

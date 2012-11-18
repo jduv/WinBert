@@ -19,6 +19,18 @@
         #region Methods
 
         /// <summary>
+        /// Loads the assembly target into this environment, or returns the already loaded
+        /// assembly if it exists.
+        /// </summary>
+        /// <param name="target">
+        /// The target to load.
+        /// </param>
+        /// <returns>
+        /// The assembly loaded into the context of this environment.
+        /// </returns>
+        ILoadedAssemblyTarget LoadTarget(IAssemblyTarget target);
+
+        /// <summary>
         /// This call should be the same as calling Assembly.LoadFile().
         /// </summary>
         /// <param name="path">
@@ -75,7 +87,7 @@
         /// <returns>
         /// The target assembly.
         /// </returns>
-        public ILoadedAssemblyTarget LoadFileWithReferences(string path);
+        ILoadedAssemblyTarget LoadFileWithReferences(string path);
 
         #endregion
     }

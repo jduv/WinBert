@@ -10,7 +10,8 @@
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
     /// </summary>
-    public sealed class AssemblyDifferenceEngine : IDifferenceEngine<ILoadedAssemblyTarget, IAssemblyDifferenceResult>
+    public sealed class AssemblyDifferenceEngine 
+        : IDifferenceEngine<ILoadedAssemblyTarget, IAssemblyDifferenceResult>, IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
     {
         #region Constants & Fields
 
@@ -50,20 +51,7 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Implementation of the Diff method required by the IDifferenceEngine interface. This method will perform
-        /// a very rudimentary diff on the two passed in assemblies.
-        /// </summary>
-        /// <param name="oldObject">
-        /// The first object to compare.
-        /// </param>
-        /// <param name="newObject">
-        /// The second object to compare.
-        /// </param>
-        /// <returns>
-        /// An IDifferenceResult implementation that contains all the differences between the target assemblies in
-        /// a hierarchical manner.
-        /// </returns>
+        /// <inheritdoc />
         public IAssemblyDifferenceResult Diff(ILoadedAssemblyTarget oldObject, ILoadedAssemblyTarget newObject)
         {
             if (oldObject == null)
@@ -76,9 +64,25 @@
                 throw new ArgumentNullException("newObject");
             }
 
-            var diffResult = AssemblyDifferenceResult.Create(oldObject, newObject);
-            var oldTypes = oldObject.Assembly.GetTypes().ToDictionary(x => x.Name);
-            var newTypes = newObject.Assembly.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName))).ToList();
+            return this.Diff(oldObject.Assembly, newObject.Assembly);
+        }
+
+        /// <inheritdoc />
+        public IAssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
+        {
+            if (oldObject == null)
+            {
+                throw new ArgumentNullException("oldObject");
+            }
+
+            if (newObject == null)
+            {
+                throw new ArgumentNullException("newObject");
+            }
+
+            var diffResult = new AssemblyDifferenceResult(oldObject, newObject);
+            var oldTypes = oldObject.GetTypes().ToDictionary(x => x.Name);
+            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName))).ToList();
 
             foreach (var newType in newTypes)
             {

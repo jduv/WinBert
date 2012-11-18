@@ -198,19 +198,11 @@
                     var currentBuild = manager.GetMostRecentBuild();
 
                     // Get the last build where tests were executed.
-                    var lastTestedBuild = manager.BuildArchive.Values.Reverse().Skip(1).FirstOrDefault(x => !string.IsNullOrEmpty(x.TestAssemblyPath)) ??
-                        manager.GetBuildRevisionPreceding(currentBuild);
+                    var lastTestedBuild = manager.GetBuildRevisionPreceding(currentBuild);
 
                     if (currentBuild != null && lastTestedBuild != null)
                     {
-                        var compiler = new TestCompiler();
-                        var runner = new RandoopTestRunner();
-                        var generator = new RandoopTestGenerator(this.Config, compiler);
-                        
-                        // Use the default assembly resolver.
-                        var testManager = new RegressionTestSuiteManager(this.Config, generator, runner);
-
-                        var results = testManager.BuildAndExecuteTestSuite(currentBuild, lastTestedBuild);
+                        // BMK Write me.
                     }
                 }
             }

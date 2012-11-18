@@ -17,7 +17,7 @@
 
         #endregion
 
-        #region Constructrs & Destructors
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the AppDomainAssemblyLoader class.
@@ -65,11 +65,6 @@
         #region Public Methods
 
         /// <inheritdoc />
-        /// <remarks>
-        /// Dispose will unload the application domain managed by the loader if it' *not* the default app domain.
-        /// This should always be the case, since the ctor creates the application domain that we use anyway--but 
-        /// better safe than crashed application.
-        /// </remarks>
         public void Dispose()
         {
             if (this.domain != null && !this.domain.IsDefaultAppDomain())
@@ -78,11 +73,28 @@
             }
         }
 
+        /// <inheritdoc />
+        public ILoadedAssemblyTarget LoadTarget(IAssemblyTarget target)
+        {
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
+
+            if (string.IsNullOrEmpty(target.Location))
+            {
+                throw new ArgumentException("Target location cannot be null or empty.");
+            }
+
+            if (!File.Exists(target.Location))
+            {
+                throw new ArgumentException("Target location must be an existing file.");
+            }
+
+            return this.LoadFile(target.Location);
+        }
+
         /// <inheritdoc/>
-        /// <remarks>
-        /// This method will load the target assembly into the application domain wrapped by an instance
-        /// of this class instead of the current one.
-        /// </remarks>
         public ILoadedAssemblyTarget LoadFile(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -96,14 +108,18 @@
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadFile(path);
-            throw new NotImplementedException();
+            if (assembly != null)
+            {
+                return new LoadedAssemblyTarget(assembly, this);
+            }
+            else
+            {
+                // BMK Throw exception here.
+                throw new NotImplementedException();
+            }
         }
 
         /// <inheritdoc/>
-        /// <remarks>
-        /// This method will load the target assembly into the application domain wrapped by an instance
-        /// of this class instead of the current one.
-        /// </remarks>
         public ILoadedAssemblyTarget LoadFrom(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -117,14 +133,18 @@
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadFrom(path);
-            throw new NotImplementedException();
+            if (assembly != null)
+            {
+                return new LoadedAssemblyTarget(assembly, this);
+            }
+            else
+            {
+                // BMK Throw exception here.
+                throw new NotImplementedException();
+            }
         }
 
         /// <inheritdoc/>
-        /// <remarks>
-        /// This method will load the target assembly into the application domain wrapped by an instance
-        /// of this class instead of the current one.
-        /// </remarks>
         public ILoadedAssemblyTarget LoadBits(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -138,14 +158,18 @@
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadBits(path);
-            throw new NotImplementedException();
+            if (assembly != null)
+            {
+                return new LoadedAssemblyTarget(assembly, this);
+            }
+            else
+            {
+                // BMK Throw exception here.
+                throw new NotImplementedException();
+            }
         }
 
         /// <inheritdoc/>
-        /// <remarks>
-        /// This method will load the target assembly into the application domain wrapped by an instance
-        /// of this class instead of the current one.
-        /// </remarks>
         public ILoadedAssemblyTarget LoadBits(string assemblyPath, string pdbPath)
         {
             if (string.IsNullOrEmpty(assemblyPath))
@@ -169,14 +193,18 @@
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadBits(assemblyPath, pdbPath);
-            throw new NotImplementedException();
+            if (assembly != null)
+            {
+                return new LoadedAssemblyTarget(assembly, this);
+            }
+            else
+            {
+                // BMK Throw exception here.
+                throw new NotImplementedException();
+            }
         }
 
         /// <inheritdoc/>
-        /// <remarks>
-        /// This method will load the target assembly into the application domain wrapped by an instance
-        /// of this class instead of the current one.
-        /// </remarks>
         public ILoadedAssemblyTarget LoadFileWithReferences(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -190,6 +218,64 @@
             }
 
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Inner Classes
+
+        /// <summary>
+        /// Represents an assembly loaded into an environment.
+        /// </summary>
+        private class LoadedAssemblyTarget : ILoadedAssemblyTarget
+        {
+            #region Constructors & Destructors
+
+            /// <summary>
+            /// Initializes a new instance of the LoadedAssemblyTarget class.
+            /// </summary>
+            /// <param name="loadedAssembly">
+            /// The loaded assembly.
+            /// </param>
+            /// <param name="environment">
+            /// The environment where the assembly was loaded.
+            /// </param>
+            public LoadedAssemblyTarget(Assembly loadedAssembly, IAssemblyEnvironment environment)
+            {
+                if (Assembly == null)
+                {
+                    throw new ArgumentNullException("loadedAssembly");
+                }
+
+                if (environment != null)
+                {
+                    throw new ArgumentNullException("environment");
+                }
+
+                this.Assembly = loadedAssembly;
+                this.Environment = environment;
+            }
+
+            #endregion
+
+            #region Propertis
+
+            /// <inheritdoc />
+            public Assembly Assembly { get; private set; }
+
+            /// <inheritdoc />
+            public IAssemblyEnvironment Environment { get; private set; }
+
+            /// <inheritdoc />
+            public string Location
+            {
+                get
+                {
+                    return this.Assembly.Location;
+                }
+            }
+
+            #endregion
         }
 
         #endregion

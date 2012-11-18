@@ -5,8 +5,8 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Arktos.WinBert.Environment;
     using Arktos.WinBert.Exceptions;
-    using Microsoft.Cci;
 
     /// <summary>
     /// Compiles tests into a test assembly. This implementation is basically a wrapper around the CodeDomProvider,
@@ -92,7 +92,7 @@
         }
 
         /// <inheritdoc />
-        public IAssembly CompileTests(string sourcePath)
+        public IAssemblyTarget CompileTests(string sourcePath)
         {
             if (string.IsNullOrEmpty(sourcePath))
             {
@@ -103,7 +103,7 @@
         }
 
         /// <inheritdoc />
-        public IAssembly CompileTests(string sourcePath, string outputFileName)
+        public IAssemblyTarget CompileTests(string sourcePath, string outputFileName)
         {
             if (string.IsNullOrEmpty(sourcePath))
             {
@@ -126,9 +126,7 @@
 
                     if (results.Errors.Count == 0)
                     {
-                        // return the loaded assembly.
-                        //return resolver.LoadMeta(Path.GetFullPath(results.PathToAssembly));
-                        return null;
+                        return AssemblyTarget.Create(Path.GetFullPath(results.PathToAssembly));
                     }
                     else
                     {
@@ -136,8 +134,7 @@
                     }
                 }
 
-                // Empty directory, nothing to compile.
-                return null;
+                throw new CompilationException("No source files were found to compile!");
             }
 
             throw new DirectoryNotFoundException("Directory not found. Path: " + fullPath);

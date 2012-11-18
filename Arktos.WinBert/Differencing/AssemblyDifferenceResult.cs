@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Arktos.WinBert.Environment;
+    using System.Reflection;
 
     /// <summary>
     /// This class represents a difference result between two assemblies.
@@ -20,20 +21,22 @@
         /// <param name="newAssembly">
         /// The new assembly.
         /// </param>
-        public AssemblyDifferenceResult(ILoadedAssemblyTarget oldAssemblyTarget, ILoadedAssemblyTarget newAssemblyTarget)
+        public AssemblyDifferenceResult(Assembly oldAssembly, Assembly newAssembly)
         {
-            if (oldAssemblyTarget == null)
+            if (oldAssembly == null)
             {
-                throw new ArgumentNullException("oldAssemblyTarget");
+                throw new ArgumentNullException("oldAssembly");
             }
 
-            if (newAssemblyTarget == null)
+            if (newAssembly == null)
             {
-                throw new ArgumentNullException("newAssemblyTarget");
+                throw new ArgumentNullException("newAssembly");
             }
 
-            this.OldAssembly = oldAssemblyTarget;
-            this.NewAssembly = newAssemblyTarget;
+            this.OldAssembly = oldAssembly;
+            this.OldAssemblyTarget = AssemblyTarget.Create(oldAssembly);
+            this.NewAssembly = newAssembly;
+            this.NewAssemblyTarget = AssemblyTarget.Create(newAssembly);
             this.TypeDifferences = new List<ITypeDifferenceResult>();
         }
 
@@ -50,45 +53,24 @@
             }
         }
 
-        /// <inheritdoc />
-        public ILoadedAssemblyTarget NewAssembly { get; private set; }
+        /// <summary>
+        /// Gets the new assembly.
+        /// </summary>
+        public Assembly NewAssembly { get; private set; }
 
         /// <inheritdoc />
-        public ILoadedAssemblyTarget OldAssembly { get; private set; }
+        public IAssemblyTarget NewAssemblyTarget { get; private set; }
+
+        /// <summary>
+        /// Gets the old assembly.
+        /// </summary>
+        public Assembly OldAssembly { get; private set; }
+
+        /// <inheritdoc />
+        public IAssemblyTarget OldAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
         public IList<ITypeDifferenceResult> TypeDifferences { get; private set; }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Creates a new AssemblyDifferenceResult from the target assemblies.
-        /// </summary>
-        /// <param name="oldAssembly">
-        /// The old assembly.
-        /// </param>
-        /// <param name="newAssembly">
-        /// The new assembly.
-        /// </param>
-        /// <returns>
-        /// A new AssemblyDifferenceResult.
-        /// </returns>
-        public static AssemblyDifferenceResult Create(ILoadedAssemblyTarget oldAssembly, ILoadedAssemblyTarget newAssembly)
-        {
-            if (newAssembly == null)
-            {
-                throw new ArgumentNullException("newAssembly");
-            }
-
-            if (oldAssembly == null)
-            {
-                throw new ArgumentNullException("oldAssembly");
-            }
-
-            return new AssemblyDifferenceResult(oldAssembly, newAssembly);
-        }
 
         #endregion
     }
