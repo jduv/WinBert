@@ -10,7 +10,7 @@
     public class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
         #region Public Methods
-        
+
         /// <inheritdoc /> 
         public Assembly Load(string path)
         {
@@ -21,7 +21,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             return Assembly.Load(path);
@@ -37,7 +37,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             return Assembly.LoadFile(path);
@@ -53,7 +53,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             return Assembly.LoadFrom(path);
@@ -69,7 +69,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             byte[] bits = File.ReadAllBytes(path);
@@ -86,7 +86,7 @@
 
             if (!File.Exists(assemblyPath))
             {
-                throw new ArgumentException("Assembly path must be an existing file!");
+                throw new FileNotFoundException("Assembly path must be an existing file!");
             }
 
             if (string.IsNullOrEmpty(pdbPath))
@@ -96,7 +96,7 @@
 
             if (!File.Exists(pdbPath))
             {
-                throw new ArgumentException("Pdb path must be an existing file!");
+                throw new FileNotFoundException("Pdb path must be an existing file!");
             }
 
             byte[] assemblyBits = File.ReadAllBytes(assemblyPath);

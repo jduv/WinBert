@@ -32,7 +32,7 @@
             var winbertDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var setupInfo = new AppDomainSetup()
             {
-                ApplicationName = "WinBert-Temp-domain-" + this.domainName,
+                ApplicationName = "WinBert-Temp-Domain-" + this.domainName,
                 ApplicationBase = winbertDir,
                 PrivateBinPath = winbertDir
             };
@@ -108,7 +108,7 @@
 
             if (!File.Exists(target.Location))
             {
-                throw new ArgumentException("Target location must be an existing file.");
+                throw new FileNotFoundException("Target location must be an existing file.");
             }
 
             return this.LoadFile(target.Location);
@@ -124,7 +124,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadFile(path);
@@ -149,7 +149,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadFrom(path);
@@ -174,7 +174,7 @@
 
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path must be an existing file!");
+                throw new FileNotFoundException("Path must be an existing file!");
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadBits(path);
@@ -199,7 +199,7 @@
 
             if (!File.Exists(assemblyPath))
             {
-                throw new ArgumentException("Assembly path must be an existing file!");
+                throw new FileNotFoundException("Assembly path must be an existing file!");
             }
 
             if (string.IsNullOrEmpty(pdbPath))
@@ -209,7 +209,7 @@
 
             if (!File.Exists(pdbPath))
             {
-                throw new ArgumentException("Pdb path must be an existing file!");
+                throw new FileNotFoundException("Pdb path must be an existing file!");
             }
 
             var assembly = this.loaderProxy.RemoteObject.LoadBits(assemblyPath, pdbPath);
