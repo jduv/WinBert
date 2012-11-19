@@ -97,6 +97,12 @@
         }
 
         /// <inheritdoc />
+        public IAssemblyTarget GetTestsFor(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public IAssembly GetTestsFor(IAssembly target, IList<INamedTypeDefinition> validTypes)
         {
             if (target == null)
@@ -122,7 +128,8 @@
                     {
                         var srcDir = Path.GetDirectoryName(target.Location);
                         this.compiler.AddReference(target.Location);
-                        return this.compiler.CompileTests(srcDir, GetTestAssemblyName(target.Location));
+                        //return this.compiler.CompileTests(srcDir, GetTestAssemblyName(target.Location));
+                        return null;
                     }
                     catch (Exception)
                     {
@@ -190,6 +197,10 @@
             var replacement = string.Format(".tests.{0}.dll", Guid.NewGuid().ToString().Substring(0, 7));
             return targetAssemblyPath.Replace(extension, replacement);
         }
+
+        #endregion
+
+        #region ITestGenerator Members
 
         #endregion
     }

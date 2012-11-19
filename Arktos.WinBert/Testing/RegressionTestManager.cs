@@ -4,10 +4,9 @@
     using System.Linq;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Xml;
     using Arktos.WinBert.Environment;
     using Arktos.WinBert.Instrumentation;
-    using System.Reflection;
+    using Arktos.WinBert.Xml;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage
@@ -87,42 +86,38 @@
         /// The current build.
         /// </param>
         /// <returns>A test suite, or null if something went wrong.</returns>
-        public AnalysisResult BuildAndExecuteTestSuite(Build previous,Build current)
+        public AnalysisResult BuildAndExecuteTestSuite(Build previous, Build current)
         {
-            var currentBuildEnv = new AssemblyEnvironment();
-            var currentAssembly = currentBuildEnv.LoadFile(current.AssemblyPath);
-
-            var previousBuildEnv = new AssemblyEnvironment();
-            var previousAssembly = previousBuildEnv.LoadFile(previous.AssemblyPath);
-
-            var diff = this.DoDiff(previousAssembly, currentAssembly);
-            if (diff.IsDifferent)
+            using (var currentBuildEnv = new AssemblyEnvironment())
+            using (var previousBuildEnv = new AssemblyEnvironment())
             {
-                // First get the tests.
-                var typeNames = diff.TypeDifferences.Select(x => x.Name);
-                var oldTests = this.generator.GetTestsFor(previousAssembly, typeNames);
-                var newTests = this.generator.GetTestsFor(currentAssembly, typeNames);
+                AnalysisResult result = null;
+                var currentAssembly = currentBuildEnv.LoadFile(current.AssemblyPath);
+                var previousAssembly = previousBuildEnv.LoadFile(previous.AssemblyPath);
 
-                // Next instrument the tests
-                var instrumentedOldTests = this.instrumenter.InstrumentTests(oldTests);
-                var instrumentedNewTests = this.instrumenter.InstrumentTests(newTests);
+                var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
+                var diff = differ.Diff(previousAssembly, currentAssembly);
 
-                // Finally execute the tests
-                var oldResult = this.runner.RunTests(previousAssembly);
-                var newResult = this.runner.RunTests(currentAssembly);
+                if (diff.IsDifferent)
+                {
+                    // First get the tests.
+                    var typeNames = diff.TypeDifferences.Select(x => x.Name);
+                    var oldTests = this.generator.GetTestsFor(previousAssembly, typeNames);
+                    var newTests = this.generator.GetTestsFor(currentAssembly, typeNames);
+
+                    // Next instrument the tests
+                    var instrumentedOldTests = this.instrumenter.InstrumentTests(oldTests);
+                    var instrumentedNewTests = this.instrumenter.InstrumentTests(newTests);
+
+                    // Finally execute the tests
+                    var oldResult = this.runner.RunTests(previousAssembly);
+                    var newResult = this.runner.RunTests(currentAssembly);
+
+                    result = this.analyzer.Analyze(oldResult, newResult);
+                }
+
+                return result;
             }
-
-            return null;
-        }
-
-        #endregion
-
-        #region Protected Methods
-
-        public IAssemblyDifferenceResult DoDiff( ILoadedAssemblyTarget previousAssembly, ILoadedAssemblyTarget currentAssembly)
-        {
-            var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
-            return differ.Diff(previousAssembly, currentAssembly);
         }
 
         #endregion

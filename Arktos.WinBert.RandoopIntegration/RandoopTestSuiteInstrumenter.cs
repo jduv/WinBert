@@ -1,9 +1,6 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
-    using System.Reflection;
-    using Arktos.WinBert.Instrumentation;
-    using Arktos.WinBert.Testing;
     using Microsoft.Cci;
 
     /// <summary>
@@ -12,32 +9,6 @@
     public class RandoopTestSuiteInstrumenter
     {
         #region Public Methods
-
-        /// <summary>
-        /// This method will instrument the target test assembly and return a modified copy.
-        /// </summary>
-        /// <param name="testsToInstrument">
-        /// The tests to instrument.
-        /// </param>
-        /// <returns>
-        /// A test assembly that has been successfully instrumented.
-        /// </returns>
-        public IRegressionTestSuite InstrumentTestSuite(IRegressionTestSuite testsToInstrument)
-        {
-            var instrumentedOldTests = this.InstrumentTestAssembly(testsToInstrument.OldTargetTestAssembly);
-            var instrumentedNewTests = this.InstrumentTestAssembly(testsToInstrument.NewTargetTestAssembly);
-            var instrumentedOldAssembly = this.InstrumentTargetAssembly(testsToInstrument.OldTargetAssembly);
-            var instrumentedNewAssembly = this.InstrumentTargetAssembly(testsToInstrument.NewTargetAssembly);
-
-            return new InstrumentedTestSuite(testsToInstrument)
-            {
-                InstrumentedOldTargetTestAssembly = instrumentedOldTests, 
-                InstrumentedNewTargetTestAssembly = instrumentedNewTests, 
-                InstrumentedNewTargetAssembly = instrumentedNewAssembly, 
-                InstrumentedOldTargetAssembly = instrumentedOldAssembly
-            };
-        }
-        
         #endregion
 
         #region Private Methods
@@ -72,4 +43,4 @@
 
         #endregion
     }
-} 
+}

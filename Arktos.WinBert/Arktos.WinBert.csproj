@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
+    <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
     <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
     <Compile Include="Environment\RemotableAssemblyLoader.cs" />

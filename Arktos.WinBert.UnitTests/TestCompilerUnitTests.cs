@@ -179,7 +179,8 @@
         }
 
         [TestMethod]
-        public void CompileTests_EmptyDirectory_ReturnsNull()
+        [ExpectedException(typeof(CompilationException))]
+        public void CompileTests_EmptyDirectory()
         {
             var emptyDir = Path.Combine(WorkingDir, "empty-dir");
             Directory.CreateDirectory(emptyDir);
