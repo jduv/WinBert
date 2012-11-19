@@ -6,6 +6,7 @@
 
     /// <summary>
     /// Loads assemblies into the contained application domain.
+    /// BMK: Clean this up.
     /// </summary>
     public class AssemblyEnvironment : IAssemblyEnvironment
     {

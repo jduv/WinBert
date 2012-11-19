@@ -6,7 +6,6 @@
 
     /// <summary>
     /// This inner class exists to pull assemblies into whatever application domain it's loaded into.\
-    /// BMK: Clean this class up.
     /// </summary>
     public class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
