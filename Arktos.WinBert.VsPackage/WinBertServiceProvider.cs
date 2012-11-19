@@ -2,21 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
-    using System.Linq;
     using System.Text;
     using System.Windows.Forms;
     using System.Xml;
     using System.Xml.Serialization;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.RandoopIntegration;
+    using Arktos.WinBert.Testing;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using EnvDTE;
     using EnvDTE80;
-    using Arktos.WinBert.Testing;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
@@ -198,11 +196,17 @@
                     var currentBuild = manager.GetMostRecentBuild();
 
                     // Get the last build where tests were executed.
-                    var lastTestedBuild = manager.GetBuildRevisionPreceding(currentBuild);
+                    var previousBuild = manager.GetBuildRevisionPreceding(currentBuild);
 
-                    if (currentBuild != null && lastTestedBuild != null)
+                    if (currentBuild != null && previousBuild != null)
                     {
-                        // BMK Write me.
+                        var generator = new RandoopTestGenerator(this.Config, new TestCompiler());
+                        var instrumenter = new RandoopTestInstrumenter();
+                        var runner = new RandoopTestRunner();
+                        var analyzer = new BertBehavioralAnalyzer();
+
+                        var tester = new RegressionTestManager(this.Config, generator, instrumenter, runner, analyzer);
+                        tester.BuildAndExecuteTestSuite(previousBuild, currentBuild);
                     }
                 }
             }

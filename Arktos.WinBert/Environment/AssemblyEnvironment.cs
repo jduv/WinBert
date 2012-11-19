@@ -25,12 +25,28 @@
         public AssemblyEnvironment()
         {
             this.domainName = Guid.NewGuid();
+            this.Resolver = new AssemblyResolver();
+
+            // All app domains must be loaded with the WinBert plugin context.
+            var winbertDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var setupInfo = new AppDomainSetup()
+            {
+                ApplicationName = "WinBert-Temp-domain-" + this.domainName,
+                ApplicationBase = winbertDir,
+                PrivateBinPath = winbertDir
+            };
+
+            // Add the root directory for this assembly to the resolver.
+            this.Resolver.AddProbePath(winbertDir);
 
             // Create the new domain.
             this.domain = AppDomain.CreateDomain(
                 this.domainName.ToString(),
                 null,
-                AppDomain.CurrentDomain.SetupInformation);
+                setupInfo);
+
+            this.domain.AssemblyResolve += this.Resolver.Resolve;
+            //AppDomain.CurrentDomain.AssemblyResolve += this.Resolver.Resolve;
 
             // Create a remote for an assembly loader.
             this.loaderProxy = Remote<RemotableAssemblyLoader>.Create(this.domain);
@@ -59,6 +75,9 @@
                 return this.domainName;
             }
         }
+
+        /// <inheritdoc />
+        public IAssemblyResolver Resolver { get; private set; }
 
         #endregion
 
@@ -204,22 +223,6 @@
             }
         }
 
-        /// <inheritdoc/>
-        public ILoadedAssemblyTarget LoadFileWithReferences(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentException("Path cannot be null or empty!");
-            }
-
-            if (!File.Exists(path))
-            {
-                throw new ArgumentException("Path must be an existing file!");
-            }
-
-            throw new NotImplementedException();
-        }
-
         #endregion
 
         #region Inner Classes
@@ -258,7 +261,7 @@
 
             #endregion
 
-            #region Propertis
+            #region Properties
 
             /// <inheritdoc />
             public Assembly Assembly { get; private set; }

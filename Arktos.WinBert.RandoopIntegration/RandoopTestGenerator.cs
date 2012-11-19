@@ -167,10 +167,10 @@
             bool success = false;
             var assemblyPath = assembly.Location;
             var typeNames = validTypes.Select(x => x.Name.Value).ToList();
-            using (var isolated = Remote<RemoteTestGenerator>.Create(this.config))
-            {
-                success = isolated.RemoteObject.GenerateTests(typeNames, assemblyPath);
-            }
+            ////using (var isolated = Remote<RemoteTestGenerator>.Create(this.config))
+            ////{
+            ////    success = isolated.RemoteObject.GenerateTests(typeNames, assemblyPath);
+            ////}
 
             return success;
         }

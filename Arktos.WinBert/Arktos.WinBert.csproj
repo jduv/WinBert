@@ -125,6 +125,8 @@
     <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
     <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
+    <Compile Include="Environment\AssemblyResolver.cs" />
+    <Compile Include="Environment\IAssemblyResolver.cs" />
     <Compile Include="Environment\RemotableAssemblyLoader.cs" />
     <Compile Include="Environment\AssemblyTarget.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />

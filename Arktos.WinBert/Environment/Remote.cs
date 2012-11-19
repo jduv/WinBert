@@ -1,7 +1,9 @@
 ﻿namespace Arktos.WinBert.Environment
 {
     using System;
+    using System.Linq;
     using System.Reflection;
+    using System.IO;
 
     /// <summary>
     /// Allows for isolated creation of an object of type T imported into another
@@ -42,20 +44,6 @@
         /// <summary>
         /// Creates a new remote.
         /// </summary>
-        /// <param name="constructorArgs">
-        /// A list of constructor arguments to pass to the remote object.
-        /// </param>
-        /// <returns>
-        /// A remote proxy to tan object of type T living in a new application domain.
-        /// </returns>
-        public static Remote<T> Create(params object[] constructorArgs)
-        {
-            return Create(null, constructorArgs);
-        }
-
-        /// <summary>
-        /// Creates a new remote.
-        /// </summary>
         /// <param name="domain">
         /// The domain for the remote. Default value is null, in which case a new application domain  that 
         /// mirrors the current one will be automatically created.
@@ -68,11 +56,13 @@
         /// </returns>
         public static Remote<T> Create(AppDomain domain, params object[] constructorArgs)
         {
-            var targetDomain = domain == null ?
-                AppDomain.CreateDomain("Remote " + Guid.NewGuid(), null, AppDomain.CurrentDomain.SetupInformation) :
-                domain;
+            if (domain == null)
+            {
+                throw new ArgumentNullException("domain");
+            }
 
             var type = typeof(T);
+
             var proxy = (T)domain.CreateInstanceAndUnwrap(
                 type.Assembly.FullName,
                 type.FullName,
@@ -85,7 +75,7 @@
 
             return new Remote<T>()
             {
-                Domain = targetDomain,
+                Domain = domain,
                 RemoteObject = proxy
             };
         }

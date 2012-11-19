@@ -92,8 +92,8 @@
             using (var previousBuildEnv = new AssemblyEnvironment())
             {
                 AnalysisResult result = null;
-                var currentAssembly = currentBuildEnv.LoadFile(current.AssemblyPath);
-                var previousAssembly = previousBuildEnv.LoadFile(previous.AssemblyPath);
+                var currentAssembly = currentBuildEnv.LoadFrom(current.AssemblyPath);
+                var previousAssembly = previousBuildEnv.LoadFrom(previous.AssemblyPath);
 
                 var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
                 var diff = differ.Diff(previousAssembly, currentAssembly);

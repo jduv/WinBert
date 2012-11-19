@@ -1,14 +1,27 @@
 ﻿namespace Arktos.WinBert.Environment
 {
+    using System;
     using System.Reflection;
 
     /// <summary>
-    /// Defines behavior for a class that acts exactly the same as the static methods on
-    /// the Assembly class.
+    /// Defines behavior for an instance class that should act similar to the static methods on the
+    /// Assembly class. The reason for this is to support hot-swappable loading implemenations and
+    /// facilitate better testing of encironments by stubbing out how each load method executes.
     /// </summary>
     public interface IAssemblyLoader
     {
         #region Methods
+
+        /// <summary>
+        /// This call should be the same as calling Assembly.Load().
+        /// </summary>
+        /// <param name="path">
+        /// The path to the assembly to load.
+        /// </param>
+        /// <returns>
+        /// The target assembly.
+        /// </returns>
+        Assembly Load(string path);
 
         /// <summary>
         /// This call should be the same as calling Assembly.LoadFile().

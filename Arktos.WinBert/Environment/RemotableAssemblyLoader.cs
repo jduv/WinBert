@@ -5,10 +5,29 @@
     using System.Reflection;
 
     /// <summary>
-    /// This inner class exists to pull assemblies into whatever application domain it's loaded into.
+    /// This inner class exists to pull assemblies into whatever application domain it's loaded into.\
+    /// BMK: Clean this class up.
     /// </summary>
     public class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
+        #region Public Methods
+        
+        /// <inheritdoc /> 
+        public Assembly Load(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Path cannot be null or empty!");
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new ArgumentException("Path must be an existing file!");
+            }
+
+            return Assembly.Load(path);
+        }
+
         /// <inheritdoc/>
         public Assembly LoadFile(string path)
         {
@@ -85,5 +104,7 @@
             byte[] pdbBits = File.ReadAllBytes(pdbPath);
             return Assembly.Load(assemblyBits, pdbBits);
         }
+
+        #endregion
     }
 }

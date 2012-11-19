@@ -14,6 +14,11 @@
         /// </summary>
         AppDomain Domain { get; }
 
+        /// <summary>
+        /// Gets the assembly resolver responsible for resolving assemblies in the application domain.
+        /// </summary>
+        IAssemblyResolver Resolver { get; }
+
         #endregion
 
         #region Methods
@@ -77,17 +82,6 @@
         /// The target assembly.
         /// </returns>
         ILoadedAssemblyTarget LoadBits(string assemblyPath, string pdbPath);
-
-        /// <summary>
-        /// Loads the assembly at the target path with all it's references, if possible.
-        /// </summary>
-        /// <param name="path">
-        /// The path to the assembly to load.
-        /// </param>
-        /// <returns>
-        /// The target assembly.
-        /// </returns>
-        ILoadedAssemblyTarget LoadFileWithReferences(string path);
 
         #endregion
     }

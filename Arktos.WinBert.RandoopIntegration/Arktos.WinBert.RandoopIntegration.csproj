@@ -114,7 +114,7 @@
     <Compile Include="Xml\RandoopPluginConfigSchema.cs">
       <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
     </Compile>
-    <Compile Include="RandoopTestSuiteInstrumenter.cs" />
+    <Compile Include="RandoopTestInstrumenter.cs" />
     <Compile Include="RandoopTestGenerator.cs" />
     <Compile Include="PermissiveReflectionFilter.cs" />
   </ItemGroup>
