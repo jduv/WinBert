@@ -8,10 +8,11 @@
     using System.Reflection;
     using Common;
     using Randoop;
-using Arktos.WinBert.Xml;
+    using Arktos.WinBert.Xml;
     using Arktos.WinBert.RandoopIntegration.Xml;
+    using Arktos.WinBert.Environment;
 
-    public class RemoteTestGenerator : MarshalByRefObject
+    public class RemotableTestGenerator : MarshalByRefObject
     {
         #region Fields & Constants
 
@@ -29,7 +30,7 @@ using Arktos.WinBert.Xml;
         /// <param name="config">
         /// The configuration to initialize with.
         /// </param>
-        public RemoteTestGenerator(RandoopPluginConfig config)
+        public RemotableTestGenerator(RandoopPluginConfig config)
         {
             if (config == null)
             {
@@ -55,7 +56,7 @@ using Arktos.WinBert.Xml;
         /// <returns>
         /// True if generation was successful, false otherwise.
         /// </returns>
-        public bool GenerateTests(IList<string> includedTypeNames, string assemblyPath)
+        public bool GenerateTests(string assemblyPath, IEnumerable<string> includedTypeNames)
         {
             // first grab the config file
             RandoopConfiguration config = this.GenerateRandoopInput(assemblyPath);

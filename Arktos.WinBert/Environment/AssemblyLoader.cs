@@ -5,11 +5,52 @@
     using System.Reflection;
 
     /// <summary>
-    /// This inner class exists to pull assemblies into whatever application domain it's loaded into.\
+    /// This class will load assemblies into whatever application domain it's loaded into.
     /// </summary>
-    public class RemotableAssemblyLoader : MarshalByRefObject, IAssemblyLoader
+    public class AssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
         #region Public Methods
+
+        /// <inheritdoc />
+        public Assembly Load(string assemblyPath, LoadMethod method)
+        {
+            if (string.IsNullOrEmpty(assemblyPath))
+            {
+                throw new ArgumentException("Path cannot be null or empty!");
+            }
+
+            if (!File.Exists(assemblyPath))
+            {
+                throw new FileNotFoundException("Path must be an existing file!");
+            }
+
+            switch (method)
+            {
+                case LoadMethod.Load:
+                    return this.Load(assemblyPath);
+                case LoadMethod.LoadFrom:
+                    return this.LoadFrom(assemblyPath);
+                case LoadMethod.LoadFile:
+                    return this.LoadFile(assemblyPath);
+                case LoadMethod.LoadBits:
+
+                    // Attempt to load the PDB bits along with the assembly to avoid image exceptions.
+                    Assembly assembly = null;
+                    var pdbPath = Path.ChangeExtension(assemblyPath, "pdb");
+                    if (File.Exists(pdbPath))
+                    {
+                        assembly = this.LoadBits(assemblyPath, pdbPath);
+                    }
+                    else
+                    {
+                        assembly = this.LoadBits(assemblyPath);
+                    }
+
+                    return assembly;
+                default:
+                    throw new NotSupportedException("The target load method isn't supported!");
+            }
+        }
 
         /// <inheritdoc /> 
         public Assembly Load(string path)

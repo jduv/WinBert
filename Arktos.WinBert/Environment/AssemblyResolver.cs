@@ -53,7 +53,7 @@
     {
         #region Fields & Constants
 
-        private readonly IDictionary<string, DirectoryInfo> probePaths;
+        private readonly HashSet<string> probePaths;
         private readonly IAssemblyLoader loader;
 
         #endregion
@@ -61,27 +61,23 @@
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the AssemblyResolver class. The default load context for
-        /// a new instance is the LoadFrom context.
-        /// </summary>
-        public AssemblyResolver()
-            : this(null, LoadMethod.LoadFrom)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the AssemblyResolver class.
+        /// Initializes a new instance of the AssemblyResolver class. A default instance of this class will resolve
+        /// assemblies into the LoadFrom context.
         /// </summary>
         /// <param name="loader">
-        /// The loader to use when loading assemblies.
+        /// The loader to use when loading assemblies. Default is null, which will create and use an instance
+        /// of the RemotableAssemblyLoader class.
         /// </param>
-        /// <param name="context">
-        /// The context to load assemblies into.
+        /// <param name="loadMethod">
+        /// The load method to use when loading assemblies. Defaults to LoadMethod.LoadFrom.
         /// </param>
-        public AssemblyResolver(IAssemblyLoader loader, LoadMethod context)
+        public AssemblyResolver(
+            IAssemblyLoader loader = null, 
+            LoadMethod loadMethod = LoadMethod.LoadFrom)
         {
-            this.probePaths = new Dictionary<string, DirectoryInfo>();
-            this.loader = loader;
+            this.probePaths = new HashSet<string>();
+            this.loader = loader == null ? new AssemblyLoader() : loader;
+            this.LoadMethod = loadMethod;
         }
 
         #endregion
@@ -120,13 +116,13 @@
         {
             if (string.IsNullOrEmpty(path))
             {
-                path = Directory.GetCurrentDirectory();
+                throw new ArgumentException("Path cannot be null or empty!");
             }
 
-            var info = new DirectoryInfo(path);
-            if (!this.probePaths.ContainsKey(info.FullName))
+            var dir = new DirectoryInfo(path);
+            if (!this.probePaths.Contains(dir.FullName))
             {
-                this.probePaths.Add(info.FullName, info);
+                this.probePaths.Add(dir.FullName);
             }
         }
 
@@ -134,65 +130,23 @@
         public Assembly Resolve(object sender, ResolveEventArgs args)
         {
             var name = new AssemblyName(args.Name);
-            foreach (var info in this.probePaths.Values)
+            foreach (var path in this.probePaths)
             {
-                var dllPath = Path.Combine(info.FullName, string.Format("{0}.dll", name.Name));
+                var dllPath = Path.Combine(path, string.Format("{0}.dll", name.Name));
                 if (File.Exists(dllPath))
                 {
-                    return this.LoadAssembly(dllPath);
+                    return this.loader.Load(dllPath, this.LoadMethod);
                 }
 
                 var exePath = Path.ChangeExtension(dllPath, "exe");
                 if (File.Exists(exePath))
                 {
-                    return this.LoadAssembly(exePath);
+                    return this.loader.Load(exePath, this.LoadMethod);
                 }
             }
 
             // Not found.
             return null;
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Loads an assembly given a valid path. This method uses the LoadMethod defined on this
-        /// AssemblyResolver instance to determine how it loadds the target assembly.
-        /// </summary>
-        /// <param name="path">
-        /// The path to the assembly to load. It is assumed to exist.
-        /// </param>
-        /// <returns>
-        /// The loaded assembly.
-        /// </returns>
-        private Assembly LoadAssembly(string path)
-        {
-            switch (this.LoadMethod)
-            {
-                case LoadMethod.Load:
-                    return this.loader == null ? Assembly.Load(path) : this.loader.Load(path);
-                case LoadMethod.LoadFrom:
-                    return this.loader == null ? Assembly.LoadFrom(path) : this.loader.LoadFrom(path);
-                case LoadMethod.LoadFile:
-                    return this.loader == null ? Assembly.LoadFile(path) : this.loader.LoadFile(path);
-                case LoadMethod.LoadBits:
-                    Assembly assembly = null;
-                    var pdbPath = Path.ChangeExtension(path, "pdb");
-                    if (File.Exists(pdbPath))
-                    {
-                        assembly = this.loader == null ? Assembly.Load(File.ReadAllBytes(path), File.ReadAllBytes(pdbPath)) : this.loader.LoadBits(path, pdbPath);
-                    }
-                    else
-                    {
-                        assembly = this.loader == null ? Assembly.Load(File.ReadAllBytes(path)) : this.loader.LoadBits(path);
-                    }
-
-                    return assembly;
-                default:
-                    throw new NotSupportedException("The target load method isn't supported!");
-            }
         }
 
         #endregion

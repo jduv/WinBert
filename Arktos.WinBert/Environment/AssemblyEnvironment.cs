@@ -13,7 +13,7 @@
         #region Fields & Constants
 
         private readonly AppDomain domain;
-        private readonly Remote<RemotableAssemblyLoader> loaderProxy;
+        private readonly Remotable<AssemblyLoader> loaderProxy;
         private readonly Guid domainName;
 
         #endregion
@@ -21,24 +21,27 @@
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the AppDomainAssemblyLoader class.
+        /// Initializes a new instance of the AppDomainAssemblyLoader class. The assembly environment will create
+        /// a new application domain with the location of the currently executing assembly as the application base. It
+        /// will also add that root directory to the assembly resolver's path in order to properly load a remotable
+        /// AssemblyLoader object into context. From here, add whatever assembly probe paths you wish in order to
+        /// resolve remote proxies, or extend this class if you desire more specific behavior.
         /// </summary>
         public AssemblyEnvironment()
         {
             this.domainName = Guid.NewGuid();
-            this.Resolver = new AssemblyResolver();
+            this.Resolver  = new AssemblyResolver();
 
-            // All app domains must be loaded with the WinBert plugin context.
-            var winbertDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var setupInfo = new AppDomainSetup()
             {
                 ApplicationName = "WinBert-Temp-Domain-" + this.domainName,
-                ApplicationBase = winbertDir,
-                PrivateBinPath = winbertDir
+                ApplicationBase = rootDir,
+                PrivateBinPath = rootDir
             };
 
             // Add the root directory for this assembly to the resolver.
-            this.Resolver.AddProbePath(winbertDir);
+            this.Resolver.AddProbePath(rootDir);
 
             // Create the new domain.
             this.domain = AppDomain.CreateDomain(
@@ -47,10 +50,11 @@
                 setupInfo);
 
             this.domain.AssemblyResolve += this.Resolver.Resolve;
-            //AppDomain.CurrentDomain.AssemblyResolve += this.Resolver.Resolve;
+            AppDomain.CurrentDomain.AssemblyResolve += this.Resolver.Resolve;
+
 
             // Create a remote for an assembly loader.
-            this.loaderProxy = Remote<RemotableAssemblyLoader>.Create(this.domain);
+            this.loaderProxy = Remotable<AssemblyLoader>.Create(this.domain);
         }
 
         #endregion
@@ -67,9 +71,9 @@
         }
 
         /// <summary>
-        /// Gets the name assigned to the contained app domain.
+        /// Gets a unique ID assigned to the environment. Useful for dictionary keys.
         /// </summary>
-        public Guid DomainName
+        public Guid UniqueId
         {
             get
             {
@@ -246,12 +250,12 @@
             /// </param>
             public LoadedAssemblyTarget(Assembly loadedAssembly, IAssemblyEnvironment environment)
             {
-                if (Assembly == null)
+                if (loadedAssembly == null)
                 {
                     throw new ArgumentNullException("loadedAssembly");
                 }
 
-                if (environment != null)
+                if (environment == null)
                 {
                     throw new ArgumentNullException("environment");
                 }

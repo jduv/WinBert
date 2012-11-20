@@ -7,6 +7,7 @@
     using Arktos.WinBert.Environment;
     using Arktos.WinBert.Instrumentation;
     using Arktos.WinBert.Xml;
+    using System.IO;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage
@@ -91,9 +92,13 @@
             using (var currentBuildEnv = new AssemblyEnvironment())
             using (var previousBuildEnv = new AssemblyEnvironment())
             {
+                // Add assembly paths for the target assemblies
+                currentBuildEnv.Resolver.AddProbePath(Path.GetDirectoryName(current.AssemblyPath));
+                previousBuildEnv.Resolver.AddProbePath(Path.GetDirectoryName(previous.AssemblyPath));
+
                 AnalysisResult result = null;
-                var currentAssembly = currentBuildEnv.LoadFrom(current.AssemblyPath);
-                var previousAssembly = previousBuildEnv.LoadFrom(previous.AssemblyPath);
+                var currentAssembly = currentBuildEnv.LoadFile(current.AssemblyPath);
+                var previousAssembly = previousBuildEnv.LoadFile(previous.AssemblyPath);
 
                 var differ = new AssemblyDifferenceEngine(this.config.IgnoreList);
                 var diff = differ.Diff(previousAssembly, currentAssembly);

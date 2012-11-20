@@ -10,8 +10,9 @@
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
     /// </summary>
-    public sealed class AssemblyDifferenceEngine 
-        : IDifferenceEngine<ILoadedAssemblyTarget, IAssemblyDifferenceResult>, IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
+    public sealed class AssemblyDifferenceEngine
+        : MarshalByRefObject,
+        IDifferenceEngine<ILoadedAssemblyTarget, IAssemblyDifferenceResult>, IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
     {
         #region Constants & Fields
 

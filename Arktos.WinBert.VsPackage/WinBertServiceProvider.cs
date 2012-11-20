@@ -200,7 +200,7 @@
 
                     if (currentBuild != null && previousBuild != null)
                     {
-                        var generator = new RandoopTestGenerator(this.Config, new TestCompiler());
+                        var generator = new RandoopTestGenerator(this.Config);
                         var instrumenter = new RandoopTestInstrumenter();
                         var runner = new RandoopTestRunner();
                         var analyzer = new BertBehavioralAnalyzer();

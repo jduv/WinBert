@@ -87,11 +87,6 @@
             {
                 this.WinBertServiceProvider = new WinBertServiceProvider(dte2);
             }
-
-            // This enables the plugin to load it's own executing assembly into memory so proxy casts will work properly.
-            var resolver = new AssemblyResolver();
-            resolver.AddProbePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-            AppDomain.CurrentDomain.AssemblyResolve += resolver;
         }
 
         #endregion

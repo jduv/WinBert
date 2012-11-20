@@ -12,14 +12,14 @@
     /// <typeparam name="T">
     /// The type of object to import. Must be a deriviative of MarshalByRefObject.
     /// </typeparam>
-    public sealed class Remote<T> : IDisposable where T : MarshalByRefObject
+    public sealed class Remotable<T> : IDisposable where T : MarshalByRefObject
     {
         #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the Remote class.
         /// </summary>
-        private Remote()
+        private Remotable()
         {
         }
 
@@ -54,7 +54,7 @@
         /// <returns>
         /// A remote proxy to an object of type T living in the target application domain.
         /// </returns>
-        public static Remote<T> Create(AppDomain domain, params object[] constructorArgs)
+        public static Remotable<T> Create(AppDomain domain, params object[] constructorArgs)
         {
             if (domain == null)
             {
@@ -73,7 +73,7 @@
                 null,
                 null);
 
-            return new Remote<T>()
+            return new Remotable<T>()
             {
                 Domain = domain,
                 RemoteObject = proxy

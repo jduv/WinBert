@@ -13,15 +13,22 @@
         #region Methods
 
         /// <summary>
-        /// This call should be the same as calling Assembly.Load().
+        /// Loads the target assembly with the indicated load method. This method should default to the same as
+        /// calling Assembly.Load(). If LoadMethod.LoadBits is passed to the method then it should attempt to also load
+        /// the PDB file along side the target assembly if it exists. If this contract isn't kept then there's a possibility of
+        /// file image exceptions being thrown as the load context needs the debug symbols in order to adequately load
+        /// the assembly.
         /// </summary>
-        /// <param name="path">
+        /// <param name="assemblyPath">
         /// The path to the assembly to load.
+        /// </param>
+        /// <param name="loadMethod">
+        /// The load method to use. Defaults to LoadMethod.Load.
         /// </param>
         /// <returns>
         /// The target assembly.
         /// </returns>
-        Assembly Load(string path);
+        Assembly Load(string assemblyPath, LoadMethod loadMethod = LoadMethod.Load);
 
         /// <summary>
         /// This call should be the same as calling Assembly.LoadFile().

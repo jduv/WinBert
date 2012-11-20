@@ -20,7 +20,6 @@
     {
         #region Fields and Constants
 
-        private readonly ITestCompiler compiler;
         private RandoopPluginConfig config;
 
         #endregion
@@ -28,30 +27,19 @@
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RandoopTestGenerator"/> class. 
-        /// Initializes a new instance of the RandoopTestGeneratorClass.
+        /// Initializes a new instance of the RandoopTestGenerator class. 
         /// </summary>
-        /// <param name="workingDirectory">
-        /// The path to where tests should be generated. If this directory doesn't exist the generator will create it.
-        /// </param>
         /// <param name="config">
         /// The Randoop configuration file for the test generator to pull any needed information from.
         /// </param>
-        public RandoopTestGenerator(WinBertConfig config, ITestCompiler compiler)
+        public RandoopTestGenerator(WinBertConfig config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("Config cannot be null!");
             }
 
-            if (compiler == null)
-            {
-                throw new ArgumentNullException("Test compiler cannot be null!");
-            }
-
-            this.compiler = compiler;
             var randoopConfig = GetRandoopConfiguration(config);
-
             if (randoopConfig != null)
             {
                 this.config = randoopConfig;
@@ -99,12 +87,6 @@
         /// <inheritdoc />
         public IAssemblyTarget GetTestsFor(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        public IAssembly GetTestsFor(IAssembly target, IList<INamedTypeDefinition> validTypes)
-        {
             if (target == null)
             {
                 throw new ArgumentNullException("assembly");
@@ -115,34 +97,39 @@
                 throw new ArgumentException("Assembly must have a valid location.");
             }
 
-            if (validTypes == null)
+            if (validTypeNames == null)
             {
                 throw new ArgumentNullException("Types list cannot be null!");
             }
 
-            if (validTypes.Count > 0)
+            if (string.IsNullOrEmpty(this.config.GeneratedTestsSubDirName))
             {
-                if (this.GenerateTestsInNewAppDomain(target, validTypes))
-                {
-                    try
-                    {
-                        var srcDir = Path.GetDirectoryName(target.Location);
-                        this.compiler.AddReference(target.Location);
-                        //return this.compiler.CompileTests(srcDir, GetTestAssemblyName(target.Location));
-                        return null;
-                    }
-                    catch (Exception)
-                    {
-                        // BMK Handle exception
-                    }
-                    finally
-                    {
-                        this.compiler.ClearReferences();
-                    }
-                }
+                throw new InvalidConfigurationException("Specifying a randoop test sub-directory name is required!");
             }
 
-            return null;
+            // Build the needed paths.
+            var workingDirPath = Path.GetDirectoryName(target.Location);
+            var testDirPath = Path.Combine(workingDirPath, this.config.GeneratedTestsSubDirName);
+            if (Directory.Exists(testDirPath))
+            {
+                // Clean it
+                Directory.Delete(testDirPath, true);
+            }
+
+            // Create the new directory
+            Directory.CreateDirectory(testDirPath);
+
+            if (this.GenerateTestsInNewAppDomain(target, validTypeNames))
+            {
+                var compiler = new TestCompiler();
+                compiler.AddReference(target.Location);
+                return compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
+            }
+            else
+            {
+                // BMK Throw an exception here instead.
+                return null;
+            }
         }
 
         #endregion
@@ -151,9 +138,9 @@
 
         /// <summary>
         /// Generates all the tests for the target assembly by spinning up a new application domain and
-        /// executing a remote test generator implementation. This will prevent assembly memory hell.
+        /// executing a remote test generator implementation. This will prevent DLL hell.
         /// </summary>
-        /// <param name="assembly">
+        /// <param name="target">
         /// The assembly to load.
         /// </param>
         /// <param name="validTypes">
@@ -162,15 +149,15 @@
         /// <returns>
         /// True if the tests were successful, false otherwise.
         /// </returns>
-        private bool GenerateTestsInNewAppDomain(IAssembly assembly, IList<INamedTypeDefinition> validTypes)
+        private bool GenerateTestsInNewAppDomain(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             bool success = false;
-            var assemblyPath = assembly.Location;
-            var typeNames = validTypes.Select(x => x.Name.Value).ToList();
-            ////using (var isolated = Remote<RemoteTestGenerator>.Create(this.config))
-            ////{
-            ////    success = isolated.RemoteObject.GenerateTests(typeNames, assemblyPath);
-            ////}
+
+            using(var environment = new AssemblyEnvironment())
+            using (var remote = Remotable<RemotableTestGenerator>.Create(environment.Domain, this.config))
+            {
+                success = remote.RemoteObject.GenerateTests(target.Location, validTypeNames);
+            }
 
             return success;
         }
@@ -188,7 +175,7 @@
         private static string GetTestAssemblyName(string targetAssemblyPath)
         {
             var extension = Path.GetExtension(targetAssemblyPath);
-            if (string.IsNullOrEmpty(extension))
+            if (string.IsNullOrEmpty(extension) || extension.IndexOf("exe")  + extension.IndexOf("dll") < 0)
             {
                 throw new ArgumentException("Target assembly path is invalid!");
             }
@@ -197,10 +184,6 @@
             var replacement = string.Format(".tests.{0}.dll", Guid.NewGuid().ToString().Substring(0, 7));
             return targetAssemblyPath.Replace(extension, replacement);
         }
-
-        #endregion
-
-        #region ITestGenerator Members
 
         #endregion
     }

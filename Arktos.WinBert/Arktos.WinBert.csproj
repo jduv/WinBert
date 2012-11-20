@@ -127,7 +127,7 @@
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
     <Compile Include="Environment\AssemblyResolver.cs" />
     <Compile Include="Environment\IAssemblyResolver.cs" />
-    <Compile Include="Environment\RemotableAssemblyLoader.cs" />
+    <Compile Include="Environment\AssemblyLoader.cs" />
     <Compile Include="Environment\AssemblyTarget.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceEngine.cs" />
@@ -143,7 +143,7 @@
     <Compile Include="Environment\IAssemblyTarget.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
-    <Compile Include="Environment\Remote.cs" />
+    <Compile Include="Environment\Remotable.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="Testing\IRegressionTestManager.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
