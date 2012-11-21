@@ -23,6 +23,6 @@
         /// <returns>
         /// A reference to the compiled assembly containing the tests.
         /// </returns>
-        IAssemblyTarget GetTestsFor(IAssemblyTarget target, IEnumerable<string> validTypeNames);
+        AssemblyTarget GetTestsFor(AssemblyTarget target, IEnumerable<string> validTypeNames);
     }
 }

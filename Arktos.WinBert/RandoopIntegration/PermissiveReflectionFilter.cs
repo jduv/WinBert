@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Arktos.WinBert.RandoopIntegration.Xml;
+    using Arktos.WinBert.Xml;
     using Randoop;
 
     /// <summary>
@@ -106,14 +106,14 @@
         {
             if (type != null)
             {
-                foreach (ForbidExpression fExp in this.forbiddenTypes)
+                foreach (ForbidExpression expression in this.forbiddenTypes)
                 {
-                    if (fExp.IsForbidden(type.ToString()))
+                    if (expression.IsForbidden(type.ToString()))
                     {
                         message = string.Format(
                             "The Type {0} matches the ForbidExpression with pattern {1}. It will not be used.", 
                             type.FullName, 
-                            fExp.Pattern);
+                            expression.Pattern);
 
                         return false;
                     }

@@ -3,15 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Xml;
     using System.Xml.Serialization;
     using Arktos.WinBert.Environment;
     using Arktos.WinBert.Exceptions;
-    using Arktos.WinBert.RandoopIntegration.Xml;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
-    using Microsoft.Cci;
 
     /// <summary>
     /// Uses the Randoop framework to generate a set of tests for the target assembly under test.
@@ -85,7 +82,7 @@
         }
 
         /// <inheritdoc />
-        public IAssemblyTarget GetTestsFor(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        public AssemblyTarget GetTestsFor(AssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             if (target == null)
             {
@@ -149,12 +146,12 @@
         /// <returns>
         /// True if the tests were successful, false otherwise.
         /// </returns>
-        private bool GenerateTestsInNewAppDomain(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        private bool GenerateTestsInNewAppDomain(AssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             bool success = false;
 
-            using(var environment = new AssemblyEnvironment())
-            using (var remote = Remotable<RemotableTestGenerator>.Create(environment.Domain, this.config))
+            using(var environment = new AssemblyContext())
+            using (var remote = Remote<RemotableTestGenerator>.CreateProxy(environment.Domain, this.config))
             {
                 success = remote.RemoteObject.GenerateTests(target.Location, validTypeNames);
             }

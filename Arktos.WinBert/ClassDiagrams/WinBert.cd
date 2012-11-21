@@ -256,11 +256,11 @@
       <FileName>Differencing\IAssemblyDifferenceResult.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Arktos.WinBert.Differencing.IAssemblyTarget" Collapsed="true">
+  <Interface Name="Arktos.WinBert.Differencing.AssemblyTarget" Collapsed="true">
     <Position X="8.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\IAssemblyTarget.cs</FileName>
+      <FileName>Differencing\AssemblyTarget.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.IDifferenceResult" Collapsed="true">

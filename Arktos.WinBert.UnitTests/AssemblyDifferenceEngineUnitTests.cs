@@ -39,58 +39,6 @@
         #region Diff
 
         [TestMethod]
-        public void Diff_ILoadedAssemblyTargetOverload_Difference()
-        {
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine();
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
-
-            var mockOldTarget = new Mock<ILoadedAssemblyTarget>();
-            mockOldTarget.Setup(x => x.Assembly).Returns(oldObject);
-            mockOldTarget.Setup(x => x.Location).Returns(oldObject.Location);
-
-            var mockNewTarget = new Mock<ILoadedAssemblyTarget>();
-            mockNewTarget.Setup(x => x.Assembly).Returns(newObject);
-            mockNewTarget.Setup(x => x.Location).Returns(newObject.Location);
-
-            IAssemblyDifferenceResult actual = target.Diff(mockOldTarget.Object, mockNewTarget.Object);
-
-            Assert.IsNotNull(actual);
-            Assert.IsNotNull(actual.OldAssemblyTarget);
-            Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsTrue(actual.IsDifferent);
-            Assert.IsTrue(actual.TypeDifferences.Count > 0);
-        }
-
-        [TestMethod]
-        public void Diff_ILoadedAssemblyTargetOverload_NoDifference()
-        {
-            IgnoreTarget[] targets = new IgnoreTarget[1];
-            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "BankAccount.BankAccount");
-            targets[0] = target0;
-
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
-            Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
-            Assembly newObject = this.LoadAssembly(diffAssembly2Path);
-
-            var mockOldTarget = new Mock<ILoadedAssemblyTarget>();
-            mockOldTarget.Setup(x => x.Assembly).Returns(oldObject);
-            mockOldTarget.Setup(x => x.Location).Returns(oldObject.Location);
-
-            var mockNewTarget = new Mock<ILoadedAssemblyTarget>();
-            mockNewTarget.Setup(x => x.Assembly).Returns(newObject);
-            mockNewTarget.Setup(x => x.Location).Returns(newObject.Location);
-
-            IAssemblyDifferenceResult actual = target.Diff(mockOldTarget.Object, mockNewTarget.Object);
-
-            Assert.IsNotNull(actual);
-            Assert.IsNotNull(actual.OldAssemblyTarget);
-            Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsFalse(actual.IsDifferent);
-            Assert.IsTrue(actual.TypeDifferences.Count == 0);
-        }
-
-        [TestMethod]
         public void Diff_DifferentAssemblies_Difference()
         {
             AssemblyDifferenceEngine target = new AssemblyDifferenceEngine();

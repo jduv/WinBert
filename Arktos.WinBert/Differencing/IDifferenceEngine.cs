@@ -11,7 +11,7 @@
     /// <typeparam name="TResult">
     /// The resulting type.
     /// </typeparam>
-    public interface IDifferenceEngine<T, TResult>
+    internal interface IDifferenceEngine<T, TResult>
     {
         #region Methods
 

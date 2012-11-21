@@ -6,7 +6,7 @@
     {
         #region Methods
 
-        IAssemblyTarget InstrumentTests(IAssemblyTarget toInstrument);
+        AssemblyTarget InstrumentTests(AssemblyTarget toInstrument);
 
         #endregion
     }

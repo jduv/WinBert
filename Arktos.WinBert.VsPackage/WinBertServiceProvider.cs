@@ -10,7 +10,6 @@
     using System.Xml.Serialization;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.RandoopIntegration;
-    using Arktos.WinBert.Testing;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using EnvDTE;
@@ -205,8 +204,8 @@
                         var runner = new RandoopTestRunner();
                         var analyzer = new BertBehavioralAnalyzer();
 
-                        var tester = new RegressionTestManager(this.Config, generator, instrumenter, runner, analyzer);
-                        tester.BuildAndExecuteTestSuite(previousBuild, currentBuild);
+                        var tester = new RandoopRegressionTestManager(this.Config, generator, instrumenter, runner, analyzer);
+                        tester.BuildAndExecuteTests(previousBuild, currentBuild);
                     }
                 }
             }
@@ -371,7 +370,8 @@
 
                 try
                 {
-                    using (XmlWriter writer = XmlWriter.Create(path))
+                    using (XmlWriter writer
+                        = XmlWriter.Create(path))
                     {
                         var serializer = new XmlSerializer(typeof(WinBertConfig));
                         serializer.Serialize(writer, config);

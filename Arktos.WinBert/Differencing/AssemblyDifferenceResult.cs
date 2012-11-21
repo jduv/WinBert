@@ -59,7 +59,7 @@
         public Assembly NewAssembly { get; private set; }
 
         /// <inheritdoc />
-        public IAssemblyTarget NewAssemblyTarget { get; private set; }
+        public AssemblyTarget NewAssemblyTarget { get; private set; }
 
         /// <summary>
         /// Gets the old assembly.
@@ -67,7 +67,7 @@
         public Assembly OldAssembly { get; private set; }
 
         /// <inheritdoc />
-        public IAssemblyTarget OldAssemblyTarget { get; private set; }
+        public AssemblyTarget OldAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
         public IList<ITypeDifferenceResult> TypeDifferences { get; private set; }

@@ -14,7 +14,7 @@
 
         #region Public Methods
 
-        public TestRunResult RunTests(ILoadedAssemblyTarget target)
+        public TestRunResult RunTests(AssemblyTarget target)
         {
             throw new NotImplementedException();
         }

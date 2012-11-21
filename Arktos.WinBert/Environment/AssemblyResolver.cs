@@ -6,43 +6,6 @@
     using System.Reflection;
 
     /// <summary>
-    /// Used to determine which load context assemblies should be loaded into by the resolver.
-    /// </summary>
-    public enum LoadMethod
-    {
-        /// <summary>
-        /// The default load context. Use this if your application has it's bits located in the GAC or
-        /// on the main application path of the AppDomain.CurrentDomain. This should be rare unless you
-        /// like putting Assemblies in the GAC.
-        /// </summary>
-        Load,
-
-        /// <summary>
-        /// Loads the assembly into the LoadFrom context, which enables the assembly and all it's references to be discovered
-        /// and loaded into the target application domain. Despite it's penchant for DLL hell, this is probably the way to go by
-        /// default as long as you make sure to pass the base directory of the application to an AssemblyResolver instance such
-        /// that references can be properly resolved. This also allows for multiple assemblies of the same name to be loaded while
-        /// maintaining separate file names. This is the recommended way to go.
-        /// </summary>
-        LoadFrom,
-
-        /// <summary>
-        /// Loads an assembly into memory using the raw file name. This loads the assembly anonymously, so it won't have
-        /// a load context. Use this if you want the bits loaded, but make sure to pass the directory where this file lives to an 
-        /// AssemblyResolver instance so you can find it again. This is similar to LoadFrom except you don't get the free 
-        /// lookups for already existing assembly names via fusion. Use this for more control over assembly file loads.
-        /// </summary>
-        LoadFile,
-
-        /// <summary>
-        /// Loads the bits of the target assembly into memory using the raw file name. This is, in essence, a dynamic assembly
-        /// for all the CLR cares. You won't ever be able to find this with an assembly resolver, so don't use this unless you look
-        /// for it by name. Be careful with this one.
-        /// </summary>
-        LoadBits
-    }
-
-    /// <summary>
     /// Handles resolving assemblies in application domains. This class is helpful when attempting to load a
     /// particular assembly into an application domain and the assembly you're looking for doesn't exist in the
     /// main application bin path. This 'feature' of the .NET framework makes assembly loading very, very
@@ -135,13 +98,13 @@
                 var dllPath = Path.Combine(path, string.Format("{0}.dll", name.Name));
                 if (File.Exists(dllPath))
                 {
-                    return this.loader.Load(dllPath, this.LoadMethod);
+                    return this.loader.LoadAssembly(this.LoadMethod, dllPath);
                 }
 
                 var exePath = Path.ChangeExtension(dllPath, "exe");
                 if (File.Exists(exePath))
                 {
-                    return this.loader.Load(exePath, this.LoadMethod);
+                    return this.loader.LoadAssembly(this.LoadMethod, exePath);
                 }
             }
 

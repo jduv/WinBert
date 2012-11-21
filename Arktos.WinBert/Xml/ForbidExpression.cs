@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.RandoopIntegration.Xml
+﻿namespace Arktos.WinBert.Xml
 {
     using System;
     using System.Text.RegularExpressions;

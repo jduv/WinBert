@@ -3,7 +3,7 @@
 <IgnoreList />
 <Projects />
 <EmbeddedConfigurations>
-<EmbeddedConfiguration Type="Arktos.WinBert.RandoopIntegration.Xml.RandoopPluginConfig">
+<EmbeddedConfiguration Type="Arktos.WinBert.Xml.RandoopPluginConfig">
     <rpc:RandoopPluginConfig xmlns:rpc="http://arktos.org/RandoopPluginConfig.xsd">
         <rpc:GeneratedTestsSubDirName>tests</rpc:GeneratedTestsSubDirName>
         <rpc:ForbiddenTypes />

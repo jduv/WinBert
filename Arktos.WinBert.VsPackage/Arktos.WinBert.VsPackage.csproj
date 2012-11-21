@@ -178,10 +178,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Arktos.WinBert.RandoopIntegration\Arktos.WinBert.RandoopIntegration.csproj">
-      <Project>{F0485540-6010-4819-B9D1-D1B767A355BE}</Project>
-      <Name>Arktos.WinBert.RandoopIntegration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Arktos.WinBert\Arktos.WinBert.csproj">
       <Project>{986263EA-6C7F-4AF2-B448-0A1ED8007193}</Project>
       <Name>Arktos.WinBert</Name>

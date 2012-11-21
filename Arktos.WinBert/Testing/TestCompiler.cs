@@ -92,7 +92,7 @@
         }
 
         /// <inheritdoc />
-        public IAssemblyTarget CompileTests(string sourcePath)
+        public AssemblyTarget CompileTests(string sourcePath)
         {
             if (string.IsNullOrEmpty(sourcePath))
             {
@@ -103,7 +103,7 @@
         }
 
         /// <inheritdoc />
-        public IAssemblyTarget CompileTests(string sourcePath, string outputFileName)
+        public AssemblyTarget CompileTests(string sourcePath, string outputFileName)
         {
             if (string.IsNullOrEmpty(sourcePath))
             {

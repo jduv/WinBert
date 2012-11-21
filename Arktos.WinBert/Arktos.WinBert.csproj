@@ -27,7 +27,7 @@
     </DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -136,18 +136,22 @@
     <Compile Include="Differencing\ITypeDifferenceResult.cs" />
     <Compile Include="Differencing\TypeDifferenceEngine.cs" />
     <Compile Include="Differencing\TypeDifferenceResult.cs" />
-    <Compile Include="Environment\AssemblyEnvironment.cs" />
-    <Compile Include="Environment\IAssemblyEnvironment.cs" />
-    <Compile Include="Environment\ILoadedAssemblyTarget.cs" />
+    <Compile Include="Environment\AssemblyContext.cs" />
+    <Compile Include="Environment\IAssemblyContext.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
-    <Compile Include="Environment\IAssemblyTarget.cs" />
+    <Compile Include="Environment\AssemblyLoaderProxy.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
-    <Compile Include="Environment\Remotable.cs" />
+    <Compile Include="Environment\Remote.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
+    <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
+    <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />
+    <Compile Include="RandoopIntegration\RandoopTestInstrumenter.cs" />
+    <Compile Include="RandoopIntegration\RandoopTestRunner.cs" />
+    <Compile Include="RandoopIntegration\RandoopRegressionTestManager.cs" />
+    <Compile Include="RandoopIntegration\RemotableTestGenerator.cs" />
     <Compile Include="Testing\IRegressionTestManager.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
-    <Compile Include="Testing\RegressionTestManager.cs" />
     <Compile Include="Testing\TestCompiler.cs" />
     <Compile Include="Testing\ITestCompiler.cs" />
     <Compile Include="Testing\ITestGenerator.cs" />
@@ -157,6 +161,10 @@
     <Compile Include="Util\FileCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\EmbeddedConfiguration.cs" />
+    <Compile Include="Xml\ForbidExpression.cs" />
+    <Compile Include="Xml\RandoopPluginConfigSchema.cs">
+      <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Xml\WinBertConfig.cs" />
     <Compile Include="Xml\WinBertConfigSchema.cs">
       <DependentUpon>WinBertConfigSchema.xsd</DependentUpon>
@@ -214,14 +222,27 @@
   <ItemGroup>
     <None Include="ClassDiagrams\WinBert.cd" />
     <None Include="packages.config" />
+    <None Include="Xml\RandoopPluginConfigSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Xml\WinBertConfigSchema.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\RandoopCommon\RandoopCommon.csproj">
+      <Project>{D5B45A6E-B8DA-4A4B-B08B-4C1EA24BEB1B}</Project>
+      <Name>RandoopCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RandoopImpl\RandoopImpl.csproj">
+      <Project>{596DF464-5F9A-4892-9CFD-6431806CCA73}</Project>
+      <Name>RandoopImpl</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
+    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml RandoopPluginConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
   </Target>
   <Target Name="AfterBuild">
     <PropertyGroup>

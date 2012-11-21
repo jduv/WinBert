@@ -12,7 +12,7 @@
         #region Public Methods
 
         /// <inheritdoc/>
-        public IAssemblyTarget InstrumentTests(IAssemblyTarget toInstrument)
+        public AssemblyTarget InstrumentTests(AssemblyTarget toInstrument)
         {
             throw new NotImplementedException();
         }

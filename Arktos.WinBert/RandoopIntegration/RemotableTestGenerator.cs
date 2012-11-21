@@ -6,11 +6,9 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Arktos.WinBert.Xml;
     using Common;
     using Randoop;
-    using Arktos.WinBert.Xml;
-    using Arktos.WinBert.RandoopIntegration.Xml;
-    using Arktos.WinBert.Environment;
 
     public class RemotableTestGenerator : MarshalByRefObject
     {

@@ -5,9 +5,11 @@
     using System.Reflection;
 
     /// <summary>
-    /// Simple class representing an assembly target.
+    /// Simple class representing an assembly target. This class will be serialized accross application domains
+    /// instead of remoted. There's no reason to remote it because it's simply a wrapper around a string anyway.
     /// </summary>
-    public class AssemblyTarget : IAssemblyTarget
+    [Serializable]
+    public class AssemblyTarget
     {
         #region Constructors & Destructors
 

@@ -9,10 +9,12 @@
 
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
+    /// This object is remotable into other application domains so as to prevent DLL hell. It *will* need to load both
+    /// assemblies into the current application domain in order to properly perform the diff, so it's best to remote this
+    /// and use the AssemblyTarget implementations.
     /// </summary>
-    public sealed class AssemblyDifferenceEngine
-        : MarshalByRefObject,
-        IDifferenceEngine<ILoadedAssemblyTarget, IAssemblyDifferenceResult>, IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
+    public sealed class AssemblyDifferenceEngine : MarshalByRefObject,
+        IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
     {
         #region Constants & Fields
 
@@ -51,22 +53,6 @@
         #endregion
 
         #region Public Methods
-
-        /// <inheritdoc />
-        public IAssemblyDifferenceResult Diff(ILoadedAssemblyTarget oldObject, ILoadedAssemblyTarget newObject)
-        {
-            if (oldObject == null)
-            {
-                throw new ArgumentNullException("oldObject");
-            }
-
-            if (newObject == null)
-            {
-                throw new ArgumentNullException("newObject");
-            }
-
-            return this.Diff(oldObject.Assembly, newObject.Assembly);
-        }
 
         /// <inheritdoc />
         public IAssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
