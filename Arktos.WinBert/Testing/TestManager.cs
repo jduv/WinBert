@@ -32,6 +32,8 @@
             {
                 throw new ArgumentNullException("config");
             }
+
+            this.config = config;
         }
 
         #endregion
