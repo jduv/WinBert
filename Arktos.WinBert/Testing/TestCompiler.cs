@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Arktos.WinBert.Environment;
+    using AppDomainToolkit;
     using Arktos.WinBert.Exceptions;
 
     /// <summary>

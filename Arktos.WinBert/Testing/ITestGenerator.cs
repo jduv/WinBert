@@ -1,10 +1,7 @@
 ﻿namespace Arktos.WinBert.Testing
 {
-    using System;
     using System.Collections.Generic;
-    using System.Reflection;
-    using Microsoft.Cci;
-    using Arktos.WinBert.Environment;
+    using AppDomainToolkit;
 
     /// <summary>
     /// Represents an implementation that generates tests.

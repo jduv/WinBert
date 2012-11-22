@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Reflection;
     using Arktos.WinBert.Xml;
-    using Arktos.WinBert.Environment;
 
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.

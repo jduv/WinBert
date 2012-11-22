@@ -50,6 +50,9 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AppDomainToolkit">
+      <HintPath>..\packages\AppDomainToolkit.1.0.1\lib\AppDomainToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -128,25 +131,12 @@
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />
     <Compile Include="Differencing\ITypeDifferenceResult.cs" />
-    <Compile Include="Environment\PathBasedAssemblyResolver.cs" />
-    <Compile Include="Environment\IAssemblyResolver.cs" />
-    <Compile Include="Environment\AssemblyLoader.cs" />
-    <Compile Include="Environment\AssemblyTarget.cs" />
     <Compile Include="Differencing\IDifferenceEngine.cs" />
     <Compile Include="Differencing\AssemblyDifferenceEngine.cs" />
     <Compile Include="Differencing\TypeDifferenceEngine.cs" />
     <Compile Include="Differencing\TypeDifferenceResult.cs" />
-    <Compile Include="Environment\AppDomainContext.cs" />
-    <Compile Include="Environment\IAppDomainContext.cs" />
-    <Compile Include="Environment\IAssemblyLoader.cs" />
-    <Compile Include="Environment\AssemblyTargetLoader.cs" />
-    <Compile Include="Environment\IAssemblyTarget.cs" />
-    <Compile Include="Environment\IAssemblyTargetLoader.cs" />
-    <Compile Include="Environment\RemoteAction.cs" />
-    <Compile Include="Environment\RemoteFunc.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
-    <Compile Include="Environment\Remote.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />

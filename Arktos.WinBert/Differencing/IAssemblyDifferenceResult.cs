@@ -1,8 +1,7 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
     using System.Collections.Generic;
-    using Arktos.WinBert.Environment;
-    using System.Reflection;
+    using AppDomainToolkit;
 
     /// <summary>
     /// Defines the contract for a difference result for an assembly.

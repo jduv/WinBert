@@ -1,7 +1,7 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
-    using Arktos.WinBert.Environment;
+    using AppDomainToolkit;
     using Arktos.WinBert.Testing;
 
     public class RandoopTestRunner : ITestRunner
@@ -14,7 +14,7 @@
 
         #region Public Methods
 
-        public TestRunResult RunTests(AssemblyTarget target)
+        public TestRunResult RunTests(IAssemblyTarget target)
         {
             throw new NotImplementedException();
         }

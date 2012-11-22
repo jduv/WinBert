@@ -1,11 +1,9 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
+    using AppDomainToolkit;
     using Arktos.WinBert.Analysis;
-    using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Environment;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
 
@@ -111,7 +109,7 @@
         /// </returns>
         public IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
-            using (var testEnv = new AppDomainContext())
+            using (var testEnv = AppDomainContext.Create())
             {
                 return RemoteFunc.Invoke(
                     testEnv.Domain,

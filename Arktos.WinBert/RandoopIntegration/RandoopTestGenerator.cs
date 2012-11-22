@@ -5,7 +5,7 @@
     using System.IO;
     using System.Xml;
     using System.Xml.Serialization;
-    using Arktos.WinBert.Environment;
+    using AppDomainToolkit;
     using Arktos.WinBert.Exceptions;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
@@ -152,7 +152,7 @@
         {
             bool success = false;
 
-            using(var environment = new AppDomainContext())
+            using(var environment = AppDomainContext.Create())
             using (var remote = Remote<RemotableTestGenerator>.CreateProxy(environment.Domain, this.config))
             {
                 success = remote.RemoteObject.GenerateTests(target.Location, validTypeNames);

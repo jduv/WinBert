@@ -2,16 +2,11 @@
 {
     using System;
     using System.ComponentModel.Design;
-    using System.Diagnostics;
-    using System.Globalization;
     using System.Runtime.InteropServices;
     using EnvDTE80;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
-    using Arktos.WinBert.Environment;
-    using System.Reflection;
-    using System.IO;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.

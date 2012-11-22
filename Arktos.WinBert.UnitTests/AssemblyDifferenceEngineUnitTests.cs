@@ -4,10 +4,8 @@
     using System.IO;
     using System.Reflection;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Environment;
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Moq;
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]

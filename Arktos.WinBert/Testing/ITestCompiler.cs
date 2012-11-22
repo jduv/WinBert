@@ -1,9 +1,7 @@
 ﻿namespace Arktos.WinBert.Testing
 {
     using System.Collections.Generic;
-    using System.Reflection;
-    using Microsoft.Cci;
-    using Arktos.WinBert.Environment;
+    using AppDomainToolkit;
 
     /// <summary>
     /// Defines behavior for a component that is able to compile an Assembly

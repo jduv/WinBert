@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using Arktos.WinBert.Environment;
     using System.Reflection;
+    using AppDomainToolkit;
 
     /// <summary>
     /// This class represents a difference result between two assemblies. This class should always be marked as

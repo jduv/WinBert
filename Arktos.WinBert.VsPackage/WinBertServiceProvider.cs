@@ -8,7 +8,6 @@
     using System.Windows.Forms;
     using System.Xml;
     using System.Xml.Serialization;
-    using Arktos.WinBert.Analysis;
     using Arktos.WinBert.RandoopIntegration;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;

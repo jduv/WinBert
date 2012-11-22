@@ -1,7 +1,6 @@
 ﻿namespace Arktos.WinBert.Testing
 {
-    using Arktos.WinBert.Analysis;
-    using Arktos.WinBert.Environment;
+    using AppDomainToolkit;
 
     /// <summary>
     /// Implementations of this interface should be able to execute tests.
@@ -19,7 +18,7 @@
         /// <returns>
         /// A test run result.
         /// </returns>
-        TestRunResult RunTests(AssemblyTarget target);
+        TestRunResult RunTests(IAssemblyTarget target);
         
         #endregion
     }

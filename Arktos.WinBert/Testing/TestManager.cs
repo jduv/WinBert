@@ -1,9 +1,9 @@
 ﻿namespace Arktos.WinBert.Testing
 {
     using System;
+    using AppDomainToolkit;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
-    using Arktos.WinBert.Environment;
     using Arktos.WinBert.Xml;
 
     /// <summary>
@@ -61,7 +61,7 @@
         /// </returns>
         protected IAssemblyDifferenceResult DoDiff(Build previous, Build current)
         {
-            using (var diffEnv = new AppDomainContext())
+            using (var diffEnv = AppDomainContext.Create())
             {
                 // Execute the diff in another application domain.
                 return RemoteFunc.Invoke(
