@@ -6,9 +6,8 @@
 
     /// <summary>
     /// Loads assemblies into the contained application domain.
-    /// BMK: Clean this up.
     /// </summary>
-    public class AssemblyContext : IAssemblyContext
+    public class AppDomainContext : IAppDomainContext
     {
         #region Fields & Constants
 
@@ -27,7 +26,7 @@
         /// AssemblyLoader object into context. From here, add whatever assembly probe paths you wish in order to
         /// resolve remote proxies, or extend this class if you desire more specific behavior.
         /// </summary>
-        public AssemblyContext()
+        public AppDomainContext()
         {
             this.domainName = Guid.NewGuid();
             this.Resolver  = new AssemblyResolver();

@@ -6,8 +6,11 @@
     using System.Reflection;
 
     /// <summary>
-    /// This class represents a difference result between two assemblies.
+    /// This class represents a difference result between two assemblies. This class should always be marked as
+    /// serializable to avoid issues with app domain lifecycles. Never pass the raw assemblies, however back and
+    /// forth across application domains--you'll pollute the current app domain.
     /// </summary>
+    [Serializable]
     public sealed class AssemblyDifferenceResult : IAssemblyDifferenceResult
     {
         #region Constructors & Destructors
@@ -33,9 +36,7 @@
                 throw new ArgumentNullException("newAssembly");
             }
 
-            this.OldAssembly = oldAssembly;
             this.OldAssemblyTarget = AssemblyTarget.Create(oldAssembly);
-            this.NewAssembly = newAssembly;
             this.NewAssemblyTarget = AssemblyTarget.Create(newAssembly);
             this.TypeDifferences = new List<ITypeDifferenceResult>();
         }
@@ -53,21 +54,11 @@
             }
         }
 
-        /// <summary>
-        /// Gets the new assembly.
-        /// </summary>
-        public Assembly NewAssembly { get; private set; }
+        /// <inheritdoc />
+        public IAssemblyTarget NewAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
-        public AssemblyTarget NewAssemblyTarget { get; private set; }
-
-        /// <summary>
-        /// Gets the old assembly.
-        /// </summary>
-        public Assembly OldAssembly { get; private set; }
-
-        /// <inheritdoc />
-        public AssemblyTarget OldAssemblyTarget { get; private set; }
+        public IAssemblyTarget OldAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
         public IList<ITypeDifferenceResult> TypeDifferences { get; private set; }

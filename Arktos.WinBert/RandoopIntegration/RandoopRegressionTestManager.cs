@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
@@ -18,10 +19,6 @@
     {
         #region Fields & Constants
 
-        private readonly ITestGenerator generator;
-        private readonly ITestInstrumenter instrumenter;
-        private readonly ITestRunner runner;
-        private readonly IBehavioralAnalyzer analyzer;
         private readonly WinBertConfig config;
 
         #endregion
@@ -31,46 +28,17 @@
         /// <summary>
         /// Initializes a new instance of the RegressionTestSuiteManager class.
         /// </summary>
-        /// <param name="config">The configuration to initialize with.</param>
-        /// <param name="generator">The generator implementation to use when generating test assembiles.</param>
-        /// <param name="runner">The test runner.</param>
-        public RandoopRegressionTestManager(
-            WinBertConfig config,
-            ITestGenerator generator,
-            ITestInstrumenter instrumenter,
-            ITestRunner runner,
-            IBehavioralAnalyzer analyzer)
+        /// <param name="config">
+        /// The configuration to initialize with.
+        /// </param>
+        public RandoopRegressionTestManager(WinBertConfig config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("Config cannot be null.");
             }
 
-            if (generator == null)
-            {
-                throw new ArgumentNullException("Test generator cannot be null.");
-            }
-
-            if (instrumenter == null)
-            {
-                throw new ArgumentNullException("Instrumenter cannot be null.");
-            }
-
-            if (runner == null)
-            {
-                throw new ArgumentNullException("Test runner cannot be null.");
-            }
-
-            if (analyzer == null)
-            {
-                throw new ArgumentNullException("Analyzer cannot be null.");
-            }
-
             this.config = config;
-            this.generator = generator;
-            this.instrumenter = instrumenter;
-            this.runner = runner;
-            this.analyzer = analyzer;
         }
 
         #endregion
@@ -89,7 +57,13 @@
         /// <returns>A test suite, or null if something went wrong.</returns>
         public AnalysisResult BuildAndExecuteTests(Build previous, Build current)
         {
-            this.DoDiff(previous, current);
+            var diff = this.DoDiff(previous, current);
+
+            if (diff != null && diff.IsDifferent)
+            {
+
+            }
+
             return null;
             ////using (var currentBuildEnv = new AssemblyEnvironment())
             ////using (var previousBuildEnv = new AssemblyEnvironment())
@@ -129,15 +103,33 @@
             ////}
         }
 
-        public void DoDiff(Build previous, Build current)
+        /// <summary>
+        /// Performs a diff in another application domain.
+        /// </summary>
+        /// <param name="previous">
+        /// The previous build.
+        /// </param>
+        /// <param name="current">
+        /// The current build.
+        /// </param>
+        /// <returns>
+        /// The assembly difference result.
+        /// </returns>
+        public IAssemblyDifferenceResult DoDiff(Build previous, Build current)
         {
-            using (var diffEnv = new AssemblyContext())
+            using (var diffEnv = new AppDomainContext())
             {
-                // Load the assemblies into the diff context
-                var previousTarget = diffEnv.LoadAssembly(LoadMethod.LoadFile, previous.AssemblyPath);
-                var currentTarget = diffEnv.LoadAssembly(LoadMethod.LoadFile, current.AssemblyPath);
-
-
+                // Execute the diff in another application domain.
+                return RemoteFunc.Invoke(
+                    diffEnv.Domain,
+                    this.config.IgnoreList,
+                    previous.AssemblyPath,
+                    current.AssemblyPath,
+                    (config, previousTargetPath, currentTargetPath) =>
+                    {
+                        var differ = new AssemblyDifferenceEngine(config);
+                        return differ.Diff(Assembly.LoadFile(previousTargetPath), Assembly.LoadFile(currentTargetPath));
+                    });
             }
         }
 

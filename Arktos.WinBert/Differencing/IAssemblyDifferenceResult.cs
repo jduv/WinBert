@@ -19,12 +19,12 @@
         /// <summary>
         /// Gets the new assembly target.
         /// </summary>
-        AssemblyTarget NewAssemblyTarget { get; }
+        IAssemblyTarget NewAssemblyTarget { get; }
 
         /// <summary>
         /// Gets the old assembly target.
         /// </summary>
-        AssemblyTarget OldAssemblyTarget { get; }
+        IAssemblyTarget OldAssemblyTarget { get; }
 
         #endregion
     }

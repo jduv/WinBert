@@ -17,7 +17,9 @@
     {
         #region Fields and Constants
 
-        private RandoopPluginConfig config;
+        private static readonly string StatsFileName = "statistics.txt";
+        private static readonly string ExecutionLogName = "log.txt";
+        private readonly RandoopPluginConfig config;
 
         #endregion
 
@@ -82,7 +84,7 @@
         }
 
         /// <inheritdoc />
-        public AssemblyTarget GetTestsFor(AssemblyTarget target, IEnumerable<string> validTypeNames)
+        public IAssemblyTarget GetTestsFor(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             if (target == null)
             {
@@ -90,7 +92,7 @@
             }
 
             if (string.IsNullOrEmpty(target.Location))
-            {
+            { 
                 throw new ArgumentException("Assembly must have a valid location.");
             }
 
@@ -150,7 +152,7 @@
         {
             bool success = false;
 
-            using(var environment = new AssemblyContext())
+            using(var environment = new AppDomainContext())
             using (var remote = Remote<RemotableTestGenerator>.CreateProxy(environment.Domain, this.config))
             {
                 success = remote.RemoteObject.GenerateTests(target.Location, validTypeNames);

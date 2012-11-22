@@ -9,7 +9,7 @@
     /// <summary>
     /// This simple type differencing engine will take two types and figure out the difference between them.
     /// </summary>
-    public sealed class TypeDifferenceEngine : IDifferenceEngine<Type, ITypeDifferenceResult>
+    public sealed class TypeDifferenceEngine : MarshalByRefObject, IDifferenceEngine<Type, ITypeDifferenceResult>
     {
         #region Fields & Constants
 

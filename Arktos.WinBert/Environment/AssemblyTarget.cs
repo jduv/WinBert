@@ -9,7 +9,7 @@
     /// instead of remoted. There's no reason to remote it because it's simply a wrapper around a string anyway.
     /// </summary>
     [Serializable]
-    public class AssemblyTarget
+    public class AssemblyTarget : IAssemblyTarget
     {
         #region Constructors & Destructors
 

@@ -6,10 +6,13 @@
 
     /// <summary>
     /// This class represents a difference result between two types. The differences between the
-    ///   two types is represented by a list of method names that have changed. Note that this does not
-    ///   truly represent a 'diff' between the two types, as we are only interested in the methods inside
-    ///   the two types that 1) have the same signature and 2) have a different body.
+    /// two types is represented by a list of method names that have changed. Note that this does not
+    /// truly represent a 'diff' between the two types, as we are only interested in the methods inside
+    /// the two types that 1) have the same signature and 2) have a different body. This class should always 
+    /// be marked serializable to avoid issues with app domain lifecycles. Never pass the raw types, 
+    /// however back and forth across application domains--you'll pollute the current app domain.
     /// </summary>
+    [Serializable]
     public sealed class TypeDifferenceResult : ITypeDifferenceResult
     {
         #region Constructors and Destructors
@@ -82,25 +85,6 @@
             }
 
             return new TypeDifferenceResult(type.Name);
-        }
-
-        /// <summary>
-        /// Creates a new TypeDifferenceResult instance from the target CCI named type.
-        /// </summary>
-        /// <param name="type">
-        /// The type.
-        /// </param>
-        /// <returns>
-        /// A new TypeDifferenceResult from the target type.
-        /// </returns>
-        public static TypeDifferenceResult FromNamedTypeDefinition(INamedTypeDefinition type)
-        {
-            if (type == null)
-            {
-                throw new ArgumentNullException("type");
-            }
-
-            return new TypeDifferenceResult(type.Name.Value);
         }
 
         #endregion
