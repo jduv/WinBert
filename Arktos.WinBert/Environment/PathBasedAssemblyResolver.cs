@@ -10,9 +10,11 @@
     /// particular assembly into an application domain and the assembly you're looking for doesn't exist in the
     /// main application bin path. This 'feature' of the .NET framework makes assembly loading very, very
     /// irritating, but this little helper class should alleviate much of the pains here. Note that it extends 
-    /// MarshalByRefObject, so it can be remoted into another application domain.
+    /// MarshalByRefObject, so it can be remoted into another application domain. Paths to directories containing
+    /// assembly files that you wish to load should be added to an instance of this class, and then the Resolve
+    /// method should be assigned to the AssemblyResolve event on the target application domain.
     /// </summary>
-    public class AssemblyResolver : MarshalByRefObject, IAssemblyResolver
+    public class PathBasedAssemblyResolver : MarshalByRefObject, IAssemblyResolver
     {
         #region Fields & Constants
 
@@ -34,7 +36,7 @@
         /// <param name="loadMethod">
         /// The load method to use when loading assemblies. Defaults to LoadMethod.LoadFrom.
         /// </param>
-        public AssemblyResolver(
+        public PathBasedAssemblyResolver(
             IAssemblyLoader loader = null, 
             LoadMethod loadMethod = LoadMethod.LoadFrom)
         {
@@ -63,7 +65,7 @@
         /// <returns>
         /// A ResolveEventHandler.
         /// </returns>
-        public static implicit operator ResolveEventHandler(AssemblyResolver resolver)
+        public static implicit operator ResolveEventHandler(PathBasedAssemblyResolver resolver)
         {
             ResolveEventHandler handler = null;
             if (resolver != null)

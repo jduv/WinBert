@@ -42,8 +42,9 @@
     }
 
     /// <summary>
-    /// This class will load assemblies into whatever application domain it's loaded into. This class will
-    /// load the raw assemblies.
+    /// This class will load assemblies into whatever application domain it's loaded into. It's just a simple convenience
+    /// wrapper around the static Assembly.Load* methods, with the main benefit being the ability to load an assembly
+    /// anonymously bitwise. When you load the assembly this way, there won't be any locking of the DLL file.
     /// </summary>
     public class AssemblyLoader : MarshalByRefObject, IAssemblyLoader
     {
@@ -53,7 +54,11 @@
         /// <remarks>
         /// If the LoadMethod for this instance is set to LoadBits and the path to the PDB file is unspecified then we will attempt to guess
         /// the path to the PDB and load it.  Note that if an assembly is loaded into memory without it's debugging symbols then an
-        /// image exception will be thrown. Be wary of this.
+        /// image exception will be thrown. Be wary of this. Loading an Assembly with the LoadBits method will not lock
+        /// the DLL file because the entire assembly is loaded into memory and the file handle is closed. Note that, however,
+        /// Assemblies loaded in this manner will not have a location associated with them--so you must then key the Assembly
+        /// by it's strong name. This can cause problems when loading multiple versions of the same assembly into a single
+        /// application domain.
         /// </remarks>
         public Assembly LoadAssembly(LoadMethod loadMethod, string assemblyPath, string pdbPath = null)
         {
@@ -92,6 +97,18 @@
             }
 
             return assembly;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// This implementation will perform a best-effort load of the target assembly and it's required references
+        /// into the current application domain using the target load method. If LoadBits is the desired load method,
+        /// it will attempt to resolve the path to the target PDB files where possible.
+        /// </remarks>
+        public Assembly LoadAssemblyWithReferences(LoadMethod method, string assemblyPath)
+        {
+            // BMK Implement me.
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -53,7 +53,7 @@
         /// <returns>
         /// A test assembly.
         /// </returns>
-        AssemblyTarget CompileTests(string sourcePath);
+        IAssemblyTarget CompileTests(string sourcePath);
 
         /// <summary>
         /// Compiles all source at the target path into an Assembly with the target output name.
@@ -67,7 +67,7 @@
         /// <returns>
         /// An 
         /// </returns>
-        AssemblyTarget CompileTests(string sourcePath, string outputFileName);
+        IAssemblyTarget CompileTests(string sourcePath, string outputFileName);
 
         #endregion
     }

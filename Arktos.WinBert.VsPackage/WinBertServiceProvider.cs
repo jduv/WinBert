@@ -199,12 +199,7 @@
 
                     if (currentBuild != null && previousBuild != null)
                     {
-                        var generator = new RandoopTestGenerator(this.Config);
-                        var instrumenter = new RandoopTestInstrumenter();
-                        var runner = new RandoopTestRunner();
-                        var analyzer = new BertBehavioralAnalyzer();
-
-                        var tester = new RandoopRegressionTestManager(this.Config, generator, instrumenter, runner, analyzer);
+                        var tester = new RandoopRegressionTestManager(this.Config);
                         tester.BuildAndExecuteTests(previousBuild, currentBuild);
                     }
                 }

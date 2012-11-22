@@ -12,7 +12,7 @@
         #region Fields & Constants
 
         private readonly AppDomain domain;
-        private readonly Remote<AssemblyLoaderProxy> loaderProxy;
+        private readonly Remote<AssemblyTargetLoader> loaderProxy;
         private readonly Guid domainName;
 
         #endregion
@@ -29,7 +29,7 @@
         public AppDomainContext()
         {
             this.domainName = Guid.NewGuid();
-            this.Resolver  = new AssemblyResolver();
+            this.Resolver  = new PathBasedAssemblyResolver();
 
             var rootDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var setupInfo = new AppDomainSetup()
@@ -53,7 +53,7 @@
 
 
             // Create a remote for an assembly loader.
-            this.loaderProxy = Remote<AssemblyLoaderProxy>.CreateProxy(this.domain);
+            this.loaderProxy = Remote<AssemblyTargetLoader>.CreateProxy(this.domain);
         }
 
         #endregion
@@ -97,13 +97,13 @@
         }
 
         /// <inheritdoc />
-        public AssemblyTarget LoadTarget(LoadMethod loadMethod, AssemblyTarget target)
+        public IAssemblyTarget LoadTarget(LoadMethod loadMethod, IAssemblyTarget target)
         {
             return this.LoadAssembly(loadMethod, target.Location);
         }
 
         /// <inheritdoc/>
-        public AssemblyTarget LoadAssembly(LoadMethod loadMethod, string assemblyPath, string pdbPath = null)
+        public IAssemblyTarget LoadAssembly(LoadMethod loadMethod, string assemblyPath, string pdbPath = null)
         {
             return this.loaderProxy.RemoteObject.LoadAssembly(loadMethod, assemblyPath, pdbPath);
         }

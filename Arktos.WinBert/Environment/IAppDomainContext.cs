@@ -24,7 +24,7 @@
         #region Methods
 
         /// <summary>
-        /// Loads the assembly target into the application domain contained by this environment.
+        /// Loads the assembly target into the application domain managed by the context.
         /// </summary>
         /// <param name="loadMethod">
         /// The LoadMethod to use when importing the assembly.
@@ -35,10 +35,11 @@
         /// <returns>
         /// An assembly target.
         /// </returns>
-        AssemblyTarget LoadTarget(LoadMethod loadMethod, AssemblyTarget target);
+        IAssemblyTarget LoadTarget(LoadMethod loadMethod, IAssemblyTarget target);
 
         /// <summary>
-        /// Loads the assembly at the specified path into the current application domain.
+        /// Loads the assembly at the specified path into the application domain managed by the 
+        /// context.
         /// </summary>
         /// <param name="loadMethod">
         /// The LoadMethod to use when importing the assembly.
@@ -52,7 +53,7 @@
         /// <returns>
         /// An assembly target.
         /// </returns>
-        AssemblyTarget LoadAssembly(LoadMethod loadMethod, string path, string pdbPath = null);
+        IAssemblyTarget LoadAssembly(LoadMethod loadMethod, string path, string pdbPath = null);
 
         #endregion
     }

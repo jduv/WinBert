@@ -6,10 +6,11 @@
 
     /// <summary>
     /// Simple class representing an assembly target. This class will be serialized accross application domains
-    /// instead of remoted. There's no reason to remote it because it's simply a wrapper around a string anyway.
+    /// instead of remoted. There's no reason to remote it because it's simply a wrapper around a couple of
+    /// strings anyway.
     /// </summary>
     [Serializable]
-    public class AssemblyTarget : IAssemblyTarget
+    public sealed class AssemblyTarget : IAssemblyTarget
     {
         #region Constructors & Destructors
 
@@ -40,7 +41,7 @@
         /// <returns>
         /// An AssemblyTarget.
         /// </returns>
-        public static AssemblyTarget Create(Assembly assembly)
+        public static IAssemblyTarget FromAssembly(Assembly assembly)
         {
             if (assembly == null)
             {
@@ -59,7 +60,7 @@
         /// <returns>
         /// An AssemblyTarget.
         /// </returns>
-        public static AssemblyTarget Create(string location)
+        public static IAssemblyTarget Create(string location)
         {
             if (string.IsNullOrEmpty(location))
             {

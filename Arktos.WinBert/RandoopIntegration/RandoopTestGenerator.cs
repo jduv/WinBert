@@ -15,7 +15,7 @@
     /// </summary>
     public class RandoopTestGenerator : ITestGenerator
     {
-        #region Fields and Constants
+        #region Fields & Constants
 
         private static readonly string StatsFileName = "statistics.txt";
         private static readonly string ExecutionLogName = "log.txt";
@@ -148,7 +148,7 @@
         /// <returns>
         /// True if the tests were successful, false otherwise.
         /// </returns>
-        private bool GenerateTestsInNewAppDomain(AssemblyTarget target, IEnumerable<string> validTypeNames)
+        private bool GenerateTestsInNewAppDomain(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             bool success = false;
 
@@ -159,6 +159,12 @@
             }
 
             return success;
+        }
+
+        private bool GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        {
+            // BMK Implement me.
+            return false;
         }
 
         /// <summary>

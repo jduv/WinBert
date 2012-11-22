@@ -10,7 +10,7 @@
     /// domain and the default one. This class is simply a wrapper around an assembly loader that translates
     /// Assembly to AssemblyTarget instances before shipping them back to the parent domain.
     /// </summary>
-    public class AssemblyLoaderProxy : MarshalByRefObject
+    public class AssemblyTargetLoader : MarshalByRefObject, IAssemblyTargetLoader
     {
         #region Fields & Constants
 
@@ -21,9 +21,10 @@
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the RemotableAssemblyLoader class.
+        /// Initializes a new instance of the RemotableAssemblyLoader class. This parameterless ctor is
+        /// required for remoting.
         /// </summary>
-        public AssemblyLoaderProxy()
+        public AssemblyTargetLoader()
             : this(null)
         {
         }
@@ -34,7 +35,7 @@
         /// <param name="loader">
         /// The AssemblyLoader to use when importing assemblies.
         /// </param>
-        public AssemblyLoaderProxy(IAssemblyLoader loader)
+        public AssemblyTargetLoader(IAssemblyLoader loader)
         {
             this.loader = loader == null ? new AssemblyLoader() : loader;
         }
@@ -43,17 +44,16 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Loads an assembly into the current application domain and returns a serializable instance of the AssemblyTarget
-        /// class for the parent application domain's consumption.
-        /// </summary>
-        /// <param name="loadMethod"></param>
-        /// <param name="assemblyPath"></param>
-        /// <param name="pdbPath"></param>
-        /// <returns></returns>
-        public AssemblyTarget LoadAssembly(LoadMethod loadMethod, string assemblyPath, string pdbPath = null)
+        /// <inheritdoc/>
+        public IAssemblyTarget LoadAssembly(LoadMethod loadMethod, string assemblyPath, string pdbPath = null)
         {
-            return AssemblyTarget.Create(this.loader.LoadAssembly(loadMethod, assemblyPath, pdbPath));
+            return AssemblyTarget.FromAssembly(this.loader.LoadAssembly(loadMethod, assemblyPath, pdbPath));
+        }
+
+        /// <inheritdoc/>
+        public IAssemblyTarget LoadAssemblyWithReferences(LoadMethod loadMethod, string assemblyPath)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

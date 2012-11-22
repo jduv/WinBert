@@ -2,11 +2,10 @@
 {
     using System;
     using System.Linq;
-    using System.Reflection;
+    using System.Collections.Generic;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Environment;
-    using Arktos.WinBert.Instrumentation;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
 
@@ -15,7 +14,7 @@
     /// pulling together all the miscellaneous pieces required to build out a regression test suite and execute
     /// it, returning an analysis result.
     /// </summary>
-    public class RandoopRegressionTestManager : MarshalByRefObject, IRegressionTestManager
+    public class RandoopRegressionTestManager : TestManager
     {
         #region Fields & Constants
 
@@ -31,14 +30,8 @@
         /// <param name="config">
         /// The configuration to initialize with.
         /// </param>
-        public RandoopRegressionTestManager(WinBertConfig config)
+        public RandoopRegressionTestManager(WinBertConfig config) : base(config)
         {
-            if (config == null)
-            {
-                throw new ArgumentNullException("Config cannot be null.");
-            }
-
-            this.config = config;
         }
 
         #endregion
@@ -55,13 +48,14 @@
         /// The current build.
         /// </param>
         /// <returns>A test suite, or null if something went wrong.</returns>
-        public AnalysisResult BuildAndExecuteTests(Build previous, Build current)
+        public override AnalysisResult BuildAndExecuteTests(Build previous, Build current)
         {
             var diff = this.DoDiff(previous, current);
 
             if (diff != null && diff.IsDifferent)
             {
-
+                var typeNames = diff.TypeDifferences.Select(x => x.Name);
+                var previousTestTarget = this.GenerateTests(diff.OldAssemblyTarget, typeNames);
             }
 
             return null;
@@ -104,31 +98,30 @@
         }
 
         /// <summary>
-        /// Performs a diff in another application domain.
+        /// Generates tests for the target assembly in another application domain.
         /// </summary>
-        /// <param name="previous">
-        /// The previous build.
+        /// <param name="target">
+        /// The assembly target to generate tests for.
         /// </param>
-        /// <param name="current">
-        /// The current build.
+        /// <param name="validTypeNames">
+        /// A list of valid types to generate those tests for.
         /// </param>
         /// <returns>
-        /// The assembly difference result.
+        /// An assembly target pointing to the assembly containing the generated tests.
         /// </returns>
-        public IAssemblyDifferenceResult DoDiff(Build previous, Build current)
+        public IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
-            using (var diffEnv = new AppDomainContext())
+            using (var testEnv = new AppDomainContext())
             {
-                // Execute the diff in another application domain.
                 return RemoteFunc.Invoke(
-                    diffEnv.Domain,
-                    this.config.IgnoreList,
-                    previous.AssemblyPath,
-                    current.AssemblyPath,
-                    (config, previousTargetPath, currentTargetPath) =>
+                    testEnv.Domain,
+                    this.config,
+                    target,
+                    validTypeNames,
+                    (config, testTarget, types) =>
                     {
-                        var differ = new AssemblyDifferenceEngine(config);
-                        return differ.Diff(Assembly.LoadFile(previousTargetPath), Assembly.LoadFile(currentTargetPath));
+                        var tester = new RandoopTestGenerator(config);
+                        return tester.GetTestsFor(target, types);
                     });
             }
         }

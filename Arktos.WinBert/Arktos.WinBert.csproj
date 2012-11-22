@@ -128,7 +128,7 @@
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />
     <Compile Include="Differencing\ITypeDifferenceResult.cs" />
-    <Compile Include="Environment\AssemblyResolver.cs" />
+    <Compile Include="Environment\PathBasedAssemblyResolver.cs" />
     <Compile Include="Environment\IAssemblyResolver.cs" />
     <Compile Include="Environment\AssemblyLoader.cs" />
     <Compile Include="Environment\AssemblyTarget.cs" />
@@ -139,8 +139,9 @@
     <Compile Include="Environment\AppDomainContext.cs" />
     <Compile Include="Environment\IAppDomainContext.cs" />
     <Compile Include="Environment\IAssemblyLoader.cs" />
-    <Compile Include="Environment\AssemblyLoaderProxy.cs" />
+    <Compile Include="Environment\AssemblyTargetLoader.cs" />
     <Compile Include="Environment\IAssemblyTarget.cs" />
+    <Compile Include="Environment\IAssemblyTargetLoader.cs" />
     <Compile Include="Environment\RemoteAction.cs" />
     <Compile Include="Environment\RemoteFunc.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
@@ -153,11 +154,12 @@
     <Compile Include="RandoopIntegration\RandoopTestRunner.cs" />
     <Compile Include="RandoopIntegration\RandoopRegressionTestManager.cs" />
     <Compile Include="RandoopIntegration\RemotableTestGenerator.cs" />
-    <Compile Include="Testing\IRegressionTestManager.cs" />
+    <Compile Include="Testing\ITestManager.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
     <Compile Include="Testing\TestCompiler.cs" />
     <Compile Include="Testing\ITestCompiler.cs" />
     <Compile Include="Testing\ITestGenerator.cs" />
+    <Compile Include="Testing\TestManager.cs" />
     <Compile Include="Testing\TestRunResult.cs" />
     <Compile Include="Xml\Build.cs" />
     <Compile Include="Util\BuildVersionManager.cs" />

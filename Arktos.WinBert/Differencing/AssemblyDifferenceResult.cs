@@ -36,8 +36,8 @@
                 throw new ArgumentNullException("newAssembly");
             }
 
-            this.OldAssemblyTarget = AssemblyTarget.Create(oldAssembly);
-            this.NewAssemblyTarget = AssemblyTarget.Create(newAssembly);
+            this.OldAssemblyTarget = AssemblyTarget.FromAssembly(oldAssembly);
+            this.NewAssemblyTarget = AssemblyTarget.FromAssembly(newAssembly);
             this.TypeDifferences = new List<ITypeDifferenceResult>();
         }
 
