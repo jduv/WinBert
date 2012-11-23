@@ -28,7 +28,8 @@
         /// <param name="config">
         /// The configuration to initialize with.
         /// </param>
-        public RandoopRegressionTestManager(WinBertConfig config) : base(config)
+        public RandoopRegressionTestManager(WinBertConfig config)
+            : base(config)
         {
         }
 
@@ -46,14 +47,14 @@
         /// The current build.
         /// </param>
         /// <returns>A test suite, or null if something went wrong.</returns>
-        public override AnalysisResult BuildAndExecuteTests(Build previous, Build current)
+        public override AnalysisResult Run(Build previous, Build current)
         {
             var diff = this.DoDiff(previous, current);
 
             if (diff != null && diff.IsDifferent)
             {
                 var typeNames = diff.TypeDifferences.Select(x => x.Name);
-                var previousTestTarget = this.GenerateTests(diff.OldAssemblyTarget, typeNames);
+                var previousTestTarget = this.BuildAndExecuteTests(diff.OldAssemblyTarget, typeNames);
             }
 
             return null;
@@ -107,7 +108,7 @@
         /// <returns>
         /// An assembly target pointing to the assembly containing the generated tests.
         /// </returns>
-        public IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        public IAssemblyTarget BuildAndExecuteTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             using (var testEnv = AppDomainContext.Create())
             {

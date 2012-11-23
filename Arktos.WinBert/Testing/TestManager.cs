@@ -41,7 +41,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public abstract AnalysisResult BuildAndExecuteTests(Build previous, Build current);
+        public abstract AnalysisResult Run(Build previous, Build current);
 
         #endregion
 
@@ -63,6 +63,7 @@
         /// </returns>
         protected IAssemblyDifferenceResult DoDiff(Build previous, Build current)
         {
+            // Boot up another application domain.
             using (var diffEnv = AppDomainContext.Create())
             {
                 // Execute the diff in another application domain.

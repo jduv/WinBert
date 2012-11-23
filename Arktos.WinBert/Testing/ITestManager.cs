@@ -24,7 +24,7 @@
         /// <returns>
         /// An AnalysisResult.
         /// </returns>
-        AnalysisResult BuildAndExecuteTests(Build previous, Build current);
+        AnalysisResult Run(Build previous, Build current);
 
         #endregion
     }
