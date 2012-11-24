@@ -84,7 +84,7 @@
         }
 
         /// <inheritdoc />
-        public IAssemblyTarget GetTestsFor(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        public ITestTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             if (target == null)
             {
@@ -122,7 +122,8 @@
             {
                 var compiler = new TestCompiler();
                 compiler.AddReference(target.Location);
-                return compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
+                var tests = compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
+                return TestTarget.Create(target, tests);
             }
             else
             {
@@ -159,12 +160,6 @@
             }
 
             return success;
-        }
-
-        private bool GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
-        {
-            // BMK Implement me.
-            return false;
         }
 
         /// <summary>

@@ -198,7 +198,7 @@
 
                     if (currentBuild != null && previousBuild != null)
                     {
-                        var tester = new RandoopRegressionTestManager(this.Config);
+                        var tester = new RandoopTestManager(this.Config);
                         tester.Run(previousBuild, currentBuild);
                     }
                 }

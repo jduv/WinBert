@@ -6,7 +6,8 @@
     /// <summary>
     /// Contains information about a test run. 
     /// </summary>
-    public sealed class TestRunResult
+    [Serializable]
+    public sealed class TestRunResult : ITestRunResult
     {
         #region Constructors & Destructors
 
@@ -22,14 +23,10 @@
 
         #region Properties
 
-        /// <summary>
-        /// Gets a value indicating whether this test run restult was successful or not.
-        /// </summary>
+        /// <inheritdoc />
         public bool Success { get; private set; }
 
-        /// <summary>
-        /// The path to the analysis log.
-        /// </summary>
+        /// <inheritdoc />
         public string PathToAnalysisLog { get; private set; }
 
         #endregion
