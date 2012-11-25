@@ -30,6 +30,7 @@
         public RandoopTestManager(WinBertConfig config)
             : base(config)
         {
+            this.config = config;
         }
 
         #endregion

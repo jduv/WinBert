@@ -11,19 +11,25 @@
     {
         #region Fields and Constants
 
-        private static readonly string SrcDir = @"filecopier-test-files\";
+        private static readonly string TargetSrcDir = @"filecopier-test-files\";
 
-        private static readonly string DestDir = @"filecopier-test-files-copies\";
+        private static readonly string TargetDestDir = @"filecopier-test-files-copies\";
 
-        private static readonly string SrcFile = SrcDir + @"src.txt";
+        private static readonly string TargetDirToCopy = TargetSrcDir + @"test-dir-to-copy\";
+
+        private static readonly string TargetDirToCopySubdirName = "subdir";
+
+        private static readonly string SrcFileName = @"src.txt";
+
+        private static readonly string SrcFilePath = TargetSrcDir + SrcFileName;
 
         private static readonly string ExistingDestTxtName = @"existingDest.txt";
 
-        private static readonly string ExistingDestTxtPath = SrcDir + ExistingDestTxtName;
+        private static readonly string ExistingDestTxtPath = TargetSrcDir + ExistingDestTxtName;
 
         private static readonly string ReadOnlyDestTxtName = @"readOnlyDest.txt";
 
-        private static readonly string ReadOnlyDestTxtPath = SrcDir + ReadOnlyDestTxtName;
+        private static readonly string ReadOnlyDestTxtPath = TargetSrcDir + ReadOnlyDestTxtName;
 
         #endregion
 
@@ -34,16 +40,16 @@
         {
             try
             {
-                if (!Directory.Exists(DestDir))
+                if (!Directory.Exists(TargetDestDir))
                 {
-                    Directory.CreateDirectory(DestDir);
-                    File.Copy(ExistingDestTxtPath, DestDir + ExistingDestTxtName);
-                    File.Copy(ReadOnlyDestTxtPath, DestDir + ReadOnlyDestTxtName);
+                    Directory.CreateDirectory(TargetDestDir);
+                    File.Copy(ExistingDestTxtPath, TargetDestDir + ExistingDestTxtName);
+                    File.Copy(ReadOnlyDestTxtPath, TargetDestDir + ReadOnlyDestTxtName);
                 }
             }
             catch (Exception exc)
             {
-                Assert.Inconclusive("Unable to set up test directory " + DestDir + ". Exception: " + exc);
+                Assert.Inconclusive("Unable to set up test directory " + TargetDestDir + ". Exception: " + exc);
             }
         }
 
@@ -52,9 +58,9 @@
         {
             try
             {
-                if (Directory.Exists(DestDir))
+                if (Directory.Exists(TargetDestDir))
                 {
-                    Directory.Delete(DestDir, true);
+                    Directory.Delete(TargetDestDir, true);
                 }
             }
             catch (Exception)
@@ -121,7 +127,70 @@
         public void TryCopyFile_SourceDir()
         {
             var target = new FileCopier();
-            target.TryCopyFile(DestDir, DestDir);
+            target.TryCopyFile(TargetDestDir, TargetDestDir);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DirectoryNotFoundException))]
+        public void CopyDirectory_NonExistantSourceDir()
+        {
+            var toCopy = Guid.NewGuid() + @"\";
+            var target = new FileCopier();
+            target.CopyDirectory(toCopy, TargetDestDir);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DirectoryNotFoundException))]
+        public void CopyDirectory_NonExistantDestDir_CreateFlagNotSet()
+        {
+            var srcDir = TargetSrcDir + @"\" + Guid.NewGuid();
+            var target = new FileCopier();
+            target.CopyDirectory(TargetDirToCopy, srcDir);
+        }
+
+        [TestMethod]
+        public void CopyDirectory_CreateDestDirsNoOverwriteNoRecurse()
+        {
+            var srcDir = new DirectoryInfo(TargetDirToCopy);
+            var uniqueFolder = Guid.NewGuid().ToString();
+            var destDir = new DirectoryInfo(Path.Combine(TargetDestDir, uniqueFolder, srcDir.Name));
+            var subDir = new DirectoryInfo(Path.Combine(TargetDestDir, uniqueFolder, srcDir.Name, TargetDirToCopySubdirName));
+
+            var target = new FileCopier(FileCopierFlags.CreateDestinationDirectories);
+            target.CopyDirectory(srcDir.FullName, destDir.FullName);
+
+            Assert.IsTrue(destDir.Exists);
+            Assert.IsTrue(File.Exists(Path.Combine(destDir.FullName, ExistingDestTxtName)));
+            Assert.IsTrue(File.Exists(Path.Combine(destDir.FullName, SrcFileName)));
+            Assert.IsTrue(File.Exists(Path.Combine(destDir.FullName, ReadOnlyDestTxtName)));
+
+            Assert.IsFalse(subDir.Exists);
+            Assert.IsFalse(File.Exists(Path.Combine(subDir.FullName, ExistingDestTxtName)));
+            Assert.IsFalse(File.Exists(Path.Combine(subDir.FullName, SrcFileName)));
+            Assert.IsFalse(File.Exists(Path.Combine(subDir.FullName, ReadOnlyDestTxtName)));
+        }
+
+        [TestMethod]
+        public void CopyDirectory_CreateDestDirsNoOverwriteRecursive()
+        {
+            var srcDir = new DirectoryInfo(TargetDirToCopy);
+            var uniqueFolder = Guid.NewGuid().ToString();
+            var destDir = new DirectoryInfo(Path.Combine(TargetDestDir, uniqueFolder, srcDir.Name));
+            var subDir = new DirectoryInfo(Path.Combine(TargetDestDir, uniqueFolder, srcDir.Name, TargetDirToCopySubdirName));
+
+            var target = new FileCopier(FileCopierFlags.CreateDestinationDirectories);
+            target.CopyDirectory(srcDir.FullName, destDir.FullName, true);
+
+            Assert.IsTrue(destDir.Exists);
+            Assert.IsTrue(File.Exists(Path.Combine(destDir.FullName, ExistingDestTxtName)));
+            Assert.IsTrue(File.Exists(Path.Combine(destDir.FullName, SrcFileName)));
+            Assert.IsTrue(File.Exists(Path.Combine(destDir.FullName, ReadOnlyDestTxtName)));
+
+            Assert.IsTrue(subDir.Exists);
+            Assert.IsTrue(subDir.GetFiles().Length == 1);
+            Assert.IsFalse(File.Exists(Path.Combine(subDir.FullName, ExistingDestTxtName)));
+            Assert.IsTrue(File.Exists(Path.Combine(subDir.FullName, SrcFileName)));
+            Assert.IsFalse(File.Exists(Path.Combine(subDir.FullName, ReadOnlyDestTxtName)));
         }
 
         #endregion
@@ -130,20 +199,20 @@
 
         private bool CopyToDirectory(FileCopier copier)
         {
-            return copier.TryCopyFile(SrcFile, DestDir);
+            return copier.TryCopyFile(SrcFilePath, TargetDestDir);
         }
 
         private bool CopyFileToNamedTarget(FileCopier copier)
         {
-            string destPath = Path.Combine(DestDir, @"out.txt");
-            return copier.TryCopyFile(SrcFile, destPath);
+            string destPath = Path.Combine(TargetDestDir, @"out.txt");
+            return copier.TryCopyFile(SrcFilePath, destPath);
         }
 
         private bool CopyToExistingFile(FileCopier copier)
         {            
             if (File.Exists(ExistingDestTxtPath))
             {
-                return copier.TryCopyFile(SrcFile, ExistingDestTxtPath);
+                return copier.TryCopyFile(SrcFilePath, ExistingDestTxtPath);
             }
             else
             {
@@ -164,7 +233,7 @@
                     info.IsReadOnly = true;
                 }
 
-                return copier.TryCopyFile(SrcFile, ReadOnlyDestTxtPath);
+                return copier.TryCopyFile(SrcFilePath, ReadOnlyDestTxtPath);
             }
             else
             {
@@ -175,8 +244,8 @@
 
         private bool CopyToNonExistantDirectory(FileCopier copier)
         {
-            string destPath = Path.Combine(DestDir, @"newdir\another\out.txt");
-            return copier.TryCopyFile(SrcFile, destPath);
+            string destPath = Path.Combine(TargetDestDir, @"newdir\another\out.txt");
+            return copier.TryCopyFile(SrcFilePath, destPath);
         }
 
         #endregion

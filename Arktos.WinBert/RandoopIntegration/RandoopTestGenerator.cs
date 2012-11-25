@@ -2,13 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Xml;
     using System.Xml.Serialization;
     using AppDomainToolkit;
     using Arktos.WinBert.Exceptions;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
+    using Common;
+    using Randoop;
 
     /// <summary>
     /// Uses the Randoop framework to generate a set of tests for the target assembly under test.
@@ -38,7 +43,7 @@
                 throw new ArgumentNullException("Config cannot be null!");
             }
 
-            var randoopConfig = GetRandoopConfiguration(config);
+            var randoopConfig = GetRandoopPluginConfig(config);
             if (randoopConfig != null)
             {
                 this.config = randoopConfig;
@@ -63,7 +68,7 @@
         /// <returns>
         /// Returns a configuration object.
         /// </returns>
-        public static RandoopPluginConfig GetRandoopConfiguration(WinBertConfig config)
+        public static RandoopPluginConfig GetRandoopPluginConfig(WinBertConfig config)
         {
             if (config != null && config.EmbeddedConfigurations != null)
             {
@@ -91,11 +96,6 @@
                 throw new ArgumentNullException("assembly");
             }
 
-            if (string.IsNullOrEmpty(target.Location))
-            { 
-                throw new ArgumentException("Assembly must have a valid location.");
-            }
-
             if (validTypeNames == null)
             {
                 throw new ArgumentNullException("Types list cannot be null!");
@@ -118,49 +118,23 @@
             // Create the new directory
             Directory.CreateDirectory(testDirPath);
 
-            if (this.GenerateTestsInNewAppDomain(target, validTypeNames))
-            {
-                var compiler = new TestCompiler();
-                compiler.AddReference(target.Location);
-                var tests = compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
-                return TestTarget.Create(target, tests);
-            }
-            else
-            {
-                // BMK Throw an exception here instead.
-                return null;
-            }
+            ////if (this.GenerateTestsInNewAppDomain(target, validTypeNames))
+            ////{
+            var compiler = new TestCompiler();
+            compiler.AddReference(target.Location);
+            var tests = compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
+            return TestTarget.Create(target, tests);
+            ////}
+            ////else
+            ////{
+            ////    // BMK Throw an exception here instead.
+            ////    return null;
+            ////}
         }
 
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// Generates all the tests for the target assembly by spinning up a new application domain and
-        /// executing a remote test generator implementation. This will prevent DLL hell.
-        /// </summary>
-        /// <param name="target">
-        /// The assembly to load.
-        /// </param>
-        /// <param name="validTypes">
-        /// A list of valid types to test.
-        /// </param>
-        /// <returns>
-        /// True if the tests were successful, false otherwise.
-        /// </returns>
-        private bool GenerateTestsInNewAppDomain(IAssemblyTarget target, IEnumerable<string> validTypeNames)
-        {
-            bool success = false;
-
-            using(var environment = AppDomainContext.Create())
-            using (var remote = Remote<RemotableTestGenerator>.CreateProxy(environment.Domain, this.config))
-            {
-                success = remote.RemoteObject.GenerateTests(target.Location, validTypeNames);
-            }
-
-            return success;
-        }
 
         /// <summary>
         /// Gets a name for a new test assembly.
@@ -175,7 +149,7 @@
         private static string GetTestAssemblyName(string targetAssemblyPath)
         {
             var extension = Path.GetExtension(targetAssemblyPath);
-            if (string.IsNullOrEmpty(extension) || extension.IndexOf("exe")  + extension.IndexOf("dll") < 0)
+            if (string.IsNullOrEmpty(extension) || extension.IndexOf("exe") + extension.IndexOf("dll") < 0)
             {
                 throw new ArgumentException("Target assembly path is invalid!");
             }
@@ -183,6 +157,220 @@
             // Tests are always placed in a library.
             var replacement = string.Format(".tests.{0}.dll", Guid.NewGuid().ToString().Substring(0, 7));
             return targetAssemblyPath.Replace(extension, replacement);
+        }
+
+        /// <summary>
+        /// Injecting our own constants into the plan manager. Using hard coded text files is extremely cumbersome,
+        /// and I refuse :P. Values are pulled from the embedded Randoop configuration file that lives inside our own
+        /// WinBert configuration.
+        /// </summary>
+        /// <param name="planManager">
+        /// The plan manager.
+        /// </param>
+        /// <param name="config">
+        /// The plugin config holding all the constants to inject.
+        /// </param>
+        private static void SeedPlanManager(PlanManager planManager, RandoopPluginConfig config)
+        {
+            // signed byte
+            foreach (sbyte sb in config.SeedValues.ByteSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(sbyte), sb));
+            }
+
+            // byte
+            foreach (byte b in config.SeedValues.ByteSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(byte), b));
+            }
+
+            // short
+            foreach (short s in config.SeedValues.ShortSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(short), s));
+            }
+
+            // unsigned short
+            foreach (ushort us in config.SeedValues.ShortSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(ushort), us));
+            }
+
+            // int
+            foreach (int i in config.SeedValues.IntSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(int), i));
+            }
+
+            // unsigned int
+            foreach (uint ui in config.SeedValues.UIntSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(uint), ui));
+            }
+
+            // float
+            foreach (float f in config.SeedValues.FloatSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(float), f));
+            }
+
+            // double
+            foreach (double d in config.SeedValues.DoubleSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(double), d));
+            }
+
+            // decimal
+            foreach (decimal dec in config.SeedValues.DecimalSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(decimal), dec));
+            }
+
+            // string
+            foreach (string str in config.SeedValues.StringSeedValues.Values)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(string), str));
+            }
+
+            // char
+            foreach (string charStr in config.SeedValues.CharSeedValues.Values)
+            {
+                char c = charStr[0];
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(char), c));
+            }
+        }
+
+        /// <summary>
+        /// Generates a RandoopConfiguration file for use with each test run.
+        /// </summary>
+        /// <param name="workingDir">
+        /// The working directory for the test generation pass.
+        /// </param>
+        /// <returns>
+        /// A validated RandoopConfiguration file.
+        /// </returns>
+        private static RandoopConfiguration GetRandoopConfig(string workingDir)
+        {
+            Random rand = new Random();
+            RandoopConfiguration config = new RandoopConfiguration();
+            //config.assemblies.Add(new FileName(assemblyPath));
+            config.outputdir = workingDir;
+            config.statsFile = new FileName(Path.Combine(workingDir, StatsFileName));
+            config.executionLog = Path.Combine(workingDir, ExecutionLogName);
+            config.singledir = true; // always write to a single directory.
+            config.timelimit = 1;    // go with 1 second for now.
+            config.singledir = true;
+            config.randomseed = rand.Next();
+            config.planstartid = 0;
+            config.useinternal = false;
+            config.usestatic = false;
+            config.outputnormalinputs = true;
+            config.methodweighing = MethodWeighing.Uniform;
+            config.fairOpt = false;
+
+            return config;
+        }
+
+        /// <summary>
+        /// Generates a set of reflection filters for the Randoop test run.
+        /// </summary>
+        /// <param name="randoopConfig">
+        /// The configuration file to generate the filter from.
+        /// </param>
+        /// <param name="pluginConfig">
+        /// The randoop plugin config to generate the filter from.
+        /// </param>
+        private static IReflectionFilter GenerateRandoopReflectionFilters(RandoopConfiguration randoopConfig, RandoopPluginConfig pluginConfig)
+        {
+            VisibilityFilter visibilityFilter = new VisibilityFilter(randoopConfig);
+            PermissiveReflectionFilter permissiveFilter = new PermissiveReflectionFilter();
+            permissiveFilter.ForbiddenFields = pluginConfig.ForbiddenFields;
+            permissiveFilter.ForbiddenMembers = pluginConfig.ForbiddenMembers;
+            permissiveFilter.ForbiddenTypes = pluginConfig.ForbiddenTypes;
+            IReflectionFilter filter = new ComposableFilter(visibilityFilter, permissiveFilter);
+
+            return filter;
+        }
+
+        /// <summary>
+        /// Generates a suite of tests using Randoop API's.
+        /// </summary>
+        /// <param name="target">
+        /// The assembly to generate tests for.
+        /// </param>
+        /// <returns>
+        /// True if generation was successful, false otherwise.
+        /// </returns>
+        private static bool RunRandoop(IAssemblyTarget target, IEnumerable<string> validTypeNames, RandoopPluginConfig config)
+        {
+            // first grab the config file
+            RandoopConfiguration randoopConfig = GetRandoopConfig(Path.GetDirectoryName(target.Location));
+
+            // Now we need a list of the assemblies to test
+            Collection<Assembly> assemblies = Misc.LoadAssemblies(randoopConfig.assemblies);
+
+            // Retrieve the target assembly from the loaded ones.
+            var targetAssembly = assemblies.FirstOrDefault(x => x.Location.Equals(target.Location));
+
+            // Filter types.
+            var typesToExplore = new Collection<Type>(targetAssembly.GetTypes()
+                .Where(x => validTypeNames.Any(y => y.Equals(x.Name))).ToList());
+
+            // no need to continue
+            if (typesToExplore.Count <= 0)
+            {
+                return false;
+            }
+
+            // Handle Crypto
+            SystemRandom rand = new SystemRandom();
+            rand.Init(randoopConfig.randomseed);
+
+            // Set up the plan manager
+            PlanManager planManager = new PlanManager(randoopConfig);
+            planManager.builderPlans.AddEnumConstantsToPlanDB(new Collection<Type>(typesToExplore.ToList()));
+            SeedPlanManager(planManager, config);
+
+            // Stats manager
+            StatsManager statsManager = new StatsManager(randoopConfig);
+
+            // Grab the reflection filter
+            IReflectionFilter filter = GenerateRandoopReflectionFilters(randoopConfig, config);
+
+            // Default action set
+            ActionSet actions = null;
+            try
+            {
+                actions = new ActionSet(typesToExplore, filter);
+            }
+            catch (EmpytActionSetException)
+            {
+                return false;
+            }
+
+            // The real deal. 
+            RandomExplorer explorer = new RandomExplorer(
+                typesToExplore,
+                filter,
+                true,
+                randoopConfig.randomseed,
+                randoopConfig.arraymaxsize,
+                statsManager,
+                actions);
+
+            // Time it out, and we're done.
+            ITimer timer = new Timer(randoopConfig.timelimit);
+            try
+            {
+                explorer.Explore(timer, planManager, randoopConfig.methodweighing, randoopConfig.forbidnull, true, randoopConfig.fairOpt);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            // we made it!
+            return true;
         }
 
         #endregion

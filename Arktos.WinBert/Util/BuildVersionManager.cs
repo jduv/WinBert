@@ -153,42 +153,39 @@
         {
             if (File.Exists(pathToSuccessfulBuild))
             {
-                var copier =
-                    new FileCopier(
-                        FileCopierFlags.AlwaysOverwriteDestination | FileCopierFlags.CreateDestinationDirectories);
+                var copier = new FileCopier(FileCopierFlags.AlwaysOverwriteDestination | FileCopierFlags.CreateDestinationDirectories);
 
                 // Copy the build.
                 var pathInArchive = this.GetArchivePath(pathToSuccessfulBuild);
-                if (copier.TryCopyFile(pathToSuccessfulBuild, pathInArchive))
+                copier.CopyDirectory(Path.GetDirectoryName(pathToSuccessfulBuild), Path.GetDirectoryName(pathInArchive));
+               
+                // Handle overflow.
+                if (this.BuildArchive.Count == this.MaxArchiveSize)
                 {
-                    // Handle overflow.
-                    if (this.BuildArchive.Count == this.MaxArchiveSize)
-                    {
-                        var lastElement = this.BuildArchive.Last();
-                        this.BuildArchive.Remove(lastElement.Key);
-                    }
-
-                    // Attempt to copy the PDB file over as well
-                    string pdbPathInArchive = null;
-                    string pdbPath = this.GetPdbPath(pathToSuccessfulBuild);
-                    if (!string.IsNullOrEmpty(pdbPath))
-                    {
-                        // This logic is a little backwards
-                        pdbPathInArchive = this.GetArchivePath(pdbPath);
-                        if (File.Exists(pdbPath))
-                        {
-                            pdbPathInArchive = copier.TryCopyFile(pdbPath, pdbPathInArchive) ? pdbPathInArchive : null;
-                        }
-                    }
-
-                    // Create the build object
-                    var build = this.LoadBuild(this.SequenceNumber, pathInArchive);
-                    build.PdbPath = pdbPathInArchive;
-
-                    return build;
+                    var lastElement = this.BuildArchive.Last();
+                    this.BuildArchive.Remove(lastElement.Key);
                 }
-            }
 
+                // Attempt to copy the PDB file over as well
+                string pdbPathInArchive = null;
+                string pdbPath = this.GetPdbPath(pathToSuccessfulBuild);
+                if (!string.IsNullOrEmpty(pdbPath))
+                {
+                    // This logic is a little backwards
+                    pdbPathInArchive = this.GetArchivePath(pdbPath);
+                    if (File.Exists(pdbPath))
+                    {
+                        pdbPathInArchive = copier.TryCopyFile(pdbPath, pdbPathInArchive) ? pdbPathInArchive : null;
+                    }
+                }
+
+                // Create the build object
+                var build = this.LoadBuild(this.SequenceNumber, pathInArchive);
+                build.PdbPath = pdbPathInArchive;
+
+                return build;
+            }
+            
             throw new ArgumentException("The target assembly for the build doesn't exist!");            
         }
 
@@ -229,7 +226,7 @@
             if (this.BuildArchive.Count > 1)
             {
                 int index = this.BuildArchive.IndexOfKey(sequenceNumber);
-                return this.BuildArchive.ElementAt(index - 1).Value;                    
+                return this.BuildArchive.ElementAt(index - 1).Value;
             }
 
             return null;

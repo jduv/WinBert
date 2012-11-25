@@ -74,6 +74,77 @@
         #region Public Methods
 
         /// <summary>
+        /// Attempts to copy the contents of the <paramref name="sourcePath"/> to the <paramref name="destPath"/>.
+        /// </summary>
+        /// <param name="sourcePath">
+        /// The source path.
+        /// </param>
+        /// <param name="destPath">
+        /// The destination path.
+        /// </param>
+        /// <param name="recurse">
+        /// Should the copy be recursive?
+        /// </param>
+        /// <returns>
+        /// True if the copy was successful, false otherwise.
+        /// </returns>
+        public void CopyDirectory(string sourcePath, string destPath, bool recurse = false)
+        {
+            var srcDir = new DirectoryInfo(sourcePath);
+            var destDir = new DirectoryInfo(destPath);
+
+            if (srcDir.Exists)
+            {
+                if (!destDir.Exists)
+                {
+                    if ((this.flags & FileCopierFlags.CreateDestinationDirectories) == FileCopierFlags.CreateDestinationDirectories)
+                    {
+                        destDir.Create();
+                    }
+                    else
+                    {
+                        throw new DirectoryNotFoundException("Destination directory must exist or CreateDestinationDirectories flag must be set! Path: " + destPath);
+                    }
+                }
+
+                // Directory exists, copy files.
+                var files = srcDir.GetFiles();
+                var overwrite = (this.flags & FileCopierFlags.AlwaysOverwriteDestination) == FileCopierFlags.AlwaysOverwriteDestination;
+                var overwriteReadOnly = (this.flags & FileCopierFlags.AttemptOverwriteReadonlyDest) == FileCopierFlags.AttemptOverwriteReadonlyDest;
+                
+                foreach (var file in files)
+                {
+                    if(file.IsReadOnly && overwriteReadOnly)
+                    {
+                        file.IsReadOnly = false;
+                    }
+
+                    string path = Path.Combine(destDir.FullName, file.Name);
+                    if(!file.IsReadOnly)
+                    {
+                        var exist = File.Exists(path);
+                        if (!exist || (exist && overwrite))
+                        {
+                            file.CopyTo(path, overwrite);
+                        }
+                    }
+                }
+
+                if (recurse)
+                {
+                    foreach (var subDir in srcDir.GetDirectories())
+                    {
+                        this.CopyDirectory(subDir.FullName, Path.Combine(destDir.FullName, subDir.Name), recurse);
+                    }
+                }
+            }
+            else
+            {
+                throw new DirectoryNotFoundException("Source directory must exist! Path: " + sourcePath);
+            }
+        }
+
+        /// <summary>
         /// Copies a file given by the source path to the destination path. This method will not throw exceptions upon
         /// errors, but instead return a boolean indicating if the copy was successful or not. If the destination path
         /// is an existing directory, then this method will attempt to infer the file name.

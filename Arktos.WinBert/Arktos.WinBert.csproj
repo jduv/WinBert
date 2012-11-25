@@ -50,8 +50,9 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AppDomainToolkit">
-      <HintPath>..\packages\AppDomainToolkit.1.0.1\lib\AppDomainToolkit.dll</HintPath>
+    <Reference Include="AppDomainToolkit, Version=1.0.1.2, Culture=neutral, PublicKeyToken=bb9d5b2511e0df41, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AppDomainToolkit.1.0.1.3\lib\net40\AppDomainToolkit.dll</HintPath>
     </Reference>
     <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -137,6 +138,7 @@
     <Compile Include="Differencing\TypeDifferenceResult.cs" />
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
+    <Compile Include="Exceptions\TestGenerationException.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />

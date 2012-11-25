@@ -110,6 +110,11 @@
                 throw new ArgumentException("Invalid path.");
             }
 
+            if (string.IsNullOrEmpty(outputFileName))
+            {
+                throw new ArgumentException("Output file name cannot be null or empty!");
+            }
+
             var fullPath = Path.GetFullPath(sourcePath);
             if (Directory.Exists(fullPath))
             {
@@ -137,7 +142,7 @@
                 throw new CompilationException("No source files were found to compile!");
             }
 
-            throw new DirectoryNotFoundException("Directory not found. Path: " + fullPath);
+            throw new DirectoryNotFoundException("Source directory not found. Path: " + fullPath);
         }
 
         #endregion
