@@ -1,11 +1,12 @@
 ﻿namespace Arktos.WinBert.Xml
 {
-    using System.Diagnostics.CodeAnalysis;
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Partial implementation of a generated class.
     /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public partial class Build : IEquatable<Build>
     {
         #region Constructors and Destructors

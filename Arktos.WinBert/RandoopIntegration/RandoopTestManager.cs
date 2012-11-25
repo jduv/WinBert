@@ -1,10 +1,11 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using AppDomainToolkit;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
-    using System;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage
@@ -50,11 +51,11 @@
                     testEnv.Domain,
                     this.config,
                     target,
-                    validTypeNames,
+                    validTypeNames.ToList(),
                     (config, testTarget, types) =>
                     {
                         var tester = new RandoopTestGenerator(config);
-                        return tester.GenerateTests(target, types);
+                        return tester.GenerateTests(testTarget, types);
                     });
             }
         }

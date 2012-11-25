@@ -145,7 +145,6 @@
     <Compile Include="RandoopIntegration\RandoopTestInstrumenter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestRunner.cs" />
     <Compile Include="RandoopIntegration\RandoopTestManager.cs" />
-    <Compile Include="RandoopIntegration\RemotableTestGenerator.cs" />
     <Compile Include="Testing\ITestManager.cs" />
     <Compile Include="Testing\ITestRunner.cs" />
     <Compile Include="Testing\ITestRunResult.cs" />
@@ -162,6 +161,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\EmbeddedConfiguration.cs" />
     <Compile Include="Xml\ForbidExpression.cs" />
+    <Compile Include="Xml\RandoopPluginConfig.cs" />
     <Compile Include="Xml\RandoopPluginConfigSchema.cs">
       <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
     </Compile>

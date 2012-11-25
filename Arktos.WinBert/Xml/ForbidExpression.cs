@@ -1,12 +1,14 @@
 ﻿namespace Arktos.WinBert.Xml
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.RegularExpressions;
     using Common;
 
     /// <summary>
     /// Partial declaration of the ForbidExpression class.
     /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public partial class ForbidExpression
     {
         #region Public Methods

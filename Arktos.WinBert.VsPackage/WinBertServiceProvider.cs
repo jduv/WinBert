@@ -111,7 +111,7 @@
             {
                 try
                 {
-                    return WinBertConfig.Deserialize(File.OpenRead(path));
+                    return WinBertConfig.XmlDeserialize(File.OpenRead(path));
                 }
                 catch (Exception exc)
                 {
@@ -133,7 +133,7 @@
             try
             {
                 var data = Encoding.ASCII.GetBytes(Resources.winbertconfig);
-                return WinBertConfig.Deserialize(new MemoryStream(data));
+                return WinBertConfig.XmlDeserialize(new MemoryStream(data));
             }
             catch (Exception exc)
             {

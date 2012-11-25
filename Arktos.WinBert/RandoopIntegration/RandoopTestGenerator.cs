@@ -118,23 +118,101 @@
             // Create the new directory
             Directory.CreateDirectory(testDirPath);
 
-            ////if (this.GenerateTestsInNewAppDomain(target, validTypeNames))
-            ////{
+            // Execute Randoop
+            RunRandoop(target, validTypeNames, testDirPath, this.config);
+
+            // Compile the generated tests.
             var compiler = new TestCompiler();
             compiler.AddReference(target.Location);
             var tests = compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
             return TestTarget.Create(target, tests);
-            ////}
-            ////else
-            ////{
-            ////    // BMK Throw an exception here instead.
-            ////    return null;
-            ////}
         }
 
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Executes randoop.
+        /// </summary>
+        /// <param name="target">
+        /// The assembly under test.
+        /// </param>
+        /// <param name="validTypeNames">
+        /// A list of valid type names to test.
+        /// </param>
+        /// <param name="workingDir">
+        /// The working directory.
+        /// </param>
+        /// <param name="config">
+        /// The randoop plugin configuration.
+        /// </param>
+        private static void RunRandoop(IAssemblyTarget target, IEnumerable<string> validTypeNames, string workingDir, RandoopPluginConfig config)
+        {
+            // first grab the config file
+            RandoopConfiguration randoopConfig = GetRandoopConfig(workingDir);
+
+            // Load up the target along with it's references.
+            var loader = new AssemblyLoader();
+            var targetAssembly = loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
+
+            // Filter types.
+            var typesToExplore = new Collection<Type>(targetAssembly.GetTypes()
+                .Where(x => validTypeNames.Any(y => y.Equals(x.Name))).ToList());
+
+            // no need to continue
+            if (typesToExplore.Count <= 0)
+            {
+                throw new TestGenerationException("No type to explore! No tests will be generated.");
+            }
+
+            // Handle Crypto
+            SystemRandom rand = new SystemRandom();
+            rand.Init(randoopConfig.randomseed);
+
+            // Set up the plan manager
+            PlanManager planManager = new PlanManager(randoopConfig);
+            planManager.builderPlans.AddEnumConstantsToPlanDB(new Collection<Type>(typesToExplore.ToList()));
+            SeedPlanManager(planManager, config);
+
+            // Stats manager
+            StatsManager statsManager = new StatsManager(randoopConfig);
+
+            // Grab the reflection filter
+            IReflectionFilter filter = GenerateRandoopReflectionFilters(randoopConfig, config);
+
+            // Default action set
+            ActionSet actions = null;
+            try
+            {
+                actions = new ActionSet(typesToExplore, filter);
+            }
+            catch (EmpytActionSetException exc)
+            {
+                throw new TestGenerationException(exc);
+            }
+
+            // The real deal. 
+            RandomExplorer explorer = new RandomExplorer(
+                typesToExplore,
+                filter,
+                true,
+                randoopConfig.randomseed,
+                randoopConfig.arraymaxsize,
+                statsManager,
+                actions);
+
+            // Time it out, and we're done.
+            ITimer timer = new Timer(randoopConfig.timelimit);
+            try
+            {
+                explorer.Explore(timer, planManager, randoopConfig.methodweighing, randoopConfig.forbidnull, true, randoopConfig.fairOpt);
+            }
+            catch (Exception exc)
+            {
+                throw new TestGenerationException(exc);
+            }
+        }
 
         /// <summary>
         /// Gets a name for a new test assembly.
@@ -253,7 +331,6 @@
         {
             Random rand = new Random();
             RandoopConfiguration config = new RandoopConfiguration();
-            //config.assemblies.Add(new FileName(assemblyPath));
             config.outputdir = workingDir;
             config.statsFile = new FileName(Path.Combine(workingDir, StatsFileName));
             config.executionLog = Path.Combine(workingDir, ExecutionLogName);
@@ -290,87 +367,6 @@
             IReflectionFilter filter = new ComposableFilter(visibilityFilter, permissiveFilter);
 
             return filter;
-        }
-
-        /// <summary>
-        /// Generates a suite of tests using Randoop API's.
-        /// </summary>
-        /// <param name="target">
-        /// The assembly to generate tests for.
-        /// </param>
-        /// <returns>
-        /// True if generation was successful, false otherwise.
-        /// </returns>
-        private static bool RunRandoop(IAssemblyTarget target, IEnumerable<string> validTypeNames, RandoopPluginConfig config)
-        {
-            // first grab the config file
-            RandoopConfiguration randoopConfig = GetRandoopConfig(Path.GetDirectoryName(target.Location));
-
-            // Now we need a list of the assemblies to test
-            Collection<Assembly> assemblies = Misc.LoadAssemblies(randoopConfig.assemblies);
-
-            // Retrieve the target assembly from the loaded ones.
-            var targetAssembly = assemblies.FirstOrDefault(x => x.Location.Equals(target.Location));
-
-            // Filter types.
-            var typesToExplore = new Collection<Type>(targetAssembly.GetTypes()
-                .Where(x => validTypeNames.Any(y => y.Equals(x.Name))).ToList());
-
-            // no need to continue
-            if (typesToExplore.Count <= 0)
-            {
-                return false;
-            }
-
-            // Handle Crypto
-            SystemRandom rand = new SystemRandom();
-            rand.Init(randoopConfig.randomseed);
-
-            // Set up the plan manager
-            PlanManager planManager = new PlanManager(randoopConfig);
-            planManager.builderPlans.AddEnumConstantsToPlanDB(new Collection<Type>(typesToExplore.ToList()));
-            SeedPlanManager(planManager, config);
-
-            // Stats manager
-            StatsManager statsManager = new StatsManager(randoopConfig);
-
-            // Grab the reflection filter
-            IReflectionFilter filter = GenerateRandoopReflectionFilters(randoopConfig, config);
-
-            // Default action set
-            ActionSet actions = null;
-            try
-            {
-                actions = new ActionSet(typesToExplore, filter);
-            }
-            catch (EmpytActionSetException)
-            {
-                return false;
-            }
-
-            // The real deal. 
-            RandomExplorer explorer = new RandomExplorer(
-                typesToExplore,
-                filter,
-                true,
-                randoopConfig.randomseed,
-                randoopConfig.arraymaxsize,
-                statsManager,
-                actions);
-
-            // Time it out, and we're done.
-            ITimer timer = new Timer(randoopConfig.timelimit);
-            try
-            {
-                explorer.Explore(timer, planManager, randoopConfig.methodweighing, randoopConfig.forbidnull, true, randoopConfig.fairOpt);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            // we made it!
-            return true;
         }
 
         #endregion
