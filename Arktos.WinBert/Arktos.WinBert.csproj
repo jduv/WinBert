@@ -165,6 +165,7 @@
     <Compile Include="Xml\RandoopPluginConfigSchema.cs">
       <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Xml\RandoopPluginConfigSeedValues.cs" />
     <Compile Include="Xml\WinBertConfig.cs" />
     <Compile Include="Xml\WinBertConfigSchema.cs">
       <DependentUpon>WinBertConfigSchema.xsd</DependentUpon>

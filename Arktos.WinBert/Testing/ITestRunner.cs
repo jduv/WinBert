@@ -18,7 +18,7 @@
         /// <returns>
         /// A test run result.
         /// </returns>
-        TestRunResult RunTests(IAssemblyTarget target);
+        ITestRunResult RunTests(ITestTarget target);
         
         #endregion
     }

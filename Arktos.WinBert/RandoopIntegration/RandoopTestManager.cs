@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using AppDomainToolkit;
     using Arktos.WinBert.Testing;
@@ -45,8 +46,14 @@
         /// </remarks>
         public override ITestTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
+
             using (var testEnv = AppDomainContext.Create())
             {
+                testEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(target.Location));
                 return RemoteFunc.Invoke(
                     testEnv.Domain,
                     this.config,
@@ -63,7 +70,25 @@
         /// <inheritdoc />
         public override ITestRunResult RunTests(ITestTarget toRun)
         {
-            throw new NotImplementedException();
+            if (toRun == null)
+            {
+                throw new ArgumentNullException("toRun");
+            }
+
+            using (var runEnv = AppDomainContext.Create())
+            {
+                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(toRun.TargetAssembly.Location));
+                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(toRun.TestAssembly.Location));
+
+                return RemoteFunc.Invoke(
+                    runEnv.Domain,
+                    toRun,
+                    (tests) =>
+                    {
+                        var runner = new RandoopTestRunner();
+                        return runner.RunTests(tests);
+                    });
+            }
         }
 
         #endregion
