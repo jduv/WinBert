@@ -154,7 +154,8 @@
 
             // Load up the target along with it's references.
             var loader = new AssemblyLoader();
-            var targetAssembly = loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
+            var assemblies = loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
+            var targetAssembly = assemblies.First(x => x.FullName.Equals(target.FullName));
 
             // Filter types.
             var typesToExplore = new Collection<Type>(targetAssembly.GetTypes()
