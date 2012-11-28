@@ -1,7 +1,6 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
     using System;
-    using AppDomainToolkit;
     using Arktos.WinBert.Instrumentation;
 
     /// <summary>
@@ -12,7 +11,7 @@
         #region Public Methods
 
         /// <inheritdoc/>
-        public IAssemblyTarget InstrumentTests(IAssemblyTarget toInstrument)
+        public Testing.ITestTarget InstrumentTests(Testing.ITestTarget toInstrument)
         {
             throw new NotImplementedException();
         }

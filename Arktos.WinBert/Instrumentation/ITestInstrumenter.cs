@@ -1,6 +1,6 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
-    using AppDomainToolkit;
+    using Arktos.WinBert.Testing;
 
     /// <summary>
     /// Defines behavior for a class that instruments tests.
@@ -13,12 +13,12 @@
         /// Instruments the target assembly and returns a handle to the instrumented tests.
         /// </summary>
         /// <param name="toInstrument">
-        /// The assembly to instrument.
+        /// The assembly pair to instrument.
         /// </param>
         /// <returns>
-        /// The instrumented target.
+        /// The instrumented targets.
         /// </returns>
-        IAssemblyTarget InstrumentTests(IAssemblyTarget toInstrument);
+        ITestTarget InstrumentTests(ITestTarget toInstrument);
 
         #endregion
     }
