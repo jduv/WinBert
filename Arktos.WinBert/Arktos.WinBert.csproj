@@ -139,6 +139,7 @@
     <Compile Include="Exceptions\CompilationException.cs" />
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Exceptions\TestGenerationException.cs" />
+    <Compile Include="Instrumentation\DynamicCallGraphInstrumenter.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />
@@ -155,23 +156,21 @@
     <Compile Include="Testing\TestManager.cs" />
     <Compile Include="Testing\TestRunResult.cs" />
     <Compile Include="Testing\TestTarget.cs" />
-    <Compile Include="Xml\Build.cs" />
     <Compile Include="Util\BuildVersionManager.cs" />
     <Compile Include="Util\FileCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Xml\EmbeddedConfiguration.cs" />
-    <Compile Include="Xml\ForbidExpression.cs" />
+    <Compile Include="Xml\WinBertAnalysisLog.cs" />
     <Compile Include="Xml\RandoopPluginConfig.cs" />
     <Compile Include="Xml\RandoopPluginConfigSchema.cs">
       <DependentUpon>RandoopPluginConfigSchema.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\RandoopPluginConfigSeedValues.cs" />
     <Compile Include="Xml\WinBertConfig.cs" />
     <Compile Include="Xml\WinBertConfigSchema.cs">
       <DependentUpon>WinBertConfigSchema.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\IgnoreTarget.cs" />
-    <Compile Include="Xml\WinBertProject.cs" />
+    <Compile Include="Xml\WinBertAnalysisLogSchema.cs">
+      <DependentUpon>WinBertAnalysisLogSchema.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -226,6 +225,9 @@
     <None Include="Xml\RandoopPluginConfigSchema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Xml\WinBertAnalysisLogSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Xml\WinBertConfigSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -240,10 +242,14 @@
       <Name>RandoopImpl</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="XMLFile1.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml RandoopPluginConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
+    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertAnalysisLogSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
   </Target>
   <Target Name="AfterBuild">
     <PropertyGroup>
