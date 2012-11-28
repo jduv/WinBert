@@ -166,22 +166,8 @@
                     this.BuildArchive.Remove(lastElement.Key);
                 }
 
-                // Attempt to copy the PDB file over as well
-                string pdbPathInArchive = null;
-                string pdbPath = this.GetPdbPath(pathToSuccessfulBuild);
-                if (!string.IsNullOrEmpty(pdbPath))
-                {
-                    // This logic is a little backwards
-                    pdbPathInArchive = this.GetArchivePath(pdbPath);
-                    if (File.Exists(pdbPath))
-                    {
-                        pdbPathInArchive = copier.TryCopyFile(pdbPath, pdbPathInArchive) ? pdbPathInArchive : null;
-                    }
-                }
-
                 // Create the build object
                 var build = this.LoadBuild(this.SequenceNumber, pathInArchive);
-                build.PdbPath = pdbPathInArchive;
 
                 return build;
             }
