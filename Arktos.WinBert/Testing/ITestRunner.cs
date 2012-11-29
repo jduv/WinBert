@@ -13,12 +13,15 @@
         /// Executes the tests in the target assembly.
         /// </summary>
         /// <param name="target">
-        /// The assembly target containing the tests to execute.
+        /// The assembly target containing the protram to execute the tests against.
+        /// </param>
+        /// <param name="tests">
+        /// The assembly containing the tests to execute.
         /// </param>
         /// <returns>
         /// A test run result.
         /// </returns>
-        ITestRunResult RunTests(ITestTarget target);
+        ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests);
         
         #endregion
     }

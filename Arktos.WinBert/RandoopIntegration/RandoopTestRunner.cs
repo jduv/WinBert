@@ -19,13 +19,15 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public ITestRunResult RunTests(ITestTarget target)
+        public ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests)
         {
-            var loader = new AssemblyLoader();
-            loader.LoadAssemblyWithReferences(LoadMethod.LoadFrom, target.TargetAssembly.Location);
-            loader.LoadAssemblyWithReferences(LoadMethod.LoadFrom, target.TestAssembly.Location);
+            // BMK: This code should ensure that the tests has the correct referneces to the target.
 
-            var assembly = loader.LoadAssembly(LoadMethod.LoadFrom, target.TestAssembly.Location);
+            var loader = new AssemblyLoader();
+            loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
+            loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, tests.Location);
+
+            var assembly = loader.LoadAssembly(LoadMethod.LoadFile, tests.Location);
             foreach (var type in assembly.GetTypes())
             {
                 var testObj = Activator.CreateInstance(type);

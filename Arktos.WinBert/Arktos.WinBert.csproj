@@ -141,6 +141,7 @@
     <Compile Include="Exceptions\TestGenerationException.cs" />
     <Compile Include="Instrumentation\DynamicCallGraphInstrumenter.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
+    <Compile Include="Instrumentation\ObjectLogger.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />
     <Compile Include="RandoopIntegration\RandoopTestInstrumenter.cs" />
@@ -241,9 +242,6 @@
       <Project>{596DF464-5F9A-4892-9CFD-6431806CCA73}</Project>
       <Name>RandoopImpl</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="XMLFile1.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

@@ -20,6 +20,6 @@
         /// <returns>
         /// A reference to the compiled assembly containing the tests.
         /// </returns>
-        ITestTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames);
+        IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames);
     }
 }

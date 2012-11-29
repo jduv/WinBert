@@ -89,7 +89,7 @@
         }
 
         /// <inheritdoc />
-        public ITestTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        public IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             if (target == null)
             {
@@ -124,8 +124,7 @@
             // Compile the generated tests.
             var compiler = new TestCompiler();
             compiler.AddReference(target.Location);
-            var tests = compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
-            return TestTarget.Create(target, tests);
+            return compiler.CompileTests(testDirPath, GetTestAssemblyName(target.Location));
         }
 
         #endregion

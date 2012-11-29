@@ -7,6 +7,7 @@
     using AppDomainToolkit;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Xml;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The class that ties everything together. An implementation of this should be able to manage
@@ -44,7 +45,7 @@
         /// This method will generate tests using the Randoop fuzzing framework. Generating these tests must happen in a separate application
         /// domain to prevent assembly pollution in the current application domain.
         /// </remarks>
-        public override ITestTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
+        public override IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames)
         {
             if (target == null)
             {
@@ -68,25 +69,32 @@
         }
 
         /// <inheritdoc />
-        public override ITestRunResult RunTests(ITestTarget toRun)
+        public override ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests)
         {
-            if (toRun == null)
+            if (target == null)
             {
-                throw new ArgumentNullException("toRun");
+                throw new ArgumentNullException("target");
             }
 
+            if (tests == null)
+            {
+                throw new ArgumentNullException("tests");
+            }
+
+            // First, execute the tests against the new assembly.
             using (var runEnv = AppDomainContext.Create())
             {
-                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(toRun.TargetAssembly.Location));
-                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(toRun.TestAssembly.Location));
+                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(target.Location));
+                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(tests.Location));
 
                 return RemoteFunc.Invoke(
                     runEnv.Domain,
-                    toRun,
-                    (tests) =>
+                    target,
+                    tests,
+                    (targetArg, testsArg) =>
                     {
                         var runner = new RandoopTestRunner();
-                        return runner.RunTests(tests);
+                        return runner.RunTests(targetArg, testsArg);
                     });
             }
         }

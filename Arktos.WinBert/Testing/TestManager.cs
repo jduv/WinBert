@@ -86,7 +86,7 @@
         /// <returns>
         /// An ITestTarget implementation pointing to the assembly containing the generated tests along with the original target assembly.
         /// </returns>
-        public abstract ITestTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames);
+        public abstract IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames);
 
         /// <summary>
         /// Executes tests.
@@ -95,13 +95,16 @@
         /// No default implementation can exist for this method as this class will have no idea as to what the generated
         /// tests will look like.
         /// </remarks>
-        /// <param name="toRun">
-        /// The test target containing the tests to execute and the corresponding assembly under test.
+        /// <param name="target">
+        /// The target assembly to execute the tests against.
+        /// </param>
+        /// <param name="tests">
+        /// The assembly target containing the tests to execute and the corresponding assembly under test.
         /// </param>
         /// <returns>
         /// A test run result implementation.
         /// </returns>
-        public abstract ITestRunResult RunTests(ITestTarget toRun);
+        public abstract ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests);
 
         /// <summary>
         /// Executes the entire WinBert stack.
@@ -121,18 +124,19 @@
             // Invoke two versions of the stack simultaneously
             ITestRunResult oldAssemblyResults = null, newAssemblyResults = null;
             var typeNames = diff.TypeDifferences.Select(x => x.Name);
+
+            var tests = this.GenerateTests(diff.NewAssemblyTarget, typeNames);
+            var instrumented = this.InstrumentTests(TestTarget.Create(diff.OldAssemblyTarget, diff.NewAssemblyTarget, tests));
+
+            // Execute tests in parallel.
             Parallel.Invoke(
                 () =>
                 {
-                    var targetWithTests = this.GenerateTests(diff.OldAssemblyTarget, typeNames);
-                    var instrumented = this.InstrumentTests(targetWithTests);
-                    oldAssemblyResults = this.RunTests(instrumented);
+                    newAssemblyResults = this.RunTests(instrumented.TargetNewAssembly, instrumented.TestAssembly);
                 },
                 () =>
                 {
-                    var targetWithTests = this.GenerateTests(diff.NewAssemblyTarget, typeNames);
-                    var instrumented = this.InstrumentTests(targetWithTests);
-                    newAssemblyResults = this.RunTests(instrumented);
+                    oldAssemblyResults = this.RunTests(instrumented.TargetOldAssembly, instrumented.TestAssembly);
                 });
 
             // Perform analysis and we're done.

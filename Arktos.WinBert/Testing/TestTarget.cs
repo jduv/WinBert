@@ -24,7 +24,10 @@
         #region Properties
 
         /// <inheritdoc/>
-        public IAssemblyTarget TargetAssembly { get; private set; }
+        public IAssemblyTarget TargetNewAssembly { get; private set; }
+
+        /// <inheritdoc/>
+        public IAssemblyTarget TargetOldAssembly { get; private set; }
 
         /// <inheritdoc/>
         public IAssemblyTarget TestAssembly { get; private set; }
@@ -36,8 +39,11 @@
         /// <summary>
         /// Creates a new TestTarget.
         /// </summary>
-        /// <param name="testTarget">
-        /// The assembly to be tested.
+        /// <param name="oldTestTarget">
+        /// The old assembly target to be tested.
+        /// </param>
+        /// <param name="newTestTarget">
+        /// The new assembly target to be tested.
         /// </param>
         /// <param name="testAssembly">
         /// The assembly containing tests for the target assembly.
@@ -45,9 +51,14 @@
         /// <returns>
         /// A new TestTarget.
         /// </returns>
-        public static ITestTarget Create(IAssemblyTarget testTarget, IAssemblyTarget testAssembly)
+        public static ITestTarget Create(IAssemblyTarget oldTestTarget, IAssemblyTarget newTestTarget, IAssemblyTarget testAssembly)
         {
-            if (testTarget == null)
+            if (newTestTarget == null)
+            {
+                throw new ArgumentNullException("newTestTarget");
+            }
+
+            if (oldTestTarget == null)
             {
                 throw new ArgumentNullException("testTarget");
             }
@@ -59,7 +70,8 @@
 
             return new TestTarget()
             {
-                TargetAssembly = testTarget,
+                TargetNewAssembly = newTestTarget,
+                TargetOldAssembly = oldTestTarget,
                 TestAssembly = testAssembly
             };
         }
@@ -67,8 +79,11 @@
         /// <summary>
         /// Creates a new TestTarget.
         /// </summary>
-        /// <param name="testTarget">
-        /// The assembly to be tested.
+        /// <param name="oldTestTarget">
+        /// The old assembly to be tested.
+        /// </param>
+        /// <param name="newTestTarget">
+        /// The new assembly to be tested.
         /// </param>
         /// <param name="testAssembly">
         /// The assembly containing tests for the target assembly.
@@ -76,9 +91,14 @@
         /// <returns>
         /// A new TestTarget.
         /// </returns>
-        public static ITestTarget Create(Assembly testTarget, Assembly testAssembly)
+        public static ITestTarget Create(Assembly oldTestTarget, Assembly newTestTarget, Assembly testAssembly)
         {
-            if (testTarget == null)
+            if (newTestTarget == null)
+            {
+                throw new ArgumentNullException("newTestTarget");
+            }
+
+            if (oldTestTarget == null)
             {
                 throw new ArgumentNullException("testTarget");
             }
@@ -90,7 +110,8 @@
 
             return new TestTarget()
             {
-                TargetAssembly = AssemblyTarget.FromAssembly(testTarget),
+                TargetNewAssembly = AssemblyTarget.FromAssembly(newTestTarget),
+                TargetOldAssembly = AssemblyTarget.FromAssembly(oldTestTarget),
                 TestAssembly = AssemblyTarget.FromAssembly(testAssembly)
             };
         }

@@ -3,19 +3,24 @@
     using AppDomainToolkit;
 
     /// <summary>
-    /// Defines a simple implementation that links an assembly to it's tests.
+    /// Defines a simple implementation that links a set of assemblies to the generated tests.
     /// </summary>
     public interface ITestTarget
     {
         #region Properties
 
         /// <summary>
-        /// Gets the assembly to test.
+        /// Gets the new assembly to test.
         /// </summary>
-        IAssemblyTarget TargetAssembly { get; }
+        IAssemblyTarget TargetNewAssembly { get; }
 
         /// <summary>
-        /// Gets the assembly containing tests for the target.
+        /// Gets the old assembly to test.
+        /// </summary>
+        IAssemblyTarget TargetOldAssembly { get; }
+
+        /// <summary>
+        /// Gets the assembly containing tests for both targets.
         /// </summary>
         IAssemblyTarget TestAssembly { get; }
 
