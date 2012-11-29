@@ -21,12 +21,6 @@
     /// </remarks>
     public abstract class TestManager : ITestManager
     {
-        #region Fields & Constants
-
-        private readonly WinBertConfig config;
-
-        #endregion
-
         #region Constructors & Destructors
 
         /// <summary>
@@ -42,8 +36,17 @@
                 throw new ArgumentNullException("config");
             }
 
-            this.config = config;
+            this.Config = config;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public WinBertConfig Config { get; private set; }
 
         #endregion
 
@@ -69,7 +72,7 @@
 
         #endregion
 
-        #region Protected Methods
+       #region Protected Methods
 
         /// <summary>
         /// This method should generate tests for the target assembly and return a target to the assembly containing said tests.
@@ -121,6 +124,11 @@
         /// </returns>
         protected virtual AnalysisResult ExecuteStack(IAssemblyDifferenceResult diff)
         {
+            if (diff == null)
+            {
+                throw new ArgumentNullException("diff");
+            }
+
             // Invoke two versions of the stack simultaneously
             ITestRunResult oldAssemblyResults = null, newAssemblyResults = null;
             var typeNames = diff.TypeDifferences.Select(x => x.Name);
@@ -159,7 +167,7 @@
         /// <returns>
         /// A new test target replacing the original assemblies with instrumented ones.
         /// </returns>
-        public ITestTarget InstrumentTests(ITestTarget toInstrument)
+        public virtual ITestTarget InstrumentTests(ITestTarget toInstrument)
         {
             if (toInstrument == null)
             {
@@ -205,13 +213,23 @@
         /// </returns>
         protected IAssemblyDifferenceResult Diff(Build previous, Build current)
         {
+            if (previous == null)
+            {
+                throw new ArgumentNullException("previous");
+            }
+
+            if (current == null)
+            {
+                throw new ArgumentNullException("current");
+            }
+
             // Boot up another application domain.
             using (var diffEnv = AppDomainContext.Create())
             {
                 // Execute the diff in another application domain.
                 return RemoteFunc.Invoke(
                     diffEnv.Domain,
-                    this.config.IgnoreList,
+                    this.Config.IgnoreList,
                     previous.AssemblyPath,
                     current.AssemblyPath,
                     (ignoreTargets, previousTargetPath, currentTargetPath) =>
@@ -227,6 +245,6 @@
             }
         }
 
-        #endregion
+        #endregion 
     }
 }

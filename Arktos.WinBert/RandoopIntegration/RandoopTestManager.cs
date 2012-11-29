@@ -16,12 +16,6 @@
     /// </summary>
     public class RandoopTestManager : TestManager
     {
-        #region Fields & Constants
-
-        private readonly WinBertConfig config;
-
-        #endregion
-
         #region Constructors & Destructors
 
         /// <summary>
@@ -33,7 +27,6 @@
         public RandoopTestManager(WinBertConfig config)
             : base(config)
         {
-            this.config = config;
         }
 
         #endregion
@@ -57,7 +50,7 @@
                 testEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(target.Location));
                 return RemoteFunc.Invoke(
                     testEnv.Domain,
-                    this.config,
+                    this.Config,
                     target,
                     validTypeNames.ToList(),
                     (config, testTarget, types) =>
@@ -66,6 +59,17 @@
                         return tester.GenerateTests(testTarget, types);
                     });
             }
+        }
+
+        public override ITestTarget InstrumentTests(ITestTarget toInstrument)
+        {
+            if (toInstrument == null)
+            {
+                throw new ArgumentNullException("toInstrument");
+            }
+
+            var instrumenter = new RandoopTestInstrumenter();
+            return instrumenter.InstrumentTests(toInstrument);
         }
 
         /// <inheritdoc />

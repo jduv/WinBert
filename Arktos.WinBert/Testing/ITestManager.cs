@@ -9,6 +9,14 @@
     /// </summary>
     public interface ITestManager
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets the configuration object.
+        /// </summary>
+        WinBertConfig Config { get; }
+
+        #endregion
         #region Methods
 
         /// <summary>
