@@ -85,4 +85,5 @@ CVS/
 
 WinBertConfigSchema.cs
 RandoopPluginConfigSchema.cs
+WinBertAnalysisLogSchema.cs
 
