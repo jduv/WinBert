@@ -3,7 +3,7 @@
     targetNamespace="http://arktos.org/WinBertAnalysisLogSchema.xsd"
     elementFormDefault="qualified"
     xmlns="http://arktos.org/WinBertAnalysisLogSchema.xsd"
-    xmlns:berta="http://arktos.org/WinBertAnalysisLogSchema.xsd"
+    xmlns:ba="http://arktos.org/WinBertAnalysisLogSchema.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
     <xs:complexType name="MethodCall">
@@ -11,7 +11,7 @@
             <xs:element name="Target">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="Object" type="berta:Object"/>
+                        <xs:element name="Object" type="ba:Object"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -19,9 +19,8 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:choice>
-                            <xs:element name="Value" type="berta:Value" />
-                            <xs:element name="Object" type="berta:Object" />
-                            <xs:element name="Null" type="berta:Null"/>
+                            <xs:element name="Value" type="ba:Primitive" />
+                            <xs:element name="Object" type="ba:Object" />
                         </xs:choice>
                     </xs:sequence>
                 </xs:complexType>
@@ -32,19 +31,24 @@
     </xs:complexType>
 
     <xs:complexType name="Object">
-        <xs:sequence>
-            <xs:element name="Field" type="berta:Field" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Property" type="berta:Property" minOccurs="0" maxOccurs="unbounded" />
-        </xs:sequence>
         <xs:attribute name="Type" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="ReferenceType">
+        <xs:complexContent>
+            <xs:extension base="ba:Object">
+                <xs:sequence>
+                    <xs:element name="Field" type="ba:Field" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Property" type="ba:Property" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="Field">
         <xs:choice>
-            <xs:element name="Null" type="berta:Null" />
-            <xs:element name="NotNull" type="berta:NotNull" />
-            <xs:element name="Value" type="berta:Value" />
-            <xs:element name="Object" type="berta:Object" />
+            <xs:element name="Value" type="ba:Primitive" />
+            <xs:element name="Object" type="ba:Object" />
         </xs:choice>
         <xs:attribute name="Name" type="xs:string" use="required"/>
         <xs:attribute name="Type" type="xs:string" use="required"/>
@@ -52,17 +56,15 @@
 
     <xs:complexType name="Property">
         <xs:choice>
-            <xs:element name="Null" type="berta:Null" />
-            <xs:element name="NotNull" type="berta:NotNull" />
-            <xs:element name="Value" type="berta:Value" />
-            <xs:element name="Object" type="berta:Object" />
+            <xs:element name="Value" type="ba:Primitive" />
+            <xs:element name="Object" type="ba:Object" />
         </xs:choice>
         <xs:attribute name="Name" type="xs:string" use="required" />
         <xs:attribute name="Type" type="xs:string" use="required"/>
         <xs:attribute name="BackingFieldName" type="xs:string" use="required"/>
     </xs:complexType>
 
-    <xs:complexType name="Value">
+    <xs:complexType name="Primitive">
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="Type" type="xs:string"></xs:attribute>
@@ -70,15 +72,26 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="Null" />
-    <xs:complexType name="NotNull" />
+    <xs:complexType name="Null">
+        <xs:complexContent>
+            <xs:extension base="ba:Object">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NotNull">
+        <xs:complexContent>
+            <xs:extension base="ba:Object">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <xs:complexType name="WinBertAnalysisLog">
         <xs:sequence>
-            <xs:element name="MethodCall" type="berta:MethodCall" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="MethodCall" type="ba:MethodCall" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="MaxDepth" type="xs:int" use="required" />
     </xs:complexType>
 
-    <xs:element name="WinBertAnalysisLog" type="berta:WinBertAnalysisLog"></xs:element>
+    <xs:element name="WinBertAnalysisLog" type="ba:WinBertAnalysisLog"></xs:element>
 </xs:schema>

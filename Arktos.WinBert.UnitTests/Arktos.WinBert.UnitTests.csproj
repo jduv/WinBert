@@ -153,6 +153,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="InstrumentationTargetUnitTests.cs" />
+    <Compile Include="ObjectDumperUnitTest.cs" />
+    <Compile Include="SerializerUnitTests.cs" />
+    <Compile Include="StringsUnitTests.cs" />
     <Compile Include="TestCompilerUnitTests.cs" />
     <Compile Include="BuildUnitTests.cs" />
     <Compile Include="FileCopierUnitTests.cs" />

@@ -1,10 +1,12 @@
 ﻿namespace Arktos.WinBert.Exceptions
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     
     /// <summary>
     /// Represents an exception thrown when something occurs during the instrumetation pass.
     /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public class InstrumentationException : Exception
     {
         #region Constructors & Destructors

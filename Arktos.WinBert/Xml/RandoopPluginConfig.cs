@@ -25,6 +25,31 @@
     /// Partial implementation of a generated class.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
+    public partial class RandoopPluginConfigSeedValuesDoubleSeedValues
+    {
+    }
+
+    /// <summary>
+    /// Partial implementation of a generated class.
+    /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
+    public partial class RandoopPluginConfigSeedValuesFloatSeedValues
+    {
+    }
+
+    /// <summary>
+    /// Partial implementation of a generated class.
+    /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
+    public partial class RandoopPluginConfigSeedValuesStringSeedValues
+    {
+    }
+
+
+    /// <summary>
+    /// Partial implementation of a generated class.
+    /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public sealed partial class ForbidExpression
     {
         #region Public Methods

@@ -254,67 +254,67 @@
         private static void SeedPlanManager(PlanManager planManager, RandoopPluginConfig config)
         {
             // signed byte
-            foreach (sbyte sb in config.SeedValues.ByteSeedValues.Values)
+            foreach (sbyte sb in config.SeedValues.ByteSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(sbyte), sb));
             }
 
             // byte
-            foreach (byte b in config.SeedValues.ByteSeedValues.Values)
+            foreach (byte b in config.SeedValues.ByteSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(byte), b));
             }
 
             // short
-            foreach (short s in config.SeedValues.ShortSeedValues.Values)
+            foreach (short s in config.SeedValues.ShortSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(short), s));
             }
 
             // unsigned short
-            foreach (ushort us in config.SeedValues.ShortSeedValues.Values)
+            foreach (ushort us in config.SeedValues.ShortSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(ushort), us));
             }
 
             // int
-            foreach (int i in config.SeedValues.IntSeedValues.Values)
+            foreach (int i in config.SeedValues.IntSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(int), i));
             }
 
             // unsigned int
-            foreach (uint ui in config.SeedValues.UIntSeedValues.Values)
+            foreach (uint ui in config.SeedValues.UIntSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(uint), ui));
             }
 
             // float
-            foreach (float f in config.SeedValues.FloatSeedValues.Values)
+            foreach (float f in config.SeedValues.FloatSeedValues.Value)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(float), f));
             }
 
-            // double
-            foreach (double d in config.SeedValues.DoubleSeedValues.Values)
-            {
-                planManager.builderPlans.AddPlan(Plan.Constant(typeof(double), d));
-            }
-
             // decimal
-            foreach (decimal dec in config.SeedValues.DecimalSeedValues.Values)
+            foreach (decimal dec in config.SeedValues.DecimalSeedValues)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(decimal), dec));
             }
 
+            // double
+            foreach (double d in config.SeedValues.DoubleSeedValues.Value)
+            {
+                planManager.builderPlans.AddPlan(Plan.Constant(typeof(double), d));
+            }
+
             // string
-            foreach (string str in config.SeedValues.StringSeedValues.Values)
+            foreach (string str in config.SeedValues.StringSeedValues.Value)
             {
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(string), str));
             }
 
             // char
-            foreach (string charStr in config.SeedValues.CharSeedValues.Values)
+            foreach (string charStr in config.SeedValues.CharSeedValues)
             {
                 char c = charStr[0];
                 planManager.builderPlans.AddPlan(Plan.Constant(typeof(char), c));

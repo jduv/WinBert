@@ -39,5 +39,14 @@
         }
 
         #endregion
+
+        #region Private Methods
+
+        private void EnsureTestReference(IAssemblyTarget target, IAssemblyTarget tests)
+        {
+
+        }
+
+        #endregion
     }
 }

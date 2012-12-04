@@ -58,12 +58,10 @@
                         <xs:element name="ByteSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:byte" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:byte" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -72,12 +70,10 @@
                         <xs:element name="UByteSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:unsignedByte" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:unsignedByte" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -86,12 +82,10 @@
                         <xs:element name="ShortSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:short" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:short" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -100,12 +94,10 @@
                         <xs:element name="UShortSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:unsignedShort" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:unsignedShort" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -114,12 +106,10 @@
                         <xs:element name="IntSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:int" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -128,12 +118,10 @@
                         <xs:element name="UIntSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:unsignedInt" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:unsignedInt" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -142,12 +130,10 @@
                         <xs:element name="LongSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:long" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:long" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -156,12 +142,10 @@
                         <xs:element name="ULongSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:unsignedLong" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:unsignedLong" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -170,12 +154,10 @@
                         <xs:element name="DoubleSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:double" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:double" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                                 <xs:attribute name="UsePositiveInfinity" type="xs:boolean" default="false" use="optional" />
@@ -186,12 +168,10 @@
                         <xs:element name="FloatSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:float" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:float" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                                 <xs:attribute name="UsePositiveInfinity" type="xs:boolean" default="false" use="optional" />
@@ -202,27 +182,22 @@
                         <xs:element name="DecimalSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:decimal" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:decimal" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
-                                <xs:attribute name="UseMinusOne" type="xs:boolean" default="false" use="optional" />
                             </xs:complexType>
                         </xs:element>
 
                         <xs:element name="BoolSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:boolean" minOccurs="1" maxOccurs="2"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:boolean" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>
@@ -231,12 +206,10 @@
                         <xs:element name="StringSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string" />
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                                 <xs:attribute name="UseEmptyString" type="xs:boolean" default="true" use="optional" />
@@ -247,12 +220,12 @@
                         <xs:element name="CharSeedValues">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="Values">
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name="Value" type="rndp:Char" minOccurs="0" maxOccurs="unbounded"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
+                                    <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:pattern value=".{1}"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
                                     </xs:element>
                                 </xs:sequence>
                             </xs:complexType>

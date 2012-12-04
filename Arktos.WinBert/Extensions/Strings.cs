@@ -23,20 +23,6 @@
         }
 
         /// <summary>
-        /// Returns the string "null" if the target string is null.
-        /// </summary>
-        /// <param name="value">
-        /// The value to check.
-        /// </param>
-        /// <returns>
-        /// The string "null" if the value is null, else the value.
-        /// </returns>
-        public static string PrettyPrintNull(string value)
-        {
-            return (value == null) ? "null" : value;
-        }
-
-        /// <summary>
         /// Returns the string "null" if the target string is null or empty.
         /// </summary>
         /// <param name="value">

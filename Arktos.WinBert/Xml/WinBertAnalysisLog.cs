@@ -30,7 +30,7 @@
     /// Partial implementation of a generated class.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
-    public sealed partial class Object
+    public partial class Object
     {
     }
 
