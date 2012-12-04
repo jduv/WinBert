@@ -7,34 +7,99 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
     <xs:complexType name="MethodCall">
+        <xs:annotation>
+            <xs:documentation>
+                Defines an element that is used to represent a method call site. This call site can be static, isntance or constructor.
+                If the method call type is instance, then the &gt;PostCallInstance&lt; element should contain a dump of the object the method
+                was called on <i>post</i> call.
+            </xs:documentation>
+        </xs:annotation>
         <xs:sequence>
-            <xs:element name="Target">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="Object" type="ba:Object"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="PostCallInstance" type="ba:Object" maxOccurs="1" />
             <xs:element name="ReturnValue" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:choice>
-                            <xs:element name="Value" type="ba:Primitive" />
                             <xs:element name="Object" type="ba:Object" />
                         </xs:choice>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="ID" type="xs:int" use="required"/>
+        <xs:attribute name="Id" type="xs:int" use="required"/>
         <xs:attribute name="Signature" type="xs:string" use="required"/>
+        <xs:attribute name="Type" type="ba:MethodCallType" use="required" />
+    </xs:complexType>
+
+    <xs:simpleType name="MethodCallType">
+        <xs:annotation>
+            <xs:documentation>
+                An enumeration representing method call types.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Instance" />
+            <xs:enumeration value="Static" />
+            <xs:enumeration value="Ctor" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Field">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a field on a reference or value type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="Value" type="ba:Value" />
+        </xs:choice>
+        <xs:attribute name="Name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Property">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a property on a reference or value type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="Value" type="ba:Value" />
+        </xs:choice>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+        <xs:attribute name="BackingFieldName" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Value">
+        <xs:annotation>
+            <xs:documentation>
+                This basic type represents a container for an object or a primitive. This will primarily be used when
+                representing the actual raw data inside fields or structs--which can be either nested objects or 
+                primitive types.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:choice>
+                <xs:element name="Object" type="ba:Object" />
+                <xs:element name="Primitive" type="ba:Primitive" />
+            </xs:choice>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="Object">
-        <xs:attribute name="Type" type="xs:string"/>
+        <xs:annotation>
+            <xs:documentation>
+                Represents an object. This base type allows a basic roll up of some other representations.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="Type" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="ReferenceType">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a basic reference type.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="ba:Object">
                 <xs:sequence>
@@ -44,35 +109,26 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-
-    <xs:complexType name="Field">
-        <xs:choice>
-            <xs:element name="Value" type="ba:Primitive" />
-            <xs:element name="Object" type="ba:Object" />
-        </xs:choice>
-        <xs:attribute name="Name" type="xs:string" use="required"/>
-        <xs:attribute name="Type" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="Property">
-        <xs:choice>
-            <xs:element name="Value" type="ba:Primitive" />
-            <xs:element name="Object" type="ba:Object" />
-        </xs:choice>
-        <xs:attribute name="Name" type="xs:string" use="required" />
-        <xs:attribute name="Type" type="xs:string" use="required"/>
-        <xs:attribute name="BackingFieldName" type="xs:string" use="required"/>
-    </xs:complexType>
-
+    
     <xs:complexType name="Primitive">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a primitive type, such as int or long.
+            </xs:documentation>
+        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="Type" type="xs:string"></xs:attribute>
+                <xs:attribute name="Type" type="xs:string" use="required" />
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="Null">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a null object.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="ba:Object">
             </xs:extension>
@@ -80,6 +136,12 @@
     </xs:complexType>
 
     <xs:complexType name="NotNull">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a non-null object. Expect this when the maximum depth of the object dumping algorithm
+                has been reached. 
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexContent>
             <xs:extension base="ba:Object">
             </xs:extension>
@@ -87,6 +149,11 @@
     </xs:complexType>
 
     <xs:complexType name="WinBertAnalysisLog">
+        <xs:annotation>
+            <xs:documentation>
+                A log of method calls.
+            </xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="MethodCall" type="ba:MethodCall" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
