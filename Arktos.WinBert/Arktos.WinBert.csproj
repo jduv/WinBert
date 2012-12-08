@@ -141,6 +141,7 @@
     <Compile Include="Exceptions\InvalidConfigurationException.cs" />
     <Compile Include="Exceptions\TestGenerationException.cs" />
     <Compile Include="Extensions\Strings.cs" />
+    <Compile Include="Extensions\Objects.cs" />
     <Compile Include="Instrumentation\DynamicCallGraphInstrumenter.cs" />
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
@@ -247,9 +248,6 @@
       <Project>{596DF464-5F9A-4892-9CFD-6431806CCA73}</Project>
       <Name>RandoopImpl</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="XMLFile1.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

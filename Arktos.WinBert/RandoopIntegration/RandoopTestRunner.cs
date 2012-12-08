@@ -21,7 +21,7 @@
         /// <inheritdoc />
         public ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests)
         {
-            // BMK: This code should ensure that the tests has the correct referneces to the target.
+            // BMK: This code should ensure that the tests has the correct references target.
 
             var loader = new AssemblyLoader();
             loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
