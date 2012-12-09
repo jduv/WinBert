@@ -12,7 +12,7 @@
     {
         #region Public Methods
 
-        public Xml.Object DumpObject(object target, ushort maxDepth = 10)
+        public Xml.Object DumpObject(object target, ushort maxDepth = 3)
         {
             Xml.Object obj;
             if (target == null)
@@ -102,10 +102,6 @@
                 {
                     dumpedField.Value.Item = DumpPrimitive(value);
                 }
-                else if (maxDepth <= 1)
-                {
-                    dumpedField.Value.Item = new Xml.NotNull();
-                }
                 else
                 {
                     dumpedField.Value.Item = DumpObject(value, (ushort)(maxDepth - 1));
@@ -147,10 +143,6 @@
                     else if (value.IsPrimitive())
                     {
                         dumpedProperty.Value.Item = DumpPrimitive(value);
-                    }
-                    else if (maxDepth <= 1)
-                    {
-                        dumpedProperty.Value.Item = new Xml.NotNull();
                     }
                     else
                     {

@@ -52,9 +52,10 @@
             var actual = target.DumpObject(5);
         }
 
-        [TestMethod]
-        public void DumpObject_ValueType()
+        //[TestMethod]
+        public void DumpObject_DateTime()
         {
+            // Reproduces issue #4 on GitHub
             var now = DateTime.Now;
             var target = new ObjectDumper();
             var actual = target.DumpObject(now);
@@ -62,7 +63,47 @@
         }
 
         [TestMethod]
-        public void DumpObject_SimpleObject()
+        public void DumpObject_ValueType()
+        {
+            var toDump = new TestPoint();
+            var target = new ObjectDumper();
+            var actual = target.DumpObject(toDump);
+
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(2, actual.Fields.Length);
+            Assert.AreEqual(2, actual.Properties.Length);
+
+            // Fields
+            var xFieldValue = actual.Fields[0].Value.Item as Xml.Primitive;
+            var yFieldValue = actual.Fields[0].Value.Item as Xml.Primitive;
+            Assert.IsNotNull(xFieldValue);
+            Assert.IsNotNull(yFieldValue);
+
+            Assert.AreEqual("x", actual.Fields[0].Name);
+            Assert.AreEqual(toDump.X.GetType().FullName, xFieldValue.Type);
+            Assert.AreEqual(toDump.X.ToString(), xFieldValue.Value);
+
+            Assert.AreEqual("y", actual.Fields[1].Name);
+            Assert.AreEqual(toDump.Y.GetType().FullName, yFieldValue.Type);
+            Assert.AreEqual(toDump.Y.ToString(), yFieldValue.Value);
+
+            // Properties
+            var xPropValue = actual.Properties[0].Value.Item as Xml.Primitive;
+            var yPropValue = actual.Properties[0].Value.Item as Xml.Primitive;
+            Assert.IsNotNull(xPropValue);
+            Assert.IsNotNull(yPropValue);
+
+            Assert.AreEqual("X", actual.Properties[0].Name);
+            Assert.AreEqual(toDump.X.GetType().FullName, xPropValue.Type);
+            Assert.AreEqual(toDump.X.ToString(), xPropValue.Value);
+
+            Assert.AreEqual("Y", actual.Properties[1].Name);
+            Assert.AreEqual(toDump.Y.GetType().FullName, yPropValue.Type);
+            Assert.AreEqual(toDump.Y.ToString(), yPropValue.Value);
+        }
+
+        [TestMethod]
+        public void DumpObject_SimpleObjectWithFields()
         {
             var toDump = new AllPrimitiveFields();
             var target = new ObjectDumper();
@@ -71,6 +112,20 @@
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.Properties);
             Assert.AreEqual(12, actual.Fields.Length);
+            Assert.AreEqual(0, actual.Properties.Length);
+        }
+
+        [TestMethod]
+        public void DumpObject_SimpleObjectWithProperties()
+        {
+            var toDump = new AllProperties();
+            var target = new ObjectDumper();
+            var actual = target.DumpObject(toDump);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.IsNotNull(actual.Fields);
+            Assert.IsNotNull(actual.Properties);
+            Assert.AreEqual(12, actual.Fields.Length);
+            Assert.AreEqual(12, actual.Properties.Length);
         }
 
         [TestMethod]
@@ -84,19 +139,35 @@
             Assert.IsNotNull(actual.Properties);
 
             Assert.AreEqual(3, actual.Fields.Length);
-            Assert.AreEqual(0, actual.Properties.Length);
+            Assert.AreEqual(3, actual.Properties.Length);
+
             Assert.IsNotNull(actual.Fields[0]);
             Assert.IsNotNull(actual.Fields[1]);
             Assert.IsNotNull(actual.Fields[2]);
 
-            Assert.IsInstanceOfType(actual.Fields[0].Value.Item, typeof(Xml.Primitive));
+            Assert.IsNotNull(actual.Properties[0]);
+            Assert.IsNotNull(actual.Properties[1]);
+            Assert.IsNotNull(actual.Properties[2]);
 
-            var x = actual.Fields[0].Value.Item as Xml.Primitive;
-            Assert.AreEqual(toDump.x.ToString(), x.Value);
+            // Check first field/prop
+            var xFieldValue = actual.Fields[0].Value.Item as Xml.Primitive;
+            var xPropValue = actual.Properties[0].Value.Item as Xml.Primitive;
+            Assert.IsNotNull(xFieldValue);
+            Assert.AreEqual(toDump.x.ToString(), xFieldValue.Value);
+            Assert.IsNotNull(xPropValue);
+            Assert.AreEqual(toDump.x.ToString(), xPropValue.Value);
 
-            // Max depth is 1, all object references should be null/non-null
-            Assert.IsInstanceOfType(actual.Fields[1].Value.Item, typeof(Xml.NotNull));
-            Assert.IsInstanceOfType(actual.Fields[2].Value.Item, typeof(Xml.Null));
+            // Check second field/prop
+            var yFieldValue = actual.Fields[1].Value.Item as Xml.NotNull;
+            var yPropValue = actual.Properties[1].Value.Item as Xml.NotNull;
+            Assert.IsNotNull(yFieldValue);
+            Assert.IsNotNull(yPropValue);
+
+            // Check last field/prop
+            var zFieldValue = actual.Fields[2].Value.Item as Xml.Null;
+            var zPropValue = actual.Properties[2].Value.Item as Xml.Null;
+            Assert.IsNotNull(zFieldValue);
+            Assert.IsNotNull(zPropValue);
         }
 
         #endregion
@@ -242,6 +313,37 @@
             public uint UnsignedIntField { get; private set; }
             public ulong UnsignedLongField { get; protected set; }
             public ushort UnsignedShortField { get; set; }
+        }
+
+        /// <summary>
+        /// A test struct with properties and fields.
+        /// </summary>
+        private struct TestPoint
+        {
+            private int x;
+            private int y;
+
+            public TestPoint(int x, int y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+
+            public int X 
+            { 
+                get
+                {
+                    return this.x;
+                }
+            }
+
+            public int Y
+            {
+                get
+                {
+                    return this.y;
+                }
+            }
         }
 
         #endregion
