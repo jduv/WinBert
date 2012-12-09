@@ -119,8 +119,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="ba:Object">
-            </xs:extension>
+            <xs:extension base="ba:Object" />
         </xs:complexContent>
     </xs:complexType>
 
@@ -132,8 +131,20 @@
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>
-            <xs:extension base="ba:Object">
-            </xs:extension>
+            <xs:extension base="ba:Object"/>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="This">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a pointer to the current object. This is relevant mainly to just fields that point back to the
+                enclosing object, and is useful for preventing uneeded recursion during object logging. A field with 
+                this value should be considered to have the exact same value as it's direct parent object.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="ba:Object"/>
         </xs:complexContent>
     </xs:complexType>
 

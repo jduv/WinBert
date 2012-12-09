@@ -64,7 +64,7 @@
         [TestMethod]
         public void DumpObject_SimpleObject()
         {
-            var toDump = new AllPrivatePrimitiveFields();
+            var toDump = new AllPrimitiveFields();
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump);
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
@@ -84,6 +84,7 @@
             Assert.IsNotNull(actual.Properties);
 
             Assert.AreEqual(3, actual.Fields.Length);
+            Assert.AreEqual(0, actual.Properties.Length);
             Assert.IsNotNull(actual.Fields[0]);
             Assert.IsNotNull(actual.Fields[1]);
             Assert.IsNotNull(actual.Fields[2]);
@@ -203,14 +204,16 @@
         /// <summary>
         /// A class with only private, readonly fields of all primitive types set to their default .NET CLR values.
         /// </summary>
-        private class AllPrivatePrimitiveFields
+        private class AllPrimitiveFields
         {
+            // Set a variable number of access restrictions
             private readonly int intField;
-            private readonly short shortField;
-            private readonly byte byteField;
-            private readonly long longField;
-            private readonly decimal decimalField;
-            private readonly double doubleField;
+            public readonly short shortField;
+            protected readonly byte byteField;
+            private static readonly long longField;
+            public static readonly decimal decimalField;
+            protected static readonly double doubleField;
+
             private readonly bool boolField;
             private readonly string stringField;
             private readonly char charField;
@@ -222,20 +225,23 @@
         /// <summary>
         /// A class with only private auto-properties for all primitive types set to their default .NET CLR values.
         /// </summary>
-        private class AllPrivatePrimitiveProperties
+        private class AllProperties
         {
+            // Set a variable number of access restrictions
             private int IntField { get; set; }
-            private short ShortField { get; set; }
-            private byte ByteField { get; set; }
-            private long LongField { get; set; }
-            private decimal DecimalField { get; set; }
-            private double DoubleField { get; set; }
-            private bool BoolField { get; set; }
-            private string StringField { get; set; }
-            private char CharField { get; set; }
-            private uint UnsignedIntField { get; set; }
-            private ulong UnsignedLongField { get; set; }
-            private ushort UnsignedShortField { get; set; }
+            public short ShortField { get; set; }
+            protected byte ByteField { get; set; }
+            private static long LongField { get; set; }
+            public static decimal DecimalField { get; set; }
+            protected static double DoubleField { get; set; }
+
+            // Change the accessor restrictions
+            public bool BoolField { get; set; }
+            public string StringField { private get; set; }
+            public char CharField { protected get; set; }
+            public uint UnsignedIntField { get; private set; }
+            public ulong UnsignedLongField { get; protected set; }
+            public ushort UnsignedShortField { get; set; }
         }
 
         #endregion

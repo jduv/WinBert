@@ -80,7 +80,7 @@
             foreach (var field in target.GetType().GetFields(
                 BindingFlags.Instance |
                 BindingFlags.NonPublic |
-                BindingFlags.Public |
+                BindingFlags.Public | 
                 BindingFlags.Static))
             {
                 var dumpedField = new Xml.Field()
@@ -93,6 +93,10 @@
                 if (value == null)
                 {
                     dumpedField.Value.Item = new Xml.Null();
+                }
+                else if (value == target)
+                {
+                    dumpedField.Value.Item = new Xml.This();
                 }
                 else if (value.IsPrimitive())
                 {
@@ -116,6 +120,47 @@
         Xml.Property[] DumpProperties(object target, ushort maxDepth)
         {
             var properties = new List<Xml.Property>();
+            foreach (var prop in target.GetType().GetProperties(
+                BindingFlags.Instance | 
+                BindingFlags.Static | 
+                BindingFlags.NonPublic |
+                BindingFlags.Public))
+            {
+                // Only dump properties that are not indexers
+                if (prop.GetIndexParameters().Length == 0)
+                {
+                    var dumpedProperty = new Xml.Property()
+                    {
+                        Name = prop.Name,
+                        Value = new Xml.Value()
+                    };
+
+                    var value = prop.GetValue(target, null);
+                    if (value == null)
+                    {
+                        dumpedProperty.Value.Item = new Xml.Null();
+                    }
+                    else if (value == target)
+                    {
+                        dumpedProperty.Value.Item = new Xml.This();
+                    }
+                    else if (value.IsPrimitive())
+                    {
+                        dumpedProperty.Value.Item = DumpPrimitive(value);
+                    }
+                    else if (maxDepth <= 1)
+                    {
+                        dumpedProperty.Value.Item = new Xml.NotNull();
+                    }
+                    else
+                    {
+                        dumpedProperty.Value.Item = DumpObject(value, (ushort)(maxDepth - 1));
+                    }
+
+                    properties.Add(dumpedProperty);
+                }
+            }
+
             return properties.ToArray();
         }
 
