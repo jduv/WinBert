@@ -152,6 +152,7 @@
     <None Include="dependent-src\Dependent.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="AssemblyDifferenceResultUnitTests.cs" />
     <Compile Include="InstrumentationTargetUnitTests.cs" />
     <Compile Include="ObjectDumperUnitTest.cs" />
     <Compile Include="SerializerUnitTests.cs" />

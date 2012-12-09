@@ -54,6 +54,14 @@
     /// Partial implementation of a generated class.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
+    public sealed partial class Primitive
+    {
+    }
+
+    /// <summary>
+    /// Partial implementation of a generated class.
+    /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
     public sealed partial class Field
     {
     }
@@ -79,6 +87,14 @@
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
     public sealed partial class NotNull
+    {
+    }
+
+    /// <summary>
+    /// Partial implementation of a generated class.
+    /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
+    public sealed partial class This
     {
     }
 }
