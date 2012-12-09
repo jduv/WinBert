@@ -61,6 +61,43 @@
             Assert.AreEqual(now.GetType().FullName, actual.Type);
         }
 
+        [TestMethod]
+        public void DumpObject_SimpleObject()
+        {
+            var toDump = new AllPrivatePrimitiveFields();
+            var target = new ObjectDumper();
+            var actual = target.DumpObject(toDump);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.IsNotNull(actual.Fields);
+            Assert.IsNotNull(actual.Properties);
+            Assert.AreEqual(12, actual.Fields.Length);
+        }
+
+        [TestMethod]
+        public void DumpObject_ComplexObjectDepthOfOne()
+        {
+            var toDump = new { x = 1, y = new { a = 2, b = 3, c = 4 }, z = (string)null };
+            var target = new ObjectDumper();
+            var actual = target.DumpObject(toDump, 1);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.IsNotNull(actual.Fields);
+            Assert.IsNotNull(actual.Properties);
+
+            Assert.AreEqual(3, actual.Fields.Length);
+            Assert.IsNotNull(actual.Fields[0]);
+            Assert.IsNotNull(actual.Fields[1]);
+            Assert.IsNotNull(actual.Fields[2]);
+
+            Assert.IsInstanceOfType(actual.Fields[0].Value.Item, typeof(Xml.Primitive));
+
+            var x = actual.Fields[0].Value.Item as Xml.Primitive;
+            Assert.AreEqual(toDump.x.ToString(), x.Value);
+
+            // Max depth is 1, all object references should be null/non-null
+            Assert.IsInstanceOfType(actual.Fields[1].Value.Item, typeof(Xml.NotNull));
+            Assert.IsInstanceOfType(actual.Fields[2].Value.Item, typeof(Xml.Null));
+        }
+
         #endregion
 
         #region DumpPrimitive

@@ -50,9 +50,9 @@
                 Represents a field on a reference or value type.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:sequence>
             <xs:element name="Value" type="ba:Value" />
-        </xs:choice>
+        </xs:sequence>
         <xs:attribute name="Name" type="xs:string" use="required"/>
     </xs:complexType>
 
@@ -62,9 +62,9 @@
                 Represents a property on a reference or value type.
             </xs:documentation>
         </xs:annotation>
-        <xs:choice>
+        <xs:sequence>
             <xs:element name="Value" type="ba:Value" />
-        </xs:choice>
+        </xs:sequence>
         <xs:attribute name="Name" type="xs:string" use="required" />
         <xs:attribute name="BackingFieldName" type="xs:string" use="required"/>
     </xs:complexType>
@@ -88,26 +88,15 @@
     <xs:complexType name="Object">
         <xs:annotation>
             <xs:documentation>
-                Represents an object. This base type allows a basic roll up of some other representations.
+                Represents an object. This base type allows a basic roll up of some other representations. It serves as a base
+                for all reference and value types.
             </xs:documentation>
         </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Fields" type="ba:Field" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Properties" type="ba:Property" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
         <xs:attribute name="Type" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="ReferenceType">
-        <xs:annotation>
-            <xs:documentation>
-                Represents a basic reference type.
-            </xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="ba:Object">
-                <xs:sequence>
-                    <xs:element name="Field" type="ba:Field" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:element name="Property" type="ba:Property" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
     </xs:complexType>
     
     <xs:complexType name="Primitive">

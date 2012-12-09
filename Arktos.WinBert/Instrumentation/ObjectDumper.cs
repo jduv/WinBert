@@ -1,6 +1,8 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection;
     using Arktos.WinBert.Extensions;
 
     /// <summary>
@@ -27,12 +29,12 @@
                     }
                     else
                     {
-                        obj = new Xml.ReferenceType()
+                        obj = new Xml.Object()
                         {
                             Type = target.GetType().FullName,
-                            Field = DumpFields(target, maxDepth),
-                            Property = DumpProperties(target, maxDepth)
-                        };  
+                            Fields = DumpFields(target, maxDepth),
+                            Properties = DumpProperties(target, maxDepth)
+                        };
                     }
                 }
                 else
@@ -74,14 +76,47 @@
 
         Xml.Field[] DumpFields(object target, ushort maxDepth)
         {
-            // BMK Implement me.
-            return null;
+            var fields = new List<Xml.Field>();
+            foreach (var field in target.GetType().GetFields(
+                BindingFlags.Instance |
+                BindingFlags.NonPublic |
+                BindingFlags.Public |
+                BindingFlags.Static))
+            {
+                var dumpedField = new Xml.Field()
+                {
+                    Name = field.Name,
+                    Value = new Xml.Value()
+                };
+
+                var value = field.GetValue(target);
+                if (value == null)
+                {
+                    dumpedField.Value.Item = new Xml.Null();
+                }
+                else if (value.IsPrimitive())
+                {
+                    dumpedField.Value.Item = DumpPrimitive(value);
+                }
+                else if (maxDepth <= 1)
+                {
+                    dumpedField.Value.Item = new Xml.NotNull();
+                }
+                else
+                {
+                    dumpedField.Value.Item = DumpObject(value, (ushort)(maxDepth - 1));
+                }
+
+                fields.Add(dumpedField);
+            }
+
+            return fields.ToArray();
         }
 
         Xml.Property[] DumpProperties(object target, ushort maxDepth)
         {
-            // BMK Implement me.
-            return null;
+            var properties = new List<Xml.Property>();
+            return properties.ToArray();
         }
 
         #endregion
