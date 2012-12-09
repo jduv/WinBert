@@ -52,13 +52,15 @@
             var actual = target.DumpObject(5);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void DumpObject_DateTime()
         {
-            // Reproduces issue #4 on GitHub
+            // BMK Reproduces issue #4
             var now = DateTime.Now;
             var target = new ObjectDumper();
-            var actual = target.DumpObject(now);
+
+            // For now, we set the depth to 2 to keep from blowing up the stack.
+            var actual = target.DumpObject(now, 2);
             Assert.AreEqual(now.GetType().FullName, actual.Type);
         }
 
@@ -121,6 +123,7 @@
             var toDump = new AllProperties();
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump);
+
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.Properties);
@@ -170,6 +173,24 @@
             Assert.IsNotNull(zPropValue);
         }
 
+        [TestMethod]
+        public void DumpObject_SelfReference()
+        {
+            var toDump = new SelfReference();
+            var target = new ObjectDumper();
+            var actual = target.DumpObject(toDump);
+
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(1, actual.Fields.Length);
+            Assert.AreEqual(0, actual.Properties.Length);
+
+            var refValue = actual.Fields[0].Value.Item as Xml.This;
+            Assert.AreEqual("reference", actual.Fields[0].Name);
+            Assert.IsNotNull(refValue);
+        }
+
         #endregion
 
         #region DumpPrimitive
@@ -180,6 +201,14 @@
         {
             var target = new ObjectDumper();
             target.DumpPrimitive(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void DumpPrimitive_NonPrimitive()
+        {
+            var target = new ObjectDumper();
+            target.DumpPrimitive(new TestPoint());
         }
 
         [TestMethod]
@@ -343,6 +372,19 @@
                 {
                     return this.y;
                 }
+            }
+        }
+
+        /// <summary>
+        /// A test class that references itself.
+        /// </summary>
+        private class SelfReference
+        {
+            private SelfReference reference;
+
+            public SelfReference()
+            {
+                this.reference = this;
             }
         }
 

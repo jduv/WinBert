@@ -12,7 +12,7 @@
     {
         #region Public Methods
 
-        public Xml.Object DumpObject(object target, ushort maxDepth = 3)
+        public Xml.Object DumpObject(object target, ushort maxDepth = 5)
         {
             Xml.Object obj;
             if (target == null)
