@@ -16,17 +16,9 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element name="PostCallInstance" type="ba:Object" maxOccurs="1" />
-            <xs:element name="ReturnValue" minOccurs="0">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:choice>
-                            <xs:element name="Object" type="ba:Object" />
-                        </xs:choice>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="ReturnValue" type="ba:Value" minOccurs="0" />
         </xs:sequence>
-        <xs:attribute name="Id" type="xs:int" use="required"/>
+        <xs:attribute name="Id" type="xs:unsignedInt" use="required"/>
         <xs:attribute name="Signature" type="xs:string" use="required"/>
         <xs:attribute name="Type" type="ba:MethodCallType" use="required" />
     </xs:complexType>

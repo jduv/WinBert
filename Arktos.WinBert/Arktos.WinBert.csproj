@@ -146,6 +146,7 @@
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
+    <Compile Include="Instrumentation\MethodCallDumper.cs" />
     <Compile Include="Instrumentation\ObjectDumper.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />

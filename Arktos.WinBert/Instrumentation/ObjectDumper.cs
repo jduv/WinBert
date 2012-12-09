@@ -12,6 +12,19 @@
     {
         #region Public Methods
 
+        /// <summary>
+        /// In essence, this is a factory method for creating Xml.Object instances. This only works for non-primitive
+        /// objects and structs.
+        /// </summary>
+        /// <param name="target">
+        /// The target to dump.
+        /// </param>
+        /// <param name="maxDepth">
+        /// The maximum depth to go when recursively logging instance fields and properties. Defaults to 5.
+        /// </param>
+        /// <returns>
+        /// An Xml.Object instance representing the passed in target.
+        /// </returns>
         public Xml.Object DumpObject(object target, ushort maxDepth = 5)
         {
             Xml.Object obj;
@@ -46,6 +59,19 @@
             return obj;
         }
 
+        /// <summary>
+        /// Creates Xml.Primitive instances. This only works for objects that are considered to be
+        /// "primtive," which isn't precisly correlated to the obj.GetType().IsPrimitive property. There
+        /// are a couple of other CLR types that can be considered primitives for our purposes here
+        /// even if there are no IL instructions that operate on them (which is the CLR's definition of
+        /// a primitive as of now).
+        /// </summary>
+        /// <param name="target">
+        /// The target primitive object to dump.
+        /// </param>
+        /// <returns>
+        /// An Xml.Primitive object representing the passed in target.
+        /// </returns>
         public Xml.Primitive DumpPrimitive(object target)
         {
             if (target == null)
@@ -74,13 +100,26 @@
 
         #region Private Methods
 
+        /// <summary>
+        /// Dumps all the field values for the target object.
+        /// </summary>
+        /// <param name="target">
+        /// The target whose fields to retrieve.
+        /// </param>
+        /// <param name="maxDepth">
+        /// A depth value, used for determining how deep to recursively log field reference
+        /// types.
+        /// </param>
+        /// <returns>
+        /// An array of Xml.Field objects.
+        /// </returns>
         Xml.Field[] DumpFields(object target, ushort maxDepth)
         {
             var fields = new List<Xml.Field>();
             foreach (var field in target.GetType().GetFields(
                 BindingFlags.Instance |
                 BindingFlags.NonPublic |
-                BindingFlags.Public | 
+                BindingFlags.Public |
                 BindingFlags.Static))
             {
                 var dumpedField = new Xml.Field()
@@ -113,12 +152,25 @@
             return fields.ToArray();
         }
 
+        /// <summary>
+        /// Dumps all the property values for the target object.
+        /// </summary>
+        /// <param name="target">
+        /// The target whose properties to retrieve.
+        /// </param>
+        /// <param name="maxDepth">
+        /// A depth value, used for determining how deep to recursively log property reference
+        /// types.
+        /// </param>
+        /// <returns>
+        /// An array of Xml.Property objects.
+        /// </returns>
         Xml.Property[] DumpProperties(object target, ushort maxDepth)
         {
             var properties = new List<Xml.Property>();
             foreach (var prop in target.GetType().GetProperties(
-                BindingFlags.Instance | 
-                BindingFlags.Static | 
+                BindingFlags.Instance |
+                BindingFlags.Static |
                 BindingFlags.NonPublic |
                 BindingFlags.Public))
             {
