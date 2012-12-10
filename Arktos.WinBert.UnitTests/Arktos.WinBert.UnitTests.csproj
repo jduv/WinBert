@@ -154,6 +154,7 @@
     </None>
     <Compile Include="AssemblyDifferenceResultUnitTests.cs" />
     <Compile Include="InstrumentationTargetUnitTests.cs" />
+    <Compile Include="MethodCallDumperUnitTests.cs" />
     <Compile Include="ObjectDumperUnitTest.cs" />
     <Compile Include="SerializerUnitTests.cs" />
     <Compile Include="StringsUnitTests.cs" />

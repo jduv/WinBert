@@ -47,6 +47,17 @@
         /// </returns>
         public Xml.MethodCall DumpVoidInstanceMethod(uint id, object target, string signature)
         {
+            if (string.IsNullOrEmpty(signature))
+            {
+                throw new ArgumentException("Signature cannot be null or empty!");
+            }
+            if (target == null)
+            {
+                // Instance method target shouldn't be null.....
+                throw new ArgumentNullException("target");
+            }
+
+
             return new Xml.MethodCall()
             {
                 Id = id,
@@ -77,12 +88,24 @@
         /// </returns>
         public Xml.MethodCall DumpInstanceMethod(uint id, object target, object returnValue, string signature)
         {
+            if (string.IsNullOrEmpty(signature))
+            {
+                throw new ArgumentException("Signature cannot be null or empty!");
+            }
+
+            if (target == null)
+            {
+                // Instance method target shouldn't be null.....
+                throw new ArgumentNullException("target");
+            }
+
             var call = new Xml.MethodCall()
             {
                 Id = id,
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
                 PostCallInstance = objDumper.DumpObject(target),
+                ReturnValue = new Xml.Value()
             };
 
             if (returnValue.IsPrimitive())
