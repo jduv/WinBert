@@ -52,7 +52,8 @@
                 }
                 else
                 {
-                    obj = (target == null) ? (Xml.Object)new Xml.Null() : (Xml.Object)new Xml.NotNull();
+                    // Target will never be null here, that'll get caught earlier.
+                    obj = (Xml.Object)new Xml.NotNull();
                 }
             }
 
