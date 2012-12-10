@@ -151,6 +151,7 @@
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />
     <Compile Include="RandoopIntegration\RandoopTestInstrumenter.cs" />
+    <Compile Include="RandoopIntegration\RandoopTestRewriter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestRunner.cs" />
     <Compile Include="RandoopIntegration\RandoopTestManager.cs" />
     <Compile Include="Testing\ITestManager.cs" />
