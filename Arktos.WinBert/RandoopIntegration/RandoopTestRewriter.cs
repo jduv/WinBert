@@ -2,6 +2,8 @@
 {
     using Microsoft.Cci;
     using Microsoft.Cci.MutableCodeModel;
+    using Arktos.WinBert.Instrumentation;
+    using AppDomainToolkit;
 
     public class RandoopTestRewriter : MetadataRewriter
     {
@@ -13,12 +15,30 @@
 
         #region Constructors & Destructors
 
-        public RandoopTestRewriter(string testMethodName)
+        private RandoopTestRewriter(string testMethodName, IMetadataHost host)
+            : base(host)
         {
             this.testMethodName = testMethodName;
         }
 
         #endregion
+
+        #region Public Methods
+
+        public static RandoopTestRewriter Create(string testMethodName)
+        {
+            return Create(testMethodName, new PeReader.DefaultHost());
+        }
+
+        public static RandoopTestRewriter Create(string testMethodName, IMetadataHost host)
+        {
+            return new RandoopTestRewriter(testMethodName, host);
+        }
+
+        public IAssemblyTarget Rewrite(IInstrumentationTarget target)
+        {
+            return target.Save();
+        }
 
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
@@ -26,6 +46,10 @@
             {
                 // Rewrite
             }
+
+            return methodBody;
         }
+
+        #endregion
     }
 }

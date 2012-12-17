@@ -10,6 +10,12 @@
     /// </summary>
     public class RandoopTestInstrumenter : ITestInstrumenter
     {
+        #region Fields & Constants
+
+        private static readonly string testMethodName = "Main";
+
+        #endregion
+
         #region Public Methods
 
         /// <inheritdoc/>
@@ -52,8 +58,8 @@
         {
             using (var testTarget = InstrumentationTarget.Create(toInstrument))
             {
-                // Do instrumentation here.
-                return testTarget.Save();
+                var rewriter = RandoopTestRewriter.Create(testMethodName, testTarget.Host);
+                return rewriter.Rewrite(testTarget);
             }
         }
 

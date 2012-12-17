@@ -27,6 +27,11 @@
         IAssembly MutableAssembly { get; }
 
         /// <summary>
+        /// Gets the local scope provider.
+        /// </summary>
+        ILocalScopeProvider LocalScopeProvider { get; }
+
+        /// <summary>
         /// Gets the assembly target.
         /// </summary>
         IAssemblyTarget Target { get; }

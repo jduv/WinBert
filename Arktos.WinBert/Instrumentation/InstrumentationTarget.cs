@@ -19,6 +19,7 @@
         private IMetadataHost host;
         private PdbReader pdbReader;
         private IAssembly mutableAssembly;
+        private ILocalScopeProvider localScopeProvider;
 
         #endregion
 
@@ -86,6 +87,27 @@
             }
         }
 
+        /// <summary>
+        /// Gets the local scope provider for the instrumentation target.
+        /// </summary>
+        public ILocalScopeProvider LocalScopeProvider
+        {
+            get
+            {
+                if (this.IsDisposed)
+                {
+                    throw new ObjectDisposedException(this.GetType().FullName);
+                }
+
+                return this.localScopeProvider;
+            }
+
+            private set
+            {
+                this.localScopeProvider = value;
+            }
+        }
+
         /// <inheritdoc />
         public IAssembly MutableAssembly
         {
@@ -131,13 +153,14 @@
             var host = new PeReader.DefaultHost();
             var mutableAssembly = GetMutableAssembly(target, host);
             var pdbReader = GetPdbReader(mutableAssembly, host);
-
+            
             return new InstrumentationTarget()
             {
                 Host = host,
                 MutableAssembly = mutableAssembly,
                 PdbReader = pdbReader,
-                Target = target
+                Target = target,
+                LocalScopeProvider = pdbReader == null ? null : new ILGenerator.LocalScopeProvider(pdbReader)
             };
         }
 
@@ -167,10 +190,16 @@
                 }
                 else
                 {
-                    var scopeProvider = this.PdbReader == null ? null : new ILGenerator.LocalScopeProvider(this.PdbReader);
+                    // Assumption: LocalScopeProvider shouldn't be null if the PDBReader isn't null.
                     using (var pdbWriter = new PdbWriter(path + ".pdb", this.PdbReader))
                     {
-                        PeWriter.WritePeToStream(this.MutableAssembly, this.Host, file, this.PdbReader, scopeProvider, pdbWriter);
+                        PeWriter.WritePeToStream(
+                            this.MutableAssembly, 
+                            this.Host, 
+                            file, 
+                            this.PdbReader, 
+                            this.LocalScopeProvider,
+                            pdbWriter);
                     }
                 }
 
