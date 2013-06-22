@@ -1,10 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoopCommon", "RandoopCommon\RandoopCommon.csproj", "{D5B45A6E-B8DA-4A4B-B08B-4C1EA24BEB1B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoopImpl", "RandoopImpl\RandoopImpl.csproj", "{596DF464-5F9A-4892-9CFD-6431806CCA73}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11B9C5FF-B089-4882-B5C2-AA3F3775C2B4}"
 	ProjectSection(SolutionItems) = preProject
 		WinBert.testsettings = WinBert.testsettings
@@ -16,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2C39F9
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoopCommon", "RandoopCommon\RandoopCommon.csproj", "{D5B45A6E-B8DA-4A4B-B08B-4C1EA24BEB1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandoopImpl", "RandoopImpl\RandoopImpl.csproj", "{596DF464-5F9A-4892-9CFD-6431806CCA73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arktos.WinBert", "Arktos.WinBert\Arktos.WinBert.csproj", "{986263EA-6C7F-4AF2-B448-0A1ED8007193}"
 EndProject

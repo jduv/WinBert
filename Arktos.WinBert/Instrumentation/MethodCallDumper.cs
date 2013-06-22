@@ -57,7 +57,6 @@
                 throw new ArgumentNullException("target");
             }
 
-
             return new Xml.MethodCall()
             {
                 Id = id,

@@ -20,7 +20,6 @@
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(WinBertAnalysisWindow), Transient = true)]
     [Guid(GuidList.GuidWinBertVsPackagePkgString)]
     [ProvideAutoLoad(GuidList.GuidUiContextAnySolution)]
     public sealed class WinBertVsPackage : Package
@@ -71,9 +70,6 @@
                 CommandID toolwndCommandID = new CommandID(
                     GuidList.GuidWinBertVsPackageCmdSet, 
                     (int)PkgCmdIDList.CmdIdBertAnalysisWindow);
-                
-                MenuCommand menuToolWin = new MenuCommand(this.ShowToolWindow, toolwndCommandID);
-                mcs.AddCommand(menuToolWin);
             }
 
             // Grab the DTE2 instance and pass it to the WinBertServiceProvider
@@ -82,33 +78,6 @@
             {
                 this.WinBertServiceProvider = new WinBertServiceProvider(dte2);
             }
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// This function is called when the user clicks the menu item that shows the 
-        ///   tool window. See the Initialize method to see how the menu item is associated to 
-        ///   this function using the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender of the event.
-        /// </param>
-        /// <param name="e">
-        /// Event arguments.
-        /// </param>
-        private void ShowToolWindow(object sender, EventArgs e)
-        {
-            WinBertAnalysisWindow window = this.FindToolWindow(typeof(WinBertAnalysisWindow), 0, true) as WinBertAnalysisWindow;
-            if ((window == null) || (window.Frame == null))
-            {
-                throw new NotSupportedException(Resources.CanNotCreateWindow);
-            }
-
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         #endregion
