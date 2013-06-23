@@ -152,7 +152,6 @@
         {
             // Hook up build events.
             this.buildEvents.OnBuildBegin += this.OnBuildBegin;
-            //this.buildEvents.OnBuildProjConfigBegin += this.OnBuildProjConfigBegin;
             this.buildEvents.OnBuildDone += this.OnBuildDone;
             this.buildEvents.OnBuildProjConfigDone += this.OnBuildProjConfigDone;
 
