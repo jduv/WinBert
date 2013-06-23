@@ -55,12 +55,9 @@
         [TestMethod]
         public void DumpObject_DateTime()
         {
-            // BMK Reproduces issue #4
             var now = DateTime.Now;
             var target = new ObjectDumper();
-
-            // For now, we set the depth to 2 to keep from blowing up the stack.
-            var actual = target.DumpObject(now, 2);
+            var actual = target.DumpObject(now);
             Assert.AreEqual(now.GetType().FullName, actual.Type);
         }
 

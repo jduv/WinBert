@@ -61,6 +61,7 @@
             }
         }
 
+        /// <inheritdoc />
         public override ITestTarget InstrumentTests(ITestTarget toInstrument)
         {
             if (toInstrument == null)
