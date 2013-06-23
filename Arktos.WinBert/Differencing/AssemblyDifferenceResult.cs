@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Reflection;
     using AppDomainToolkit;
@@ -24,7 +25,13 @@
         /// <param name="newAssembly">
         /// The new assembly.
         /// </param>
-        public AssemblyDifferenceResult(Assembly oldAssembly, Assembly newAssembly)
+        /// <param name="itemsCompared">
+        /// The number of items compared.
+        /// </param>
+        /// <param name="typeDiffs">
+        /// A list of type difference.
+        /// </param>
+        public AssemblyDifferenceResult(Assembly oldAssembly, Assembly newAssembly, int itemsCompared, IList<ITypeDifferenceResult> typeDiffs)
         {
             if (oldAssembly == null)
             {
@@ -38,7 +45,7 @@
 
             this.OldAssemblyTarget = AssemblyTarget.FromAssembly(oldAssembly);
             this.NewAssemblyTarget = AssemblyTarget.FromAssembly(newAssembly);
-            this.TypeDifferences = new List<ITypeDifferenceResult>();
+            this.TypeDifferences = typeDiffs ?? new List<ITypeDifferenceResult>();
         }
 
         #endregion
@@ -50,9 +57,12 @@
         {
             get
             {
-                return this.TypeDifferences.Count > 0;
+                return this.TypeDifferences.Count() > 0;
             }
         }
+
+        /// <inheritdoc />
+        public int ItemsCompared { get; private set; }
 
         /// <inheritdoc />
         public IAssemblyTarget NewAssemblyTarget { get; private set; }
@@ -61,7 +71,7 @@
         public IAssemblyTarget OldAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
-        public IList<ITypeDifferenceResult> TypeDifferences { get; private set; }
+        public IEnumerable<ITypeDifferenceResult> TypeDifferences { get; private set; }
 
         #endregion
     }

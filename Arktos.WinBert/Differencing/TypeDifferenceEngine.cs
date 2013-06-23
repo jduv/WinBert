@@ -103,25 +103,30 @@
         /// </returns>
         private bool AreDifferent(MethodBody first, MethodBody second)
         {
-            var firstBodyBits = first.GetILAsByteArray();
-            var secondBodyBits = second.GetILAsByteArray();
+            bool areDifferent = false;
+            if (first != null && second != null)
+            {
+                var firstBodyBits = first.GetILAsByteArray();
+                var secondBodyBits = second.GetILAsByteArray();
 
-            if (firstBodyBits.Length != secondBodyBits.Length)
-            {
-                return true;
-            }
-            else
-            {
-                for (int i = 0; i < firstBodyBits.Length; i++)
+                if (firstBodyBits.Length != secondBodyBits.Length)
                 {
-                    if (firstBodyBits[i] != secondBodyBits[i])
+                    areDifferent = true;
+                }
+                else
+                {
+                    for (int i = 0; i < firstBodyBits.Length; i++)
                     {
-                        return true;
+                        if (firstBodyBits[i] != secondBodyBits[i])
+                        {
+                            areDifferent = true;
+                            break;
+                        }
                     }
                 }
             }
 
-            return false;
+            return areDifferent;
         }
 
         #endregion

@@ -13,7 +13,7 @@
         /// <summary>
         ///   Gets a list of type differences for the assembly.
         /// </summary>
-        IList<ITypeDifferenceResult> TypeDifferences { get; }
+        IEnumerable<ITypeDifferenceResult> TypeDifferences { get; }
 
         /// <summary>
         /// Gets the new assembly target.

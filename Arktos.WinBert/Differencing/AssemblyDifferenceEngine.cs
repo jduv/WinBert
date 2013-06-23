@@ -65,25 +65,27 @@
                 throw new ArgumentNullException("newObject");
             }
 
-            var diffResult = new AssemblyDifferenceResult(oldObject, newObject);
-            var oldTypes = oldObject.GetTypes().ToDictionary(x => x.Name);
-            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName))).ToList();
+            int count = 0;
+            var typeDiffs = new List<ITypeDifferenceResult>();
+            var oldTypes = oldObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && !x.IsInterface).ToDictionary(x => x.Name);
+            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && !x.IsInterface).ToList();
 
             foreach (var newType in newTypes)
             {
                 if (oldTypes.ContainsKey(newType.Name))
                 {
+                    count++;
                     var oldType = oldTypes[newType.Name];
                     var typeDiff = this.typeDiffer.Diff(oldType, newType);
 
                     if (typeDiff.IsDifferent)
                     {
-                        diffResult.TypeDifferences.Add(typeDiff);
+                        typeDiffs.Add(typeDiff);
                     }
                 }
             }
 
-            return diffResult;
+            return new AssemblyDifferenceResult(oldObject, newObject, count, typeDiffs);
         }
 
         #endregion

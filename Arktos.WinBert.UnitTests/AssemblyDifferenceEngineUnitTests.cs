@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
     using System;
+    using System.Linq;
     using System.IO;
     using System.Reflection;
     using Arktos.WinBert.Differencing;
@@ -18,6 +19,10 @@
         private static readonly string diffAssembly1Path = srcDir + @"DiffTestAssembly1.dll";
 
         private static readonly string diffAssembly2Path = srcDir + @"DiffTestAssembly2.dll";
+
+        private static readonly string interfacesOnly1Path = srcDir + @"InterfaceTestAssembly1.dll";
+
+        private static readonly string interfacesOnly2Path = srcDir + @"InterfaceTestAssembly2.dll";
 
         #endregion
 
@@ -49,7 +54,7 @@
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
             Assert.IsTrue(actual.IsDifferent);
-            Assert.IsTrue(actual.TypeDifferences.Count > 0);
+            Assert.IsTrue(actual.TypeDifferences.Count() > 0);
         }
 
         [TestMethod]
@@ -69,7 +74,7 @@
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
             Assert.IsFalse(actual.IsDifferent);
-            Assert.IsTrue(actual.TypeDifferences.Count == 0);
+            Assert.IsTrue(actual.TypeDifferences.Count() == 0);
         }
 
         [TestMethod]
@@ -142,6 +147,23 @@
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
             Assert.IsFalse(actual.IsDifferent);
+        }
+
+        [TestMethod]
+        public void Diff_InterfacesOnly_Ignored()
+        {
+            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine();
+            Assembly oldObject = this.LoadAssembly(interfacesOnly1Path);
+            Assembly newObject = this.LoadAssembly(interfacesOnly2Path);
+
+            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+
+            Assert.IsNotNull(actual);
+            Assert.IsNotNull(actual.OldAssemblyTarget);
+            Assert.IsNotNull(actual.NewAssemblyTarget);
+            Assert.IsFalse(actual.IsDifferent);
+            Assert.AreEqual(0, actual.ItemsCompared);
+            Assert.AreEqual(0, actual.TypeDifferences.Count());
         }
 
         #endregion

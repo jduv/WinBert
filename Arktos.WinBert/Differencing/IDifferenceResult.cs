@@ -8,9 +8,14 @@
         #region Properties
 
         /// <summary>
-        ///   Gets a value indicating whether a difference exists.
+        /// Gets a value indicating whether a difference exists.
         /// </summary>
         bool IsDifferent { get; }
+
+        /// <summary>
+        /// Gets the number of items compared.
+        /// </summary>
+        int ItemsCompared { get; }
 
         #endregion
     }

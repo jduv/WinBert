@@ -249,12 +249,12 @@
 
                     // Get the output path for the current configuration.
                     var outputPathProperty = config.Properties.Item("OutputPath");
+                    var projectDir = Path.GetDirectoryName(visualStudioProject.FullName);
                     var assemblyNameProperty = visualStudioProject.Properties.Item("OutputFileName");
 
-                    if (outputPathProperty != null && assemblyNameProperty != null)
+                    if (outputPathProperty != null && assemblyNameProperty != null && projectDir != null)
                     {
-                        var outputPath = Path.GetFullPath(outputPathProperty.Value.ToString());
-                        var buildPath = Path.Combine(outputPath, assemblyNameProperty.Value.ToString());
+                        var buildPath = Path.Combine(projectDir, outputPathProperty.Value.ToString(), assemblyNameProperty.Value.ToString());
 
                         if (File.Exists(buildPath))
                         {

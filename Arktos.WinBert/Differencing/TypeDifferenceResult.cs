@@ -53,6 +53,9 @@
         }
 
         /// <inheritdoc />
+        public int ItemsCompared { get; private set; }
+
+        /// <inheritdoc />
         public string Name { get; private set; }
 
         /// <inheritdoc />
