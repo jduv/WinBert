@@ -11,7 +11,7 @@
     {
         #region Constants & Fields
 
-        private static readonly ObjectDumper objDumper;
+        private static readonly ObjectDumper ObjDumper;
 
         #endregion
 
@@ -22,7 +22,7 @@
         /// </summary>
         static MethodCallDumper()
         {
-            objDumper = new ObjectDumper();
+            ObjDumper = new ObjectDumper();
         }
 
         #endregion
@@ -62,7 +62,7 @@
                 Id = id,
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
-                PostCallInstance = objDumper.DumpObject(target)
+                PostCallInstance = ObjDumper.DumpObject(target)
             };
         }
 
@@ -103,17 +103,17 @@
                 Id = id,
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
-                PostCallInstance = objDumper.DumpObject(target),
+                PostCallInstance = ObjDumper.DumpObject(target),
                 ReturnValue = new Xml.Value()
             };
 
             if (returnValue.IsPrimitive())
             {
-                call.ReturnValue.Item = objDumper.DumpPrimitive(returnValue);
+                call.ReturnValue.Item = ObjDumper.DumpPrimitive(returnValue);
             }
             else
             {
-                call.ReturnValue.Item = objDumper.DumpObject(returnValue);
+                call.ReturnValue.Item = ObjDumper.DumpObject(returnValue);
             }
 
             return call;
