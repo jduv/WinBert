@@ -84,7 +84,8 @@
             {
                 foreach (var operation in methodBody.Operations)
                 {
-                    Debug.WriteLine(operation.ToString());
+                    Debug.WriteLine("OpCode: " + operation.OperationCode);
+                    Debug.WriteLine("Value type: " + operation.Value);
                 }
             }
 

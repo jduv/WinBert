@@ -7,6 +7,7 @@
     /// Represents an exception thrown when something occurs during the instrumetation pass.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
+    [Serializable]
     public class InstrumentationException : Exception
     {
         #region Constructors & Destructors

@@ -10,6 +10,7 @@
     /// of source code or a comparable error occurs.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
+    [Serializable]
     public class CompilationException : Exception
     {
         #region Fields & Constants
