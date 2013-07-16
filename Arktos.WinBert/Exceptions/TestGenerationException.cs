@@ -7,6 +7,7 @@
     /// Throw this exception when an error or issue occurs during test generation.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
+    [Serializable]
     public class TestGenerationException : Exception
     {
         #region Fields & Constants

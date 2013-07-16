@@ -98,7 +98,7 @@
 
             if (validTypeNames == null)
             {
-                throw new ArgumentNullException("Types list cannot be null!");
+                throw new ArgumentNullException("validTypeNames");
             }
 
             if (string.IsNullOrEmpty(this.config.GeneratedTestsSubDirName))

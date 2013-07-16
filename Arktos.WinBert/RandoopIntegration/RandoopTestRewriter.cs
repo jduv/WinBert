@@ -4,7 +4,12 @@
     using Microsoft.Cci.MutableCodeModel;
     using Arktos.WinBert.Instrumentation;
     using AppDomainToolkit;
+    using System;
+    using System.Diagnostics;
 
+    /// <summary>
+    /// Class that rewrites a generated randoop test.
+    /// </summary>
     public class RandoopTestRewriter : MetadataRewriter
     {
         #region Fields & Constants
@@ -25,26 +30,62 @@
 
         #region Public Methods
 
+        /// <summary>
+        /// Creates an instance of the RandoopTestRewriter class.
+        /// </summary>
+        /// <param name="testMethodName">The name of the test method to look for.</param>
+        /// <returns>An instance of the RandoopTestRewriter class.</returns>
         public static RandoopTestRewriter Create(string testMethodName)
         {
             return Create(testMethodName, new PeReader.DefaultHost());
         }
 
+        /// <summary>
+        /// Creates an instance of the RandoopTestRewriter class.
+        /// </summary>
+        /// <param name="testMethodName">The name of the test method to look for.</param>
+        /// <param name="host">The metadata host.</param>
+        /// <returns>An instance of the RandoopTestRewriter class.</returns>
         public static RandoopTestRewriter Create(string testMethodName, IMetadataHost host)
         {
+            if (string.IsNullOrWhiteSpace(testMethodName))
+            {
+                throw new ArgumentException("Test method name cannot be null or white space!");
+            }
+
+            if (host == null)
+            {
+                throw new ArgumentNullException("host");
+            }
+
             return new RandoopTestRewriter(testMethodName, host);
         }
 
+        /// <summary>
+        /// Rewrites an instrumentation target.
+        /// </summary>
+        /// <param name="target">The target to rewrite.</param>
+        /// <returns>An assembly target pointing to the assembly inside the rewritten instrumentation
+        /// target.</returns>
         public IAssemblyTarget Rewrite(IInstrumentationTarget target)
         {
+            this.RewriteChildren(target.MutableAssembly as Assembly);
             return target.Save();
         }
 
+        /// <summary>
+        /// Rewrites the target method body.
+        /// </summary>
+        /// <param name="methodBody">The method body to rewrite.</param>
+        /// <returns>The rewritten method body.</returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
             if (methodBody.MethodDefinition.Name.Value.Equals(this.testMethodName))
             {
-                // Rewrite
+                foreach (var operation in methodBody.Operations)
+                {
+                    Debug.WriteLine(operation.ToString());
+                }
             }
 
             return methodBody;

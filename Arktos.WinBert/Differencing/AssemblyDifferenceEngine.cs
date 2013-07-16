@@ -67,8 +67,8 @@
 
             int count = 0;
             var typeDiffs = new List<ITypeDifferenceResult>();
-            var oldTypes = oldObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && !x.IsInterface).ToDictionary(x => x.Name);
-            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && !x.IsInterface).ToList();
+            var oldTypes = oldObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && !x.IsInterface && x.Attributes.HasFlag(TypeAttributes.Public)).ToDictionary(x => x.Name);
+            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && !x.IsInterface && x.Attributes.HasFlag(TypeAttributes.Public)).ToList();
 
             foreach (var newType in newTypes)
             {
