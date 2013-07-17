@@ -7,7 +7,7 @@
     /// Logs method calls of various types. In essence here we have factory methods for Xml.MethodCall
     /// objects.
     /// </summary>
-    public class MethodCallDumper
+    public sealed class MethodCallDumper
     {
         #region Constants & Fields
 

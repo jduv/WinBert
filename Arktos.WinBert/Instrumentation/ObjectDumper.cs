@@ -8,7 +8,7 @@
     /// <summary>
     /// Logs objects of various types, converting them to a simple XML representation.
     /// </summary>
-    public class ObjectDumper
+    public sealed class ObjectDumper
     {
         #region Public Methods
 

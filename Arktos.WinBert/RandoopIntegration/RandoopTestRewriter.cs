@@ -33,7 +33,9 @@
         /// <summary>
         /// Creates an instance of the RandoopTestRewriter class.
         /// </summary>
-        /// <param name="testMethodName">The name of the test method to look for.</param>
+        /// <param name="testMethodName">
+        /// The name of the test method to look for.
+        /// </param>
         /// <returns>An instance of the RandoopTestRewriter class.</returns>
         public static RandoopTestRewriter Create(string testMethodName)
         {
@@ -43,8 +45,12 @@
         /// <summary>
         /// Creates an instance of the RandoopTestRewriter class.
         /// </summary>
-        /// <param name="testMethodName">The name of the test method to look for.</param>
-        /// <param name="host">The metadata host.</param>
+        /// <param name="testMethodName">
+        /// The name of the test method to look for.
+        /// </param>
+        /// <param name="host">
+        /// The metadata host.
+        /// </param>
         /// <returns>An instance of the RandoopTestRewriter class.</returns>
         public static RandoopTestRewriter Create(string testMethodName, IMetadataHost host)
         {
@@ -64,9 +70,13 @@
         /// <summary>
         /// Rewrites an instrumentation target.
         /// </summary>
-        /// <param name="target">The target to rewrite.</param>
-        /// <returns>An assembly target pointing to the assembly inside the rewritten instrumentation
-        /// target.</returns>
+        /// <param name="target">
+        /// The target to rewrite.
+        /// </param>
+        /// <returns>
+        /// An assembly target pointing to the assembly inside the rewritten instrumentation
+        /// target.
+        /// </returns>
         public IAssemblyTarget Rewrite(IInstrumentationTarget target)
         {
             this.RewriteChildren(target.MutableAssembly as Assembly);
@@ -76,8 +86,12 @@
         /// <summary>
         /// Rewrites the target method body.
         /// </summary>
-        /// <param name="methodBody">The method body to rewrite.</param>
-        /// <returns>The rewritten method body.</returns>
+        /// <param name="methodBody">
+        /// The method body to rewrite.
+        /// </param>
+        /// <returns>
+        /// The rewritten method body.
+        /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
             if (methodBody.MethodDefinition.Name.Value.Equals(this.testMethodName))
