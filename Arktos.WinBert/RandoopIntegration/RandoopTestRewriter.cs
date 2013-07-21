@@ -79,6 +79,11 @@
         /// </returns>
         public IAssemblyTarget Rewrite(IInstrumentationTarget target)
         {
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
+
             this.RewriteChildren(target.MutableAssembly as Assembly);
             return target.Save();
         }

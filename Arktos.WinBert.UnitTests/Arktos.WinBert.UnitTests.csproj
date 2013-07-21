@@ -204,10 +204,16 @@
     <Content Include="filecopier-test-files\test-dir-to-copy\subdir\src.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="test-assembly-files\RandoopTestRewriterConsoleApp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="test-assembly-files\InterfaceTestAssembly1.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="test-assembly-files\InterfaceTestAssembly2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="test-assembly-files\RandoopTestRewriterTestAssembly.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="test-assembly-files\TestWithNoReferences.dll">
