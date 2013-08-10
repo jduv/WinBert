@@ -18,7 +18,7 @@
 
         private IMetadataHost host;
         private PdbReader pdbReader;
-        private IAssembly mutableAssembly;
+        private Assembly mutableAssembly;
         private ILocalScopeProvider localScopeProvider;
 
         #endregion
@@ -109,7 +109,7 @@
         }
 
         /// <inheritdoc />
-        public IAssembly MutableAssembly
+        public Assembly MutableAssembly
         {
             get
             {
@@ -223,7 +223,7 @@
         /// <returns>
         /// A mutable copy of the target assembly.
         /// </returns>
-        private static IAssembly GetMutableAssembly(IAssemblyTarget target, IMetadataHost host)
+        private static Assembly GetMutableAssembly(IAssemblyTarget target, IMetadataHost host)
         {
             var copier = new MetadataDeepCopier(host);
             return copier.Copy(LoadModule(target, host));
@@ -268,11 +268,11 @@
         /// <returns>
         /// The target module.
         /// </returns>
-        private static IAssembly LoadModule(IAssemblyTarget target, IMetadataHost host)
+        private static Assembly LoadModule(IAssemblyTarget target, IMetadataHost host)
         {
             var location = string.IsNullOrEmpty(target.Location) ? target.CodeBase.LocalPath : target.Location;
-            var module = host.LoadUnitFrom(location) as IAssembly;
-            if (module == null || module is Dummy)
+            var module = host.LoadUnitFrom(location) as Assembly;
+            if (module == null)
             {
                 throw new FileNotFoundException("Unable to load assembly at location: " + target.Location);
             }
@@ -289,7 +289,7 @@
         /// <returns>
         /// A string representing the full name of the target assembly.
         /// </returns>
-        private static string GetAssemblyName(IAssembly assembly)
+        private static string GetAssemblyName(Assembly assembly)
         {
             var culture = string.IsNullOrEmpty(assembly.Culture) ? "neutral" : assembly.Culture;
             return assembly.Name + ", Version=" + assembly.Version + 

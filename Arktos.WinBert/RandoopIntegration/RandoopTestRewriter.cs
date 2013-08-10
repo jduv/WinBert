@@ -99,6 +99,11 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
+            if (methodBody == null)
+            {
+                throw new ArgumentNullException("methodBody");
+            }
+
             if (methodBody.MethodDefinition.Name.Value.Equals(this.testMethodName))
             {
                 foreach (var operation in methodBody.Operations)

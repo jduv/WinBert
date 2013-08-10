@@ -4,6 +4,7 @@
     using Arktos.WinBert.RandoopIntegration;
     using Microsoft.Cci;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
     using System;
 
     [TestClass]
@@ -45,6 +46,27 @@
             var target = RandoopTestRewriter.Create("HelloWorld", Host);
             IInstrumentationTarget toRewrite = null;
             var expected = target.Rewrite(toRewrite);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Rewrite_NullMethodBody()
+        {
+            var target = RandoopTestRewriter.Create("HelloWorld", Host);
+            IMethodBody toRewrite = null;
+            var expected = target.Rewrite(toRewrite);
+        }
+        
+        [TestMethod]
+        public void Rewrite_AssemblyTarget()
+        {
+            Assert.Fail("Not Implemented");
+        }
+
+        [TestMethod]
+        public void Rewrite_MethodBody()
+        {
+            Assert.Fail("Not Implemented");
         }
 
         #endregion

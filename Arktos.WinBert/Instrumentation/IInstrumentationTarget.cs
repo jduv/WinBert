@@ -2,6 +2,7 @@
 {
     using AppDomainToolkit;
     using Microsoft.Cci;
+    using Microsoft.Cci.MutableCodeModel;
 
     /// <summary>
     /// Defines behavior for instrumentation targets.
@@ -24,7 +25,7 @@
         /// <summary>
         /// Gets the mutable assembly.
         /// </summary>
-        IAssembly MutableAssembly { get; }
+        Assembly MutableAssembly { get; }
 
         /// <summary>
         /// Gets the local scope provider.
