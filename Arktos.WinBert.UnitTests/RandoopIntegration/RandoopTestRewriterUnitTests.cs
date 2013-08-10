@@ -3,9 +3,11 @@
     using Arktos.WinBert.Instrumentation;
     using Arktos.WinBert.RandoopIntegration;
     using Microsoft.Cci;
+    using Microsoft.Cci.MutableCodeModel;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using System;
+    using System.Collections.Generic;
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
