@@ -84,7 +84,7 @@
                 throw new ArgumentNullException("target");
             }
 
-            this.RewriteChildren(target.MutableAssembly as Assembly);
+            this.RewriteChildren(target.MutableAssembly);
             return target.Save();
         }
 

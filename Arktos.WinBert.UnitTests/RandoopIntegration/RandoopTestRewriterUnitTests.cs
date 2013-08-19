@@ -1,5 +1,6 @@
 ﻿namespace Arktos.WinBert.UnitTests.RandoopIntegration
 {
+    using AppDomainToolkit;
     using Arktos.WinBert.Instrumentation;
     using Arktos.WinBert.RandoopIntegration;
     using Microsoft.Cci;
@@ -8,6 +9,7 @@
     using Moq;
     using System;
     using System.IO;
+    using System.Linq;
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
@@ -22,6 +24,8 @@
         private static readonly string TestAssemblyName = "RandoopTestRewriterTestAssembly.dll";
 
         private static readonly string TestAssemblyPath = TestDir + TestAssemblyName;
+
+        private static readonly string TestMethodName = "Main";
 
         #endregion
 
@@ -68,15 +72,21 @@
         [TestMethod]
         public void Rewrite_InstrumentationTarget()
         {
-            //var mutableAssembly = this.LoadAssemblyForInstrumentation(TestAssemblyPath);
+            // Load assembly twice so we can compare them later.
+            var originalAssembly = LoadAssemblyForInstrumentation(TestAssemblyPath);
+            var mutableAssembly = LoadAssemblyForInstrumentation(TestAssemblyPath);
+
+            // Set up mocks
             var toInstrument = new Mock<IInstrumentationTarget>();
-            //toInstrument.Setup(x => x.MutableAssembly).Returns(mutableAssembly);
-            // Execute save once.
+            toInstrument.Setup(x => x.MutableAssembly).Returns(mutableAssembly);
+
+            var target = RandoopTestRewriter.Create(TestMethodName, Host);
+            var actual = target.Rewrite(toInstrument.Object);
+
+            // Should have executed save once.
             toInstrument.Verify(x => x.Save(), Times.Once());
 
-            var target = RandoopTestRewriter.Create("Main", Host);
-            target.Rewrite(toInstrument.Object);
-            Assert.Fail("Not Implemented");
+            Assert.Fail("Not Complete");
         }
 
         [TestMethod]
@@ -91,17 +101,7 @@
 
         #region Private Methods
 
-        /// <summary>
-        /// Loads an assembly from the target path and returns it as a mutable assembly
-        /// in the CCI metadata sense.
-        /// </summary>
-        /// <param name="path">
-        /// The path to the assembly to load. Cannot be null or empty.
-        /// </param>
-        /// <returns>
-        /// A mutable assembly, copied by a metadata deep copier.
-        /// </returns>
-        private Assembly LoadAssemblyForInstrumentation(string path)
+        private static Assembly LoadAssemblyForInstrumentation(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -109,7 +109,7 @@
             }
 
             var copier = new MetadataDeepCopier(Host);
-            var assembly = Host.LoadUnitFrom(path) as Assembly;
+            var assembly = Host.LoadUnitFrom(path) as IAssembly;
 
             // File not found. Couldn't load.
             if (assembly == null)
