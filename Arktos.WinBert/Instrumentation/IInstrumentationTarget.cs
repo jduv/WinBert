@@ -42,10 +42,10 @@
         #region Methods
 
         /// <summary>
-        /// Saves the target mutable module out to the file path.
+        /// Instruments the assembly targeted by this implementation in-place.
         /// </summary>
         /// <returns>
-        /// An AssemblyTarget pointing to the file location.
+        /// An AssemblyTarget pointing to the file location of the instrumented assembly.
         /// </returns>
         IAssemblyTarget Save();
 

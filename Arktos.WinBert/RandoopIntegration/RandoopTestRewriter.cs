@@ -89,7 +89,10 @@
         }
 
         /// <summary>
-        /// Rewrites the target method body.
+        /// Rewrites the target method body. Method bodies will be assumed to follow the Randoop
+        /// pattern of a target object instantiation followed by some number of method calls on 
+        /// that object. All of this will usually be wrapped in a try/catch block, but the rewriter
+        /// will try to ignore those as best it can.
         /// </summary>
         /// <param name="methodBody">
         /// The method body to rewrite.

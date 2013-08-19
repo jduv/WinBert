@@ -171,6 +171,11 @@
         }
 
         /// <inheritdoc />
+        /// <remarks>
+        /// This implementation will save the file in-place based on the path of the target assembly
+        /// that we're instrumenting, but with a .instrumented tacked on before the original file's
+        /// extension.
+        /// </remarks>
         public IAssemblyTarget Save()
         {
             if (this.IsDisposed)
@@ -268,11 +273,11 @@
         /// <returns>
         /// The target module.
         /// </returns>
-        private static Assembly LoadModule(IAssemblyTarget target, IMetadataHost host)
+        private static IAssembly LoadModule(IAssemblyTarget target, IMetadataHost host)
         {
             var location = string.IsNullOrEmpty(target.Location) ? target.CodeBase.LocalPath : target.Location;
-            var module = host.LoadUnitFrom(location) as Assembly;
-            if (module == null)
+            var module = host.LoadUnitFrom(location) as IAssembly;
+            if (module == null || module is Dummy)
             {
                 throw new FileNotFoundException("Unable to load assembly at location: " + target.Location);
             }
