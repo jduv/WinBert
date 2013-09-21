@@ -73,8 +73,8 @@
         public void Rewrite_InstrumentationTarget()
         {
             // Load assembly twice so we can compare them later.
-            var originalAssembly = LoadAssemblyForInstrumentation(TestAssemblyPath);
-            var mutableAssembly = LoadAssemblyForInstrumentation(TestAssemblyPath);
+            var originalAssembly = LoadMutableAssemblyForInstrumentation(TestAssemblyPath);
+            var mutableAssembly = LoadMutableAssemblyForInstrumentation(TestAssemblyPath);
 
             // Set up mocks
             var toInstrument = new Mock<IInstrumentationTarget>();
@@ -101,7 +101,7 @@
 
         #region Private Methods
 
-        private static Assembly LoadAssemblyForInstrumentation(string path)
+        private static Assembly LoadMutableAssemblyForInstrumentation(string path)
         {
             if (string.IsNullOrEmpty(path))
             {

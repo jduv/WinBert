@@ -66,7 +66,8 @@
 
             var diffResult = TypeDifferenceResult.FromType(newObject);
             var oldTypeDict = oldObject.GetMethods().Where(x => x.DeclaringType.Name == oldObject.Name).ToDictionary(x => x.Name);
-            var newTypes = newObject.GetMethods().Where(x => x.DeclaringType.Name == newObject.Name && !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
+            var newTypes = newObject.GetMethods().Where(x => x.DeclaringType.Name == newObject.Name && 
+                !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
 
             foreach (var method in newTypes)
             {
@@ -115,13 +116,16 @@
                 }
                 else
                 {
-                    for (int i = 0; i < firstBodyBits.Length; i++)
+                    // While loop is more readable and avoids break/return mid loop.
+                    int i = 0;
+                    while (i < firstBodyBits.Length && !areDifferent)
                     {
                         if (firstBodyBits[i] != secondBodyBits[i])
                         {
                             areDifferent = true;
-                            break;
                         }
+
+                        i++;
                     }
                 }
             }
