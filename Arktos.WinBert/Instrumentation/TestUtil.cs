@@ -1,6 +1,7 @@
-﻿using System;
-using Arktos.WinBert.Util;
+﻿using Arktos.WinBert.Util;
 using Arktos.WinBert.Xml;
+using System;
+using System.IO;
 namespace Arktos.WinBert.Instrumentation
 {
     /// <summary>
@@ -109,7 +110,7 @@ namespace Arktos.WinBert.Instrumentation
             StateRecorder.EndTest();
 
             // Do some simple verification.
-            if (VerifyPath(path))
+            if (!VerifyFilePath(path))
             {
                 throw new ArgumentException("Cannot save analysis due to an invalid path! Did not pass verification: " + path);
             }
@@ -164,9 +165,34 @@ namespace Arktos.WinBert.Instrumentation
         /// <returns>
         /// True if the path is valid, false otherwise.
         /// </returns>
-        private static bool VerifyPath(string toVerify)
+        private static bool VerifyFilePath(string toVerify)
         {
-            throw new NotImplementedException();
+            bool verified = false;
+            if (!string.IsNullOrWhiteSpace(toVerify))
+            {
+                verified = (File.Exists(toVerify) || Directory.Exists(toVerify)) ?
+                    !File.GetAttributes(toVerify).HasFlag(FileAttributes.Directory) && VerifyFileExtension(toVerify) :
+                    VerifyFileExtension(toVerify);
+
+            }
+
+            return verified;
+        }
+
+        /// <summary>
+        /// Quick and dirty. Ensures the passed in path points to a valid XML file. Doesn't matter if it
+        /// exists or not.
+        /// </summary>
+        /// <param name="toVerify">
+        /// The path to verify.
+        /// </param>
+        /// <returns>
+        /// True if the target path isn't null or empty and contains an XML extension.
+        /// </returns>
+        private static bool VerifyFileExtension(string toVerify)
+        {
+            String extension = Path.GetExtension(toVerify);
+            return !string.IsNullOrEmpty(extension) && extension.Equals(".xml", StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion

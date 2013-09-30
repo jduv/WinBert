@@ -1,15 +1,37 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using System;
     using Arktos.WinBert.Instrumentation;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
+    using System;
 
     [TestClass]
     public class TestUtilUnitTests
     {
+        #region Fields & Constants
+
+        private Mock<IFileSystem> fileSystemMock;
+        private Mock<ITestStateRecorder> stateRecorderMock;
+
+        #endregion
+        #region Test Plumbing
+
+        [TestInitialize]
+        public void TestInit()
+        {
+            this.fileSystemMock = new Mock<IFileSystem>();
+            this.stateRecorderMock = new Mock<ITestStateRecorder>();
+
+            // Required because we're hitting a static class
+            TestUtil.FileSystem = fileSystemMock.Object;
+            TestUtil.StateRecorder = stateRecorderMock.Object;
+            // If these aren't reset, things'll go weird.
+        }
+
+        #endregion
+
         #region Test Methods
 
         #region Properties
@@ -64,19 +86,18 @@
         #region EndTest
 
         [TestMethod]
-        public void EndTest_HappyPath()
+        public void EndTest_SavesSuccessfully()
         {
             var targetPath = @"./out.xml";
 
-            // State recorder mock.
-            var stateRecorderMock = new Mock<ITestStateRecorder>();
-            stateRecorderMock.Verify(x => x.EndTest(), Times.AtMostOnce());
-            stateRecorderMock.Setup(x => x.AnalysisLog).Returns(new WinBertAnalysisLog());
+            // Set up the state recorder
+            this.stateRecorderMock.Verify(x => x.EndTest(), Times.AtMostOnce());
+            this.stateRecorderMock.Setup(x => x.AnalysisLog).Returns(new WinBertAnalysisLog());
 
             // File system mock.
-            var fsMock = new Mock<IFileSystem>();
-            fsMock.Setup(x => x.WriteAllText(It.IsAny<string>(), It.IsAny<string>())).Callback<string, string>(
-                (path, xml) => 
+            this.fileSystemMock.Setup(x => x.WriteAllText(It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string>(
+                (path, xml) =>
                 {
                     // Verify the deserialization at least looks OK in a basic sense.
                     Assert.IsFalse(string.IsNullOrWhiteSpace(xml));
@@ -85,18 +106,14 @@
                     Assert.AreEqual(targetPath, path);
                 });
 
-            // Assign mocks
-            TestUtil.StateRecorder = stateRecorderMock.Object;
-            TestUtil.FileSystem = fsMock.Object;
-
-            // Go!
+            // Mocks are assigned in test init, Go!
             TestUtil.StartTest();
             TestUtil.EndTest(targetPath);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void EndTest_NullArgument_ExceptionThrown()
+        public void EndTest_NullArgument()
         {
             TestUtil.StartTest();
             TestUtil.EndTest(null);
@@ -107,15 +124,13 @@
         #region RecordVoidInstanceMethodCall
 
         [TestMethod]
-        public void RecordVoidInstanceMethodCall_StateRecorderCalledOnce()
+        public void RecordVoidInstanceMethodCall_StateRecorderMethodCalledOnce()
         {
             // These values are meaningless--we're testing that the method gets called, that's all.
             int target = 0;
             var signature = "TestMethod";
 
-            var mock = new Mock<ITestStateRecorder>();
-            mock.Verify(x => x.RecordVoidInstanceMethodCall(target, signature), Times.AtMostOnce());
-            TestUtil.StateRecorder = mock.Object;
+            this.stateRecorderMock.Verify(x => x.RecordVoidInstanceMethodCall(target, signature), Times.AtMostOnce());
             TestUtil.RecordVoidInstanceMethodCall(target, signature);
         }
 
@@ -124,16 +139,14 @@
         #region RecordInstanceMethodCall
 
         [TestMethod]
-        public void RecordInstanceMethodCall_StateRecorderCalledOnce()
+        public void RecordInstanceMethodCall_StateRecorderMethodCalledOnce()
         {
             // These values are meaningless--we're testing that the method gets called, that's all.
             int target = 0;
             int returnValue = 1;
             var signature = "TestMethod";
 
-            var mock = new Mock<ITestStateRecorder>();
-            mock.Verify(x => x.RecordInstanceMethodCall(target, returnValue, signature), Times.AtMostOnce());
-            TestUtil.StateRecorder = mock.Object;
+            this.stateRecorderMock.Verify(x => x.RecordInstanceMethodCall(target, returnValue, signature), Times.AtMostOnce());
             TestUtil.RecordInstanceMethodCall(target, returnValue, signature);
         }
 
@@ -142,14 +155,12 @@
         #region AddMethodToDynamicCallGraph
 
         [TestMethod]
-        public void AddMethodToDynamicCallGraph_StateRecorderCalledOnce()
+        public void AddMethodToDynamicCallGraph_StateRecorderMethodCalledOnce()
         {
             // These values are meaningless--we're testing that the method gets called, that's all.
             var signature = "TestMethod";
 
-            var mock = new Mock<ITestStateRecorder>();
-            mock.Verify(x => x.AddMethodToDynamicCallGraph(signature), Times.AtMostOnce());
-            TestUtil.StateRecorder = mock.Object;
+            this.stateRecorderMock.Verify(x => x.AddMethodToDynamicCallGraph(signature), Times.AtMostOnce());
             TestUtil.AddMethodToDynamicCallGraph(signature);
         }
 

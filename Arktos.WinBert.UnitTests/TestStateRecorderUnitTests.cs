@@ -31,7 +31,7 @@
         #region EndTest
 
         [TestMethod]
-        public void EndTest_HappyPath()
+        public void EndTest_CorrectState()
         {
             var target = new TestStateRecorder();
             target.StartTest();
@@ -63,7 +63,7 @@
         #region RecordVoidInstanceMethodCall
 
         [TestMethod]
-        public void RecordVoidInstanceMethodCall_HappyPath()
+        public void RecordVoidInstanceMethodCall_CorrectState()
         {
             Assert.Fail("Not Implemented.");
         }
@@ -81,7 +81,7 @@
         #region RecordInstanceMethodCall
 
         [TestMethod]
-        public void RecordInstanceMethodCall_HappyPath()
+        public void RecordInstanceMethodCall_CorrectState()
         {
             Assert.Fail("Not Implemented.");
         }
@@ -99,7 +99,7 @@
         #region AddMethodToDynamicCallGraph
 
         [TestMethod]
-        public void AddMethodToDynamicCallGraph_HappyPath()
+        public void AddMethodToDynamicCallGraph_CorrectState()
         {
             Assert.Fail("Not Implemented.");
         }
