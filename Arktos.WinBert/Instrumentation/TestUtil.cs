@@ -1,4 +1,6 @@
 ﻿using System;
+using Arktos.WinBert.Util;
+using Arktos.WinBert.Xml;
 namespace Arktos.WinBert.Instrumentation
 {
     /// <summary>
@@ -12,7 +14,8 @@ namespace Arktos.WinBert.Instrumentation
         #region Fields & Constants
 
         private static readonly object lockObj = new object();
-        private static ITestDumper dumper;
+        private static ITestStateRecorder recorder;
+        private static IFileSystem fileSystem;
 
         #endregion
 
@@ -23,7 +26,8 @@ namespace Arktos.WinBert.Instrumentation
         /// </summary>
         static TestUtil()
         {
-            Dumper = new TestDumper();
+            recorder = new TestStateRecorder();
+            fileSystem = new FileSystem();
         }
 
         #endregion
@@ -31,14 +35,14 @@ namespace Arktos.WinBert.Instrumentation
         #region Properties
 
         /// <summary>
-        /// Gets or sets the dumper implementation. Primarily exists for a test seam--it is not recommended
+        /// Gets or sets the dumper implementation. Primarily exists as a test seam--it is not recommended
         /// to re-set this in the middle of a testing session. That will likely result in unknown behavior.
         /// </summary>
-        public static ITestDumper Dumper
+        public static ITestStateRecorder StateRecorder
         {
             get
             {
-                return dumper;
+                return recorder;
             }
 
             set
@@ -52,7 +56,33 @@ namespace Arktos.WinBert.Instrumentation
                     }
                     else
                     {
-                        dumper = value;
+                        recorder = value;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the file system implementation. Primarly exists as a test seam.
+        /// </summary>
+        public static IFileSystem FileSystem
+        {
+            get
+            {
+                return fileSystem;
+            }
+
+            set
+            {
+                lock (lockObj)
+                {
+                    if (value == null)
+                    {
+                        throw new ArgumentNullException("FileSystem");
+                    }
+                    else
+                    {
+                        fileSystem = value;
                     }
                 }
             }
@@ -63,43 +93,80 @@ namespace Arktos.WinBert.Instrumentation
         #region Public Methods
 
         /// <summary>
-        /// Static implementation of <see cref="ITestDumper.StartTest"/>.
+        /// Static implementation of <see cref="ITestStateRecorder.StartTest"/>.
         /// </summary>
         public static void StartTest()
         {
-            Dumper.StartTest();
+            StateRecorder.StartTest();
         }
 
         /// <summary>
-        /// Static implementation of <see cref="ITestDumper.EndTest"/>.
+        /// Static implementation of <see cref="ITestStateRecorder.EndTest"/>.
         /// </summary>
         public static void EndTest(string path)
         {
-            Dumper.EndTest(path);
+            // End state in the dumper. Always do this first.
+            StateRecorder.EndTest();
+
+            // Do some simple verification.
+            if (VerifyPath(path))
+            {
+                throw new ArgumentException("Cannot save analysis due to an invalid path! Did not pass verification: " + path);
+            }
+
+            // Deserialize dumper.
+            var value = Serializer.XmlSerialize(recorder.AnalysisLog);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new InvalidOperationException("Deserialized analysis log cannot be empty!");
+            }
+
+            // Write all text. If this blows due to a bad path, it should be caught.
+            FileSystem.WriteAllText(path, value);
         }
 
         /// <summary>
-        /// Static implementation of <see cref="ITestDumper.DumpVoidInstanceMethodCall"/>.
+        /// Static implementation of <see cref="ITestStateRecorder.RecordVoidInstanceMethodCall"/>.
         /// </summary>
-        public static void DumpVoidInstanceMethodCall(object target, string signature)
+        public static void RecordVoidInstanceMethodCall(object target, string signature)
         {
-            Dumper.DumpVoidInstanceMethodCall(target, signature);
+            StateRecorder.RecordVoidInstanceMethodCall(target, signature);
         }
 
         /// <summary>
-        /// Static implementation of <see cref="ITestDumper.DumpInstanceMethodCall"/>.
+        /// Static implementation of <see cref="ITestStateRecorder.RecordInstanceMethodCall"/>.
         /// </summary>
-        public static void DumpInstanceMethodCall(object target, object returnValue, string signature)
+        public static void RecordInstanceMethodCall(object target, object returnValue, string signature)
         {
-            Dumper.DumpInstanceMethodCall(target, returnValue, signature);
+            StateRecorder.RecordInstanceMethodCall(target, returnValue, signature);
         }
 
         /// <summary>
-        /// Static implementation of <see cref="ITestDumper.AddMethodToDynamicCallGraph"/>.
+        /// Static implementation of <see cref="ITestStateRecorder.AddMethodToDynamicCallGraph"/>.
         /// </summary>
         public static void AddMethodToDynamicCallGraph(string signature)
         {
-            Dumper.AddMethodToDynamicCallGraph(signature);
+            StateRecorder.AddMethodToDynamicCallGraph(signature);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Detects if the target path is valid or not. A valid path here means that it's a file that
+        /// may or may not exists but certainly has an XML extension. Directories will fail verification
+        /// without a file name.
+        /// </summary>
+        /// <param name="toVerify">
+        /// The path to verify.
+        /// </param>
+        /// <returns>
+        /// True if the path is valid, false otherwise.
+        /// </returns>
+        private static bool VerifyPath(string toVerify)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
