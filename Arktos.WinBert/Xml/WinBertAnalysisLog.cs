@@ -11,6 +11,14 @@
     }
 
     /// <summary>
+    /// Partial implementation of a partial class.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    public sealed partial class TestExecution
+    {
+    }
+
+    /// <summary>
     /// Partial implementation of a generated class.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]

@@ -163,9 +163,12 @@
     <Compile Include="Extensions\Objects.cs" />
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
+    <Compile Include="Instrumentation\ITestDumper.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="Instrumentation\MethodCallDumper.cs" />
     <Compile Include="Instrumentation\ObjectDumper.cs" />
+    <Compile Include="Instrumentation\TestDumper.cs" />
+    <Compile Include="Instrumentation\TestUtil.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />
     <Compile Include="RandoopIntegration\RandoopTestInstrumenter.cs" />

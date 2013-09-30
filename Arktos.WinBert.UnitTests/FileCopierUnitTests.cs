@@ -73,6 +73,8 @@
 
         #region Test Methods
 
+        #region TryCopyFile
+
         [TestMethod]
         public void TryCopyFile_NoFlags()
         {
@@ -129,6 +131,10 @@
             var target = new FileCopier();
             target.TryCopyFile(TargetDestDir, TargetDestDir);
         }
+
+        #endregion
+
+        #region CopyDirectory
 
         [TestMethod]
         [ExpectedException(typeof(DirectoryNotFoundException))]
@@ -195,6 +201,8 @@
 
         #endregion
 
+        #endregion
+
         #region Private Methods
 
         private bool CopyToDirectory(FileCopier copier)
@@ -209,7 +217,7 @@
         }
 
         private bool CopyToExistingFile(FileCopier copier)
-        {            
+        {
             if (File.Exists(ExistingDestTxtPath))
             {
                 return copier.TryCopyFile(SrcFilePath, ExistingDestTxtPath);
@@ -222,7 +230,7 @@
         }
 
         private bool CopyToReadOnlyFile(FileCopier copier)
-        {            
+        {
             if (File.Exists(ReadOnlyDestTxtPath))
             {
                 FileInfo info = new FileInfo(ReadOnlyDestTxtPath);

@@ -6,7 +6,7 @@
     using System;
 
     [TestClass]
-    public class ObjectDumperUnitTest
+    public class ObjectDumperUnitTests
     {
         #region Fields & Constants
 
