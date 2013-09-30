@@ -163,9 +163,12 @@
     <Compile Include="Extensions\Objects.cs" />
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
+    <Compile Include="Instrumentation\ITestStateRecorder.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
     <Compile Include="Instrumentation\MethodCallDumper.cs" />
     <Compile Include="Instrumentation\ObjectDumper.cs" />
+    <Compile Include="Instrumentation\TestStateRecorder.cs" />
+    <Compile Include="Instrumentation\TestUtil.cs" />
     <Compile Include="RandoopIntegration\PermissiveReflectionFilter.cs" />
     <Compile Include="RandoopIntegration\RandoopTestGenerator.cs" />
     <Compile Include="RandoopIntegration\RandoopTestInstrumenter.cs" />
@@ -185,6 +188,9 @@
     <Compile Include="Util\BuildVersionManager.cs" />
     <Compile Include="Util\FileCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\FileSystem.cs" />
+    <Compile Include="Util\IFileCopier.cs" />
+    <Compile Include="Util\IFileSystem.cs" />
     <Compile Include="Xml\Serializer.cs" />
     <Compile Include="Xml\WinBertAnalysisLog.cs" />
     <Compile Include="Xml\RandoopPluginConfig.cs" />

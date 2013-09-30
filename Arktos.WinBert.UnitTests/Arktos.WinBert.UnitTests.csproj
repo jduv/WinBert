@@ -155,6 +155,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestUtilUnitTests.cs" />
+    <Compile Include="TestStateRecorderUnitTests.cs" />
     <None Include="packages.config" />
     <None Include="test-src\TestSrc04.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -174,7 +176,7 @@
     <Compile Include="AssemblyDifferenceResultUnitTests.cs" />
     <Compile Include="InstrumentationTargetUnitTests.cs" />
     <Compile Include="MethodCallDumperUnitTests.cs" />
-    <Compile Include="ObjectDumperUnitTest.cs" />
+    <Compile Include="ObjectDumperUnitTests.cs" />
     <Compile Include="RandoopIntegration\RandoopTestRewriterUnitTests.cs" />
     <Compile Include="SerializerUnitTests.cs" />
     <Compile Include="StringsUnitTests.cs" />
