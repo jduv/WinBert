@@ -10,7 +10,7 @@
     {
         #region Test Methods
 
-        #region Constructors
+        #region Ctor
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

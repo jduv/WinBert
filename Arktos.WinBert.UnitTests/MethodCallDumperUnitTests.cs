@@ -55,14 +55,18 @@
             Assert.AreEqual(1U, actual.Id);
             Assert.AreEqual(Xml.MethodCallType.Instance,actual.Type);
 
+            // Verify call graph
+            Assert.IsNotNull(actual.DynamicCallGraph);
+            Assert.AreEqual(0, actual.DynamicCallGraph.Count);
+
             Assert.IsNull(actual.ReturnValue);
             Assert.IsNotNull(actual.PostCallInstance);
 
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
             Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(3, targetInstance.Fields.Length);
-            Assert.AreEqual(3, targetInstance.Properties.Length);
+            Assert.AreEqual(3, targetInstance.Fields.Count);
+            Assert.AreEqual(3, targetInstance.Properties.Count);
         }
 
         [TestMethod]
@@ -77,6 +81,10 @@
             Assert.AreEqual(1U, actual.Id);
             Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
 
+            // Verify call graph
+            Assert.IsNotNull(actual.DynamicCallGraph);
+            Assert.AreEqual(0, actual.DynamicCallGraph.Count);
+
             Assert.IsNull(actual.ReturnValue);
             Assert.IsNotNull(actual.PostCallInstance);
 
@@ -85,8 +93,8 @@
             Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
 
             Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(2, targetInstance.Fields.Length);
-            Assert.AreEqual(2, targetInstance.Properties.Length);
+            Assert.AreEqual(2, targetInstance.Fields.Count);
+            Assert.AreEqual(2, targetInstance.Properties.Count);
         }
 
         #endregion
@@ -130,6 +138,10 @@
             Assert.AreEqual(1U, actual.Id);
             Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
 
+            // Verify call graph
+            Assert.IsNotNull(actual.DynamicCallGraph);
+            Assert.AreEqual(0, actual.DynamicCallGraph.Count);
+
             Assert.IsNotNull(actual.ReturnValue);
 
             var result = actual.ReturnValue.Item as Xml.Primitive;
@@ -142,8 +154,8 @@
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
             Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(3, targetInstance.Fields.Length);
-            Assert.AreEqual(3, targetInstance.Properties.Length);
+            Assert.AreEqual(3, targetInstance.Fields.Count);
+            Assert.AreEqual(3, targetInstance.Properties.Count);
         }
 
         [TestMethod]
@@ -159,6 +171,10 @@
             Assert.AreEqual(1U, actual.Id);
             Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
 
+            // Verify call graph
+            Assert.IsNotNull(actual.DynamicCallGraph);
+            Assert.AreEqual(0, actual.DynamicCallGraph.Count);
+
             Assert.IsNotNull(actual.ReturnValue);
 
             var result = actual.ReturnValue.Item as Xml.Object;
@@ -170,8 +186,8 @@
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
             Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(3, targetInstance.Fields.Length);
-            Assert.AreEqual(3, targetInstance.Properties.Length);
+            Assert.AreEqual(3, targetInstance.Fields.Count);
+            Assert.AreEqual(3, targetInstance.Properties.Count);
         }
 
         [TestMethod]
@@ -186,6 +202,10 @@
             Assert.AreEqual(1U, actual.Id);
             Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
 
+            // Verify call graph
+            Assert.IsNotNull(actual.DynamicCallGraph);
+            Assert.AreEqual(0, actual.DynamicCallGraph.Count);
+
             Assert.IsNull(actual.ReturnValue);
             Assert.IsNotNull(actual.PostCallInstance);
 
@@ -194,8 +214,8 @@
             Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
 
             Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(2, targetInstance.Fields.Length);
-            Assert.AreEqual(2, targetInstance.Properties.Length);
+            Assert.AreEqual(2, targetInstance.Fields.Count);
+            Assert.AreEqual(2, targetInstance.Properties.Count);
         }
 
         #endregion

@@ -105,4 +105,20 @@
     public sealed partial class This
     {
     }
+
+    /// <summary>
+    /// Partial implementation of a partial class.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    public sealed partial class DynamicCallGraph
+    {
+    }
+
+    /// <summary>
+    /// Partial implementation of a partial class.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    public sealed partial class CallGraphNode
+    {
+    }
 }

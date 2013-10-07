@@ -29,7 +29,8 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="PostCallInstance" type="ba:Object" maxOccurs="1" />
+      <xs:element name="DynamicCallGraph" type="ba:DynamicCallGraph" />
+      <xs:element name="PostCallInstance" type="ba:Object" />
       <xs:element name="ReturnValue" type="ba:Value" minOccurs="0" />
     </xs:sequence>
     <xs:attribute name="Signature" type="xs:string" use="required"/>
@@ -152,6 +153,32 @@
     <xs:complexContent>
       <xs:extension base="ba:Object"/>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DynamicCallGraph">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a list of called methods. This is a flat list of A -> B call graph nodes. It is stored this way 
+        in order to keep the XML nice and clean. It should be parsed into a tree in analysis code--which should
+        be trivial to do.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CallGraphNode" type="ba:CallGraphNode" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="CallGraphNode">
+    <xs:annotation>
+      <xs:documentation>
+        Represents a call graph node. The sequence number places a topological ordering on the nodes with respect
+        to which method called which. This can be used to construct a real tree-like call graph quite easily.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Signature" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="SequenceNumber" type="xs:unsignedInt" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="WinBertAnalysisLog">

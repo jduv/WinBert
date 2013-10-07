@@ -1,13 +1,14 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
     using System;
+    using System.Collections.Generic;
     using Arktos.WinBert.Extensions;
 
     /// <summary>
     /// Logs method calls of various types. In essence here we have factory methods for Xml.MethodCall
     /// objects.
     /// </summary>
-    public sealed class MethodCallDumper
+    public sealed class MethodCallDumper : IMethodCallDumper
     {
         #region Constants & Fields
 
@@ -29,22 +30,7 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Logs a void instance method call.
-        /// </summary>
-        /// <param name="id">
-        /// The id to assign to the call.
-        /// </param>
-        /// <param name="target">
-        /// The post call instance to log. This should be the object that the instance method was executed
-        /// upon.
-        /// </param>
-        /// <param name="signature">
-        /// The signature of the executed method.
-        /// </param>
-        /// <returns>
-        /// An Xml.MethodCall instance.
-        /// </returns>
+        /// <inheritdoc/>
         public Xml.MethodCall DumpVoidInstanceMethod(uint id, object target, string signature)
         {
             if (string.IsNullOrEmpty(signature))
@@ -62,29 +48,12 @@
                 Id = id,
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
-                PostCallInstance = ObjDumper.DumpObject(target)
+                PostCallInstance = ObjDumper.DumpObject(target),
+                DynamicCallGraph = new List<Xml.CallGraphNode>()
             };
         }
 
-        /// <summary>
-        /// Dumps an instance method call with a return value.
-        /// </summary>
-        /// <param name="id">
-        /// The id to assign to the call.
-        /// </param>
-        /// <param name="target">
-        /// The post call instance to log. This should be the object that the instance method was executed
-        /// upon.
-        /// </param>
-        /// <param name="returnValue">
-        /// The return value of the method.
-        /// </param>
-        /// <param name="signature">
-        /// The signature of the executed method.
-        /// </param>
-        /// <returns>
-        /// An Xml.MethodCall instance.
-        /// </returns>
+        /// <inheritdoc/>
         public Xml.MethodCall DumpInstanceMethod(uint id, object target, object returnValue, string signature)
         {
             if (string.IsNullOrEmpty(signature))
@@ -104,7 +73,8 @@
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
                 PostCallInstance = ObjDumper.DumpObject(target),
-                ReturnValue = new Xml.Value()
+                ReturnValue = new Xml.Value(),
+                DynamicCallGraph = new List<Xml.CallGraphNode>()
             };
 
             if (returnValue.IsPrimitive())

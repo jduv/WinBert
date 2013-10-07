@@ -162,6 +162,7 @@
     <Compile Include="Extensions\Strings.cs" />
     <Compile Include="Extensions\Objects.cs" />
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
+    <Compile Include="Instrumentation\IMethodCallDumper.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
     <Compile Include="Instrumentation\ITestStateRecorder.cs" />
     <Compile Include="Instrumentation\ITestInstrumenter.cs" />
@@ -279,7 +280,7 @@
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml RandoopPluginConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
-    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertAnalysisLogSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />
+    <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\Xsd2Code.exe&quot; WinBertAnalysisLogSchema.xsd $(RootNamespace).Xml WinBertAnalysisLogSchema.cs /if- /xa" WorkingDirectory="$(ProjectDir)/Xml" />
   </Target>
   <Target Name="AfterBuild">
     <PropertyGroup>

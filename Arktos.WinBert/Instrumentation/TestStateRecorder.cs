@@ -15,8 +15,7 @@
     {
         #region Fields & Constants
 
-        private IList<TestExecution> testExecutions;
-        private IList<MethodCall> methodCalls;
+        private readonly IMethodCallDumper methodDumper;
 
         #endregion
 
@@ -26,14 +25,24 @@
         /// Initializes a new instance of the <see cref="TestStateRecorder"/> class.
         /// </summary>
         public TestStateRecorder()
+            : this(new MethodCallDumper())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestStateRecorder"/> class. This constructor is more or less
+        /// a seam for testing.
+        /// </summary>
+        /// <param name="methodDumper">
+        /// The method call dumper to use when logging method call state.
+        /// </param>
+        public TestStateRecorder(IMethodCallDumper methodDumper)
         {
             // Interface properties
             this.TestCounter = 0;
             this.MethodCounter = 0;
-            this.AnalysisLog = new WinBertAnalysisLog();
-
-            // My specialized properties
-            this.testExecutions = new List<TestExecution>();
+            this.AnalysisLog = new WinBertAnalysisLog() { TestExecutions = new List<TestExecution>() };
+            this.methodDumper = methodDumper;
         }
 
         #endregion
@@ -50,22 +59,21 @@
         public WinBertAnalysisLog AnalysisLog { get; private set; }
 
         /// <summary>
-        /// Gets the currently selected test. Mainly exists as a test seam to verify the
-        /// state of the dumper. Please do not modify.
+        /// Gets the currently selected test. Exists as a test seam to verify the
+        /// state of the recorder.
         /// </summary>
         public TestExecution CurrentTest { get; private set; }
 
         /// <summary>
-        /// Gets an enumeration of all the logged test executions thus far. Mainly exists
-        /// as a test seam to verify the state of the dumper.
+        /// Gets the currently selected method call. Exists as a test seam to verify the state of
+        /// the recorder.
         /// </summary>
-        public IEnumerable<TestExecution> TestExeuctions
-        {
-            get
-            {
-                return this.testExecutions;
-            }
-        }
+        public MethodCall CurrentMethodCall { get; private set; }
+
+        /// <summary>
+        /// Gets the currently selected value of the call graph counter.
+        /// </summary>
+        public uint CallGraphCounter { get; private set; }
 
         #endregion
 
@@ -75,10 +83,7 @@
         public void StartTest()
         {
             // Create a new execution.
-            this.CurrentTest = new TestExecution() { Id = this.MethodCounter };
-
-            // Reset method calls list.
-            this.methodCalls = new List<MethodCall>();
+            this.CurrentTest = new TestExecution() { Id = this.MethodCounter, MethodCalls = new List<MethodCall>() };
         }
 
         ///<inheritdoc />
@@ -87,34 +92,42 @@
             this.ValidateCurrentTestState();
 
             // Use field, keeps list operations private.
-            this.testExecutions.Add(this.CurrentTest);
-            this.AnalysisLog.TestExecutions = this.testExecutions.ToArray();
+            this.AnalysisLog.TestExecutions.Add(this.CurrentTest);
             this.CurrentTest = null;
+            this.CurrentMethodCall = null;
             this.TestCounter++;
+            this.MethodCounter = 0; // Reset method counter.
         }
 
         ///<inheritdoc />
         public void RecordVoidInstanceMethodCall(object target, string signature)
         {
             this.ValidateCurrentTestState();
-
-            throw new NotImplementedException();
+            // Add method and increment method counter
+            var dumpedMethod = this.methodDumper.DumpVoidInstanceMethod(this.MethodCounter++, target, signature);
+            this.CurrentMethodCall = dumpedMethod;
+            this.CurrentTest.MethodCalls.Add(dumpedMethod);
+            this.CallGraphCounter = 0; // Reset the call graph counter.
         }
 
         ///<inheritdoc />
         public void RecordInstanceMethodCall(object target, object returnValue, string signature)
         {
             this.ValidateCurrentTestState();
-
-            throw new NotImplementedException();
+            // Add method and increment method counter
+            var dumpedMethod = this.methodDumper.DumpInstanceMethod(this.MethodCounter++, target, returnValue, signature);
+            this.CurrentMethodCall = dumpedMethod;
+            this.CurrentTest.MethodCalls.Add(dumpedMethod);
+            this.CallGraphCounter = 0; // Reset the call graph counter.
         }
 
         ///<inheritdoc />
         public void AddMethodToDynamicCallGraph(string signature)
         {
             this.ValidateCurrentTestState();
-
-            throw new NotImplementedException();
+            this.ValidateCurrentMethodCallState();
+            // Add node and increment call graph counter.
+            this.CurrentMethodCall.DynamicCallGraph.Add(new Xml.CallGraphNode() { SequenceNumber = this.CallGraphCounter++, Signature = signature });
         }
 
         #endregion
@@ -133,6 +146,20 @@
                     "Ensure that StartTest has already been called.";
                 throw new InvalidOperationException(msg);
             }
+        }
+
+        /// <summary>
+        /// Simply throws an exception if the current method call is null.
+        /// </summary>
+        private void ValidateCurrentMethodCallState()
+        {
+            if (this.CurrentMethodCall == null)
+            {
+                var msg = "Invalid state: current method call is null and must not be! " +
+                    "Ensure that StartTest and a method call logging function have already been called.";
+                throw new InvalidOperationException(msg);
+            }
+
         }
 
         #endregion

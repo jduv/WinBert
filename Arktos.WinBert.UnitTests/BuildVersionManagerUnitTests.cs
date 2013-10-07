@@ -11,7 +11,7 @@
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
     public class BuildVersionManagerUnitTests
     {
-        #region Fields and Constants
+        #region Fields & Constants
         
         private static readonly string ArchivePath = @"test-archive\";
 
@@ -52,7 +52,7 @@
 
         #region Test Methods
 
-        #region Constructors
+        #region Ctor
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]

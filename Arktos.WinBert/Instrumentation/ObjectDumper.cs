@@ -114,7 +114,7 @@
         /// <returns>
         /// An array of Xml.Field objects.
         /// </returns>
-        Xml.Field[] DumpFields(object target, ushort maxDepth)
+        List<Xml.Field> DumpFields(object target, ushort maxDepth)
         {
             var fields = new List<Xml.Field>();
             foreach (var field in target.GetType().GetFields(
@@ -150,7 +150,7 @@
                 fields.Add(dumpedField);
             }
 
-            return fields.ToArray();
+            return fields;
         }
 
         /// <summary>
@@ -166,7 +166,7 @@
         /// <returns>
         /// An array of Xml.Property objects.
         /// </returns>
-        Xml.Property[] DumpProperties(object target, ushort maxDepth)
+        List<Xml.Property> DumpProperties(object target, ushort maxDepth)
         {
             var properties = new List<Xml.Property>();
             foreach (var prop in target.GetType().GetProperties(
@@ -206,7 +206,7 @@
                 }
             }
 
-            return properties.ToArray();
+            return properties;
         }
 
         #endregion

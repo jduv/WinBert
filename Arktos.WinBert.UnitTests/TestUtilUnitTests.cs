@@ -16,6 +16,7 @@
         private Mock<ITestStateRecorder> stateRecorderMock;
 
         #endregion
+
         #region Test Plumbing
 
         [TestInitialize]

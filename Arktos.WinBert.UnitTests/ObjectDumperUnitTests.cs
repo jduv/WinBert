@@ -10,9 +10,9 @@
     {
         #region Fields & Constants
 
-        private static readonly string NullDump = @"<Null xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" />";
+        private static readonly string NullDump = @"<Null xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns=""http://arktos.org/WinBertAnalysisLogSchema.xsd"" />";
 
-        private static readonly string NotNullDump = @"<NotNull xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" />";
+        private static readonly string NotNullDump = @"<NotNull xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns=""http://arktos.org/WinBertAnalysisLogSchema.xsd"" />";
 
         #endregion
 
@@ -69,8 +69,8 @@
             var actual = target.DumpObject(toDump);
 
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
-            Assert.AreEqual(2, actual.Fields.Length);
-            Assert.AreEqual(2, actual.Properties.Length);
+            Assert.AreEqual(2, actual.Fields.Count);
+            Assert.AreEqual(2, actual.Properties.Count);
 
             // Fields
             var xFieldValue = actual.Fields[0].Value.Item as Xml.Primitive;
@@ -110,8 +110,8 @@
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.Properties);
-            Assert.AreEqual(12, actual.Fields.Length);
-            Assert.AreEqual(0, actual.Properties.Length);
+            Assert.AreEqual(12, actual.Fields.Count);
+            Assert.AreEqual(0, actual.Properties.Count);
         }
 
         [TestMethod]
@@ -124,8 +124,8 @@
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.Properties);
-            Assert.AreEqual(12, actual.Fields.Length);
-            Assert.AreEqual(12, actual.Properties.Length);
+            Assert.AreEqual(12, actual.Fields.Count);
+            Assert.AreEqual(12, actual.Properties.Count);
         }
 
         [TestMethod]
@@ -138,8 +138,8 @@
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.Properties);
 
-            Assert.AreEqual(3, actual.Fields.Length);
-            Assert.AreEqual(3, actual.Properties.Length);
+            Assert.AreEqual(3, actual.Fields.Count);
+            Assert.AreEqual(3, actual.Properties.Count);
 
             Assert.IsNotNull(actual.Fields[0]);
             Assert.IsNotNull(actual.Fields[1]);
@@ -180,8 +180,8 @@
             Assert.IsNotNull(actual);
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
 
-            Assert.AreEqual(1, actual.Fields.Length);
-            Assert.AreEqual(0, actual.Properties.Length);
+            Assert.AreEqual(1, actual.Fields.Count);
+            Assert.AreEqual(0, actual.Properties.Count);
 
             var refValue = actual.Fields[0].Value.Item as Xml.This;
             Assert.AreEqual("reference", actual.Fields[0].Name);

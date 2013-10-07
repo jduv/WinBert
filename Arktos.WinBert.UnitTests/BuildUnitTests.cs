@@ -1,16 +1,8 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using System;
-    using System.Text;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Arktos.WinBert.Xml;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-
-    /// <summary>
-    /// Unit tests for the Build class.
-    /// </summary>
     [TestClass]
     public class BuildUnitTests
     {
@@ -22,7 +14,7 @@
         public void Equals_SameObject_ReferenceEquals()
         {
             var target = new Build() { SequenceNumber = 0, AssemblyPath = @"C:\my\path\to\victory" };
-            Assert.AreEqual(target, target);            
+            Assert.AreEqual(target, target);
         }
 
         [TestMethod]
