@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Arktos.WinBert.Instrumentation;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,7 +35,8 @@
                             ReturnValue = new Xml.Value(),
                             Signature = sig,
                             PostCallInstance = new Xml.NotNull(),
-                            Type = Xml.MethodCallType.Instance
+                            Type = Xml.MethodCallType.Instance,
+                            DynamicCallGraph = new List<Xml.CallGraphNode>()
                         };
                     });
 
@@ -48,7 +50,8 @@
                             Id = id,
                             Signature = sig,
                             PostCallInstance = new Xml.NotNull(),
-                            Type = Xml.MethodCallType.Instance
+                            Type = Xml.MethodCallType.Instance,
+                            DynamicCallGraph = new List<Xml.CallGraphNode>()
                         };
                     });
 
@@ -226,7 +229,7 @@
 
             target.EndTest();
 
-            // After: Method counter and test counter at one now. Both lists have one element.
+            // After: Method counter at zero and test counter at one now. Both lists have one element.
             AssertRecorderListAndCounterStates(
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
@@ -253,40 +256,6 @@
         }
 
         [TestMethod]
-        public void RecordInstanceMethodCall_EnsureMethodCounterIncrements()
-        {
-            var methodSig1 = "Foo";
-            var retVal1 = 3.0F;
-            var methodSig2 = "Bar";
-            var retVal2 = "Hello World";
-            var target = new TestStateRecorder();
-            target.StartTest();
-            target.RecordInstanceMethodCall(new TestClass(), retVal1, methodSig1);
-
-            AssertRecorderListAndCounterStates(
-                expectedMethodCounter: 1U,
-                expectedTestCounter: 0U,
-                numberOfTestExecutions: 0,
-                recorder: target);
-
-            target.RecordInstanceMethodCall(new TestClass(), retVal2, methodSig2);
-
-            AssertRecorderListAndCounterStates(
-                expectedMethodCounter: 2U,
-                expectedTestCounter: 0U,
-                numberOfTestExecutions: 0,
-                recorder: target);
-
-            target.EndTest();
-
-            AssertRecorderListAndCounterStates(
-                expectedMethodCounter: 0U,
-                expectedTestCounter: 1U,
-                numberOfTestExecutions: 1,
-                recorder: target);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void RecordInstanceMethodCall_CalledWithoutStartTest()
         {
@@ -301,7 +270,32 @@
         [TestMethod]
         public void AddMethodToDynamicCallGraph_CorrectState()
         {
-            Assert.Fail("Not Implemented");
+            var target = new TestStateRecorder(mockMethodDumper);
+            target.StartTest();
+            target.RecordVoidInstanceMethodCall("Hello World", "Foo");
+            target.AddMethodToDynamicCallGraph("Bar");
+            target.AddMethodToDynamicCallGraph("Baz");
+            target.AddMethodToDynamicCallGraph("Biff");
+
+            // Assert counter stats
+            AssertRecorderListAndCounterStates(
+                expectedMethodCounter: 1U,
+                expectedTestCounter: 0U,
+                numberOfTestExecutions: 0,
+                recorder: target);
+
+            // Should have three calls.
+            Assert.AreEqual(3, target.CurrentMethodCall.DynamicCallGraph.Count);
+
+            AssertCallGraphIsCorrect(target);
+
+            target.EndTest();
+
+            AssertRecorderListAndCounterStates(
+                expectedMethodCounter: 0U,
+                expectedTestCounter: 1U,
+                numberOfTestExecutions: 1,
+                recorder: target);
         }
 
         [TestMethod]
@@ -335,11 +329,17 @@
             target.StartTest();
             target.RecordVoidInstanceMethodCall(testClass, "Foo");
             target.AddMethodToDynamicCallGraph("Baz");
+            target.AddMethodToDynamicCallGraph("Biff");
             target.RecordInstanceMethodCall(testClass, 5, "Bar");
             target.AddMethodToDynamicCallGraph("Zoo");
             target.EndTest();
 
-            // Test state.
+            // Test counter state.
+            AssertRecorderListAndCounterStates(
+                expectedMethodCounter: 0U,
+                expectedTestCounter: 1U,
+                numberOfTestExecutions: 1,
+                recorder: target);
 
             // Do it all again.
             target.StartTest();
@@ -347,11 +347,17 @@
             target.AddMethodToDynamicCallGraph("Baz");
             target.RecordInstanceMethodCall(testClass, 5, "Bar");
             target.AddMethodToDynamicCallGraph("Zoo");
+            target.AddMethodToDynamicCallGraph("Boo");
             target.EndTest();
 
-            // Test state
+            // Test counter state
+            AssertRecorderListAndCounterStates(
+                expectedMethodCounter: 0U,
+                expectedTestCounter: 2U,
+                numberOfTestExecutions: 2,
+                recorder: target);
 
-            Assert.Fail("Not Implemented");
+            AssertCallGraphIsCorrect(target);
         }
 
         #endregion
@@ -371,6 +377,27 @@
             Assert.AreEqual(expectedTestCounter, recorder.TestCounter);
             Assert.IsNotNull(recorder.AnalysisLog.TestExecutions);
             Assert.AreEqual(numberOfTestExecutions, recorder.AnalysisLog.TestExecutions.Count());
+        }
+
+        private static void AssertCallGraphIsCorrect(TestStateRecorder target)
+        {
+            Assert.IsNotNull(target.AnalysisLog);
+            Assert.IsNotNull(target.AnalysisLog.TestExecutions);
+            foreach (var testExecution in target.AnalysisLog.TestExecutions)
+            {
+                Assert.IsNotNull(testExecution.MethodCalls);
+                foreach (var methodCall in testExecution.MethodCalls)
+                {
+                    Assert.IsNotNull(methodCall.DynamicCallGraph);
+                    for (int i = 0; i < methodCall.DynamicCallGraph.Count; i++)
+                    {
+                        // Ensure sequence number generated is correct and signature is a non-empty string
+                        var currentNode = methodCall.DynamicCallGraph[i];
+                        Assert.AreEqual((uint)i, currentNode.SequenceNumber);
+                        Assert.IsFalse(string.IsNullOrEmpty(currentNode.Signature));
+                    }
+                }
+            }
         }
 
         #endregion
