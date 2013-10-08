@@ -44,35 +44,13 @@
         #region Properties
 
         /// <summary>
-        /// 
+        /// Gets the currently loaded configuration object.
         /// </summary>
         public WinBertConfig Config { get; private set; }
 
         #endregion
 
         #region Public Methods
-
-        /// <inheritdoc />
-        /// <remarks>
-        /// This default implementation will perform a diff against the two builds using default differencing mechanisms
-        /// and then execute the WinBert stack on the difference result if a different is detected. You may override this method
-        /// if needed, but only in rare occasions when you need a hook into the differencing pipeline should this be the case.
-        /// </remarks>
-        public AnalysisResult Run(Build previous, Build current)
-        {
-            AnalysisResult result = null;
-            var diff = this.Diff(previous, current);
-            if (diff != null && diff.IsDifferent)
-            {
-                result = this.ExecuteStack(diff);
-            }
-
-            return result;
-        }
-
-        #endregion
-
-       #region Protected Methods
 
         /// <summary>
         /// This method should generate tests for the target assembly and return a target to the assembly containing said tests.
@@ -92,6 +70,24 @@
         public abstract IAssemblyTarget GenerateTests(IAssemblyTarget target, IEnumerable<string> validTypeNames);
 
         /// <summary>
+        /// Instruments the target assembly and it's tests. Overrides may choose to instrument the tests, the original assembly or
+        /// both if desired.
+        /// </summary>
+        /// <remarks>
+        ///  The default implementation of this method performs no instrumentation, that is it simply returns the passed in test target.
+        /// </remarks>
+        /// <param name="target">
+        /// The target assembly.
+        /// </param>
+        /// <param name="tests">
+        /// The tests to instrument.
+        /// </param>
+        /// <returns>
+        /// A new test target replacing the original assemblies with instrumented ones.
+        /// </returns>
+        public abstract ITestTarget InstrumentTests(ITestTarget toInstrument);
+
+        /// <summary>
         /// Executes tests.
         /// </summary>
         /// <remarks>
@@ -108,6 +104,24 @@
         /// A test run result implementation.
         /// </returns>
         public abstract ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests);
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// This default implementation will perform a diff against the two builds using default differencing mechanisms
+        /// and then execute the WinBert stack on the difference result if a different is detected. You may override this method
+        /// if needed, but only in rare occasions when you need a hook into the differencing pipeline should this be the case.
+        /// </remarks>
+        public AnalysisResult Run(Build previous, Build current)
+        {
+            AnalysisResult result = null;
+            var diff = this.Diff(previous, current);
+            if (diff != null && diff.IsDifferent)
+            {
+                result = this.ExecuteStack(diff);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Executes the entire WinBert stack.
@@ -149,32 +163,6 @@
 
             // Perform analysis and we're done.
             return this.Analyze(oldAssemblyResults, newAssemblyResults);
-        }
-
-        /// <summary>
-        /// Instruments the target assembly and it's tests. Overrides may choose to instrument the tests, the original assembly or
-        /// both if desired.
-        /// </summary>
-        /// <remarks>
-        ///  The default implementation of this method performs no instrumentation, that is it simply returns the passed in test target.
-        /// </remarks>
-        /// <param name="target">
-        /// The target assembly.
-        /// </param>
-        /// <param name="tests">
-        /// The tests to instrument.
-        /// </param>
-        /// <returns>
-        /// A new test target replacing the original assemblies with instrumented ones.
-        /// </returns>
-        public virtual ITestTarget InstrumentTests(ITestTarget toInstrument)
-        {
-            if (toInstrument == null)
-            {
-                throw new ArgumentNullException("toInstrument");
-            }
-
-            return toInstrument;
         }
 
         /// <summary>

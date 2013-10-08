@@ -17,6 +17,7 @@
         WinBertConfig Config { get; }
 
         #endregion
+
         #region Methods
 
         /// <summary>
