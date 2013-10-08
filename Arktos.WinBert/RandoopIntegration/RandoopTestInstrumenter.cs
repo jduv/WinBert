@@ -77,8 +77,8 @@
         {
             using (var target = InstrumentationTarget.Create(toInstrument))
             {
-                // Do instrumentation here.
-                return target.Save();
+                var rewriter = DynamicCallGraphInstrumenter.Create(target.Host);
+                return rewriter.Rewrite(target);
             }
         }
 

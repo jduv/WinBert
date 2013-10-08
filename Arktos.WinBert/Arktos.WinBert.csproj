@@ -161,6 +161,7 @@
     <Compile Include="Exceptions\TestGenerationException.cs" />
     <Compile Include="Extensions\Strings.cs" />
     <Compile Include="Extensions\Objects.cs" />
+    <Compile Include="Instrumentation\DynamicCallGraphInstrumenter.cs" />
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
     <Compile Include="Instrumentation\IMethodCallDumper.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
@@ -254,7 +255,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagrams\WinBert.cd" />
     <None Include="packages.config" />
     <None Include="Xml\RandoopPluginConfigSchema.xsd">
       <SubType>Designer</SubType>
