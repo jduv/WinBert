@@ -17,7 +17,9 @@
     {
         #region Fields & Constants
 
-        private readonly string testMethodName;
+        private static readonly string InjectedMethodName = "AddMethodToDynamicCallGraph";
+        private readonly NamespaceTypeDefinition testUtilDef;
+        private readonly IMethodDefinition cgMethod;
 
         #endregion
 
@@ -26,6 +28,16 @@
         private DynamicCallGraphInstrumenter(IMetadataHost host)
             : base(host)
         {
+            // Load winbert core
+            var copier = new MetadataDeepCopier(host);
+            var winBertCore = (IAssembly)host.LoadUnitFrom(this.GetType().Assembly.Location);
+
+            // Copy test util type definition so it can be "pasted" into the new assembly.
+            var originalTestUtilDef = (INamespaceTypeDefinition)UnitHelper.FindType(host.NameTable, winBertCore, typeof(TestUtil).FullName);
+            this.testUtilDef = copier.Copy(originalTestUtilDef);
+
+            // Create call graph method to be injected
+            this.cgMethod = TypeHelper.GetMethod(this.testUtilDef, host.NameTable.GetNameFor(InjectedMethodName), host.PlatformType.SystemString);
         }
 
         #endregion
@@ -68,6 +80,11 @@
                 throw new ArgumentNullException("target");
             }
 
+            // Copy over the test util namespace and type definition
+            this.testUtilDef.ContainingUnitNamespace = target.MutableAssembly.UnitNamespaceRoot;
+            target.MutableAssembly.AllTypes.Add(this.testUtilDef);
+
+            // Inject calls
             this.RewriteChildren(target.MutableAssembly);
             return target.Save();
         }
@@ -89,12 +106,10 @@
                 throw new ArgumentNullException("methodBody");
             }
 
-            foreach (var operation in methodBody.Operations)
-            {
-                Debug.WriteLine("OpCode: " + operation.OperationCode);
-                Debug.WriteLine("Value type: " + operation.Value);
-            }
-
+            var signature = MemberHelper.GetMethodSignature(methodBody.MethodDefinition);
+            var ilGenerator = new ILGenerator(this.host, methodBody.MethodDefinition);
+            ilGenerator.Emit(OperationCode.Ldsfld, signature);
+            ilGenerator.Emit(OperationCode.Call, this.cgMethod);
             return methodBody;
         }
 
