@@ -6,6 +6,13 @@
     using Microsoft.Cci;
     using Microsoft.Cci.MutableCodeModel;
 
+    /// <summary>
+    /// Instruments the target assembly with calls to the <see cref="TestUtil.AddMethodToDynamicCallGraph"/> method.
+    /// Note that once this class has instrumented the target assembly, it will only work in context of the WinBert test anslysis
+    /// framework. The changes made require the state of the <see cref="TestUtil"/> class to be very specific in order for the
+    /// assembly to be executable. This state is managed by the set of injections by the <see cref="RandoopTestRewriter"/>
+    /// class.
+    /// </summary>
     public class DynamicCallGraphInstrumenter : MetadataRewriter
     {
         #region Fields & Constants
@@ -25,6 +32,15 @@
 
         #region Public Methods
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicCallGraphInstrumenter"/> class.
+        /// </summary>
+        /// <param name="host">
+        /// The host to initialize with.
+        /// </param>
+        /// <returns>
+        /// A new instance of the <see cref="DynamicCallGraphInstrumenter"/> class.
+        /// </returns>
         public static DynamicCallGraphInstrumenter Create(IMetadataHost host)
         {
             if (host == null)
@@ -58,7 +74,7 @@
 
         /// <summary>
         /// Rewrites the target method body. This class will only insert a single call into the beginning of the
-        /// method that writes it's signature using the TestUtil class.
+        /// method that writes it's signature using the <see cref="TestUtil"/> class.
         /// </summary>
         /// <param name="methodBody">
         /// The method body to rewrite.
@@ -73,13 +89,10 @@
                 throw new ArgumentNullException("methodBody");
             }
 
-            if (methodBody.MethodDefinition.Name.Value.Equals(this.testMethodName))
+            foreach (var operation in methodBody.Operations)
             {
-                foreach (var operation in methodBody.Operations)
-                {
-                    Debug.WriteLine("OpCode: " + operation.OperationCode);
-                    Debug.WriteLine("Value type: " + operation.Value);
-                }
+                Debug.WriteLine("OpCode: " + operation.OperationCode);
+                Debug.WriteLine("Value type: " + operation.Value);
             }
 
             return methodBody;
