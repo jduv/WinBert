@@ -33,6 +33,11 @@
         ILocalScopeProvider LocalScopeProvider { get; }
 
         /// <summary>
+        /// Gets the source location provider.
+        /// </summary>
+        ISourceLocationProvider SourceLocationProvider { get; }
+
+        /// <summary>
         /// Gets the assembly target.
         /// </summary>
         IAssemblyTarget Target { get; }

@@ -20,6 +20,7 @@
         private static readonly string InjectedMethodName = "AddMethodToDynamicCallGraph";
         private readonly NamespaceTypeDefinition testUtilDef;
         private readonly IMethodDefinition cgMethod;
+        private ILRewriter rewriter;
 
         #endregion
 
@@ -84,6 +85,9 @@
             this.testUtilDef.ContainingUnitNamespace = target.MutableAssembly.UnitNamespaceRoot;
             target.MutableAssembly.AllTypes.Add(this.testUtilDef);
 
+            // New up the rewriter
+            this.rewriter = new CallGraphMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
+
             // Inject calls
             this.RewriteChildren(target.MutableAssembly);
             return target.Save();
@@ -101,16 +105,70 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
-            if (methodBody == null)
+            return rewriter.Rewrite(methodBody);
+        }
+
+        #endregion
+
+        #region Private Inner Classes
+
+        /// <summary>
+        /// This class encapuslates the call graph method injection logic.
+        /// </summary>
+        private class CallGraphMethodInjector : ILRewriter
+        {
+
+            #region Constructors & Destructors
+
+            /// <summary>
+            /// Creates a new instance of the CallGraphMethodInjector class.
+            /// </summary>
+            /// <param name="host">
+            /// The metadata host.
+            /// </param>
+            /// <param name="localScopeProvider">
+            /// The local scope provider.
+            /// </param>
+            /// <param name="sourceLocationProvider">
+            /// The source location provider.
+            /// </param>
+            /// <param name="cgMethodDefinition">
+            /// The call graph method definition.
+            /// </param>
+            public CallGraphMethodInjector(IMetadataHost host, ILocalScopeProvider localScopeProvider, ISourceLocationProvider sourceLocationProvider, IMethodDefinition cgMethodDefinition) :
+                base(host, localScopeProvider, sourceLocationProvider)
             {
-                throw new ArgumentNullException("methodBody");
+                if (cgMethodDefinition == null)
+                {
+                    throw new ArgumentNullException("cgMethodDefinition");
+                }
+
+                this.CallGraphMethodDefinition = cgMethodDefinition;
             }
 
-            var signature = MemberHelper.GetMethodSignature(methodBody.MethodDefinition);
-            var ilGenerator = new ILGenerator(this.host, methodBody.MethodDefinition);
-            ilGenerator.Emit(OperationCode.Ldsfld, signature);
-            ilGenerator.Emit(OperationCode.Call, this.cgMethod);
-            return methodBody;
+            #endregion
+
+            #region Properties
+
+            /// <summary>
+            /// Gets the call graph method definition.
+            /// </summary>
+            protected IMethodDefinition CallGraphMethodDefinition { get; private set; }
+
+            #endregion
+
+            #region Protected Methods
+
+            /// <inheritdoc />
+            protected override void EmitMethodBody(IMethodBody methodBody)
+            {
+                var signature = MemberHelper.GetMethodSignature(methodBody.MethodDefinition);
+                this.Generator.Emit(OperationCode.Ldstr, signature);
+                this.Generator.Emit(OperationCode.Call, this.CallGraphMethodDefinition);
+                base.EmitMethodBody(methodBody);
+            }
+
+            #endregion
         }
 
         #endregion

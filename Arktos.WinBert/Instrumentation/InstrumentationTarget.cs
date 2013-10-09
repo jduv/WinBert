@@ -20,6 +20,7 @@
         private PdbReader pdbReader;
         private Assembly mutableAssembly;
         private ILocalScopeProvider localScopeProvider;
+        private ISourceLocationProvider sourceLocationProvider;
 
         #endregion
 
@@ -87,9 +88,7 @@
             }
         }
 
-        /// <summary>
-        /// Gets the local scope provider for the instrumentation target.
-        /// </summary>
+        /// <inheritdoc />
         public ILocalScopeProvider LocalScopeProvider
         {
             get
@@ -105,6 +104,25 @@
             private set
             {
                 this.localScopeProvider = value;
+            }
+        }
+
+        /// <inheritdoc />
+        public ISourceLocationProvider SourceLocationProvider
+        {
+            get
+            {
+                if (this.IsDisposed)
+                {
+                    throw new ObjectDisposedException(this.GetType().FullName);
+                }
+
+                return this.sourceLocationProvider;
+            }
+
+            private set
+            {
+                this.sourceLocationProvider = value;
             }
         }
 
@@ -160,7 +178,8 @@
                 MutableAssembly = mutableAssembly,
                 PdbReader = pdbReader,
                 Target = target,
-                LocalScopeProvider = pdbReader == null ? null : new ILGenerator.LocalScopeProvider(pdbReader)
+                LocalScopeProvider = pdbReader == null ? null : new ILGenerator.LocalScopeProvider(pdbReader),
+                SourceLocationProvider = pdbReader
             };
         }
 
@@ -202,7 +221,7 @@
                             this.MutableAssembly, 
                             this.Host, 
                             file, 
-                            this.PdbReader, 
+                            this.SourceLocationProvider, 
                             this.LocalScopeProvider,
                             pdbWriter);
                     }
@@ -329,6 +348,8 @@
                     this.Host = null;
                     this.PdbReader = null;
                     this.MutableAssembly = null;
+                    this.SourceLocationProvider = null;
+                    this.localScopeProvider = null;
                 }
 
                 this.IsDisposed = true;
