@@ -5,7 +5,7 @@
     /// <summary>
     /// Defines behavior for a class that instruments tests.
     /// </summary>
-    public interface ITestInstrumenter
+    public interface ITestInstrumentor
     {
         #region Methods
 

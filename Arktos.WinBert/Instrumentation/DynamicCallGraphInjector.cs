@@ -13,7 +13,7 @@
     /// assembly to be executable. This state is managed by the set of injections by the <see cref="RandoopTestRewriter"/>
     /// class.
     /// </summary>
-    public class DynamicCallGraphInstrumenter : MetadataRewriter
+    public class DynamicCallGraphInjector : MetadataRewriter
     {
         #region Fields & Constants
 
@@ -25,7 +25,7 @@
 
         #region Constructors & Destructors
 
-        public DynamicCallGraphInstrumenter(IMetadataHost host)
+        public DynamicCallGraphInjector(IMetadataHost host)
             : base(host)
         {
             if (host == null)
@@ -65,7 +65,7 @@
             }
 
             // New up the rewriter
-            this.rewriter = new CallGraphMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
+            this.rewriter = new MethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
 
             // Inject calls
             this.RewriteChildren(target.MutableAssembly);
@@ -94,7 +94,7 @@
         /// <summary>
         /// This class encapuslates the call graph method injection logic.
         /// </summary>
-        private class CallGraphMethodInjector : ILRewriter
+        private class MethodInjector : ILRewriter
         {
 
             #region Constructors & Destructors
@@ -114,7 +114,7 @@
             /// <param name="cgMethodDefinition">
             /// The call graph method definition.
             /// </param>
-            public CallGraphMethodInjector(
+            public MethodInjector(
                 IMetadataHost host,
                 ILocalScopeProvider localScopeProvider,
                 ISourceLocationProvider sourceLocationProvider,

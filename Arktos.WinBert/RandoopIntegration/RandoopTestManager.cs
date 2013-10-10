@@ -75,7 +75,7 @@
                 throw new ArgumentNullException("toInstrument");
             }
 
-            var instrumenter = new RandoopTestInstrumenter(TestMethodName);
+            var instrumenter = new RandoopTestInstrumentor(TestMethodName);
             return instrumenter.InstrumentTests(toInstrument);
         }
 

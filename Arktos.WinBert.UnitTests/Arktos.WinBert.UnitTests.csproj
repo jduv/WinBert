@@ -177,7 +177,6 @@
     <Compile Include="InstrumentationTargetUnitTests.cs" />
     <Compile Include="MethodCallDumperUnitTests.cs" />
     <Compile Include="ObjectDumperUnitTests.cs" />
-    <Compile Include="RandoopIntegration\RandoopTestRewriterUnitTests.cs" />
     <Compile Include="SerializerUnitTests.cs" />
     <Compile Include="StringsUnitTests.cs" />
     <Compile Include="TestCompilerUnitTests.cs" />

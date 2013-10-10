@@ -16,7 +16,6 @@
         #region Fields & Constants
 
         private readonly string testMethodName;
-        private string analysisOutputPath;
 
         #endregion
 
