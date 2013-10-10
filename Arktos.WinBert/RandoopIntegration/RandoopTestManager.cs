@@ -89,8 +89,9 @@
             // First, execute the tests against the new assembly.
             using (var runEnv = AppDomainContext.Create())
             {
-                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(target.Location));
-                runEnv.RemoteResolver.AddProbePath(Path.GetDirectoryName(tests.Location));
+                runEnv.RemoteResolver.AddProbePaths(
+                    Path.GetDirectoryName(target.Location), 
+                    Path.GetDirectoryName(tests.Location));
 
                 return RemoteFunc.Invoke(
                     runEnv.Domain,

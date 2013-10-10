@@ -215,9 +215,11 @@
             // Boot up another application domain.
             using (var diffEnv = AppDomainContext.Create())
             {
+                // Pull in paths of the targets in case of dependencies.
                 diffEnv.RemoteResolver.AddProbePaths(
                     Path.GetDirectoryName(previous.AssemblyPath), 
                     Path.GetDirectoryName(current.AssemblyPath));
+
                 // Execute the diff in another application domain.
                 return RemoteFunc.Invoke(
                     diffEnv.Domain,
