@@ -18,7 +18,6 @@
         #region Fields & Constants
 
         private static readonly string InjectedMethodName = "AddMethodToDynamicCallGraph";
-        private readonly NamespaceTypeDefinition testUtilDef;
         private readonly IMethodDefinition cgMethod;
         private ILRewriter rewriter;
 
@@ -30,15 +29,13 @@
             : base(host)
         {
             // Load winbert core
-            var copier = new MetadataDeepCopier(host);
             var winBertCore = (IAssembly)host.LoadUnitFrom(this.GetType().Assembly.Location);
 
-            // Copy test util type definition so it can be "pasted" into the new assembly.
-            var originalTestUtilDef = (INamespaceTypeDefinition)UnitHelper.FindType(host.NameTable, winBertCore, typeof(TestUtil).FullName);
-            this.testUtilDef = copier.Copy(originalTestUtilDef);
+            // Grab the test utility type definition.
+            var testUtilDefinition = (INamespaceTypeDefinition)UnitHelper.FindType(host.NameTable, winBertCore, typeof(TestUtil).FullName);
 
-            // Create call graph method to be injected
-            this.cgMethod = TypeHelper.GetMethod(this.testUtilDef, host.NameTable.GetNameFor(InjectedMethodName), host.PlatformType.SystemString);
+            // Grab the call graph method to be injected
+            this.cgMethod = TypeHelper.GetMethod(testUtilDefinition, host.NameTable.GetNameFor(InjectedMethodName), host.PlatformType.SystemString);
         }
 
         #endregion
@@ -80,10 +77,6 @@
             {
                 throw new ArgumentNullException("target");
             }
-
-            // Copy over the test util namespace and type definition
-            this.testUtilDef.ContainingUnitNamespace = target.MutableAssembly.UnitNamespaceRoot;
-            target.MutableAssembly.AllTypes.Add(this.testUtilDef);
 
             // New up the rewriter
             this.rewriter = new CallGraphMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
@@ -135,8 +128,12 @@
             /// <param name="cgMethodDefinition">
             /// The call graph method definition.
             /// </param>
-            public CallGraphMethodInjector(IMetadataHost host, ILocalScopeProvider localScopeProvider, ISourceLocationProvider sourceLocationProvider, IMethodDefinition cgMethodDefinition) :
-                base(host, localScopeProvider, sourceLocationProvider)
+            public CallGraphMethodInjector(
+                IMetadataHost host,
+                ILocalScopeProvider localScopeProvider,
+                ISourceLocationProvider sourceLocationProvider,
+                IMethodDefinition cgMethodDefinition)
+                : base(host, localScopeProvider, sourceLocationProvider)
             {
                 if (cgMethodDefinition == null)
                 {
@@ -160,6 +157,11 @@
             #region Protected Methods
 
             /// <inheritdoc />
+            /// <remarks>
+            /// Simply grabs the method signature and emits some operations to load it and execute
+            /// a method call to the <see cref="TestUtil"/> call graph method definition passed in on 
+            /// the constructor.
+            /// </remarks>
             protected override void EmitMethodBody(IMethodBody methodBody)
             {
                 var signature = MemberHelper.GetMethodSignature(methodBody.MethodDefinition);
