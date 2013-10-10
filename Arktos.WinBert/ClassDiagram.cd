@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Arktos.WinBert.Testing.TestCompiler" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAFACAAAAAAABAAAAAAAACAAQAAIAAAAEAAAAAAA=</HashCode>
+      <FileName>Testing\TestCompiler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Testing.TestManager" BaseTypeListCollapsed="true">
+    <Position X="17" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAgIAAACAAAAAAIAAIAAAAAAAAAAAAAgAAAI=</HashCode>
+      <FileName>Testing\TestManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Testing.TestRunResult" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAACCAAAIAAAAAAAA=</HashCode>
+      <FileName>Testing\TestRunResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Testing.TestTarget" BaseTypeListCollapsed="true">
+    <Position X="12.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAEAAAAAAgBAAAAA=</HashCode>
+      <FileName>Testing\TestTarget.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.RandoopIntegration.PermissiveReflectionFilter" BaseTypeListCollapsed="true">
+    <Position X="1" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QACBAgAAAAAAAgAAQAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>RandoopIntegration\PermissiveReflectionFilter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.RandoopIntegration.RandoopTestGenerator" BaseTypeListCollapsed="true">
+    <Position X="11" Y="7.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BBACAAAIAAAIAAAQBAAAAIAAAAAAAAAAQAAAAAAAAAI=</HashCode>
+      <FileName>RandoopIntegration\RandoopTestGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.RandoopIntegration.RandoopTestInstrumenter" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAABAAABEAAAAAAAAA=</HashCode>
+      <FileName>RandoopIntegration\RandoopTestInstrumenter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.RandoopIntegration.RandoopTestManager">
+    <Position X="4" Y="7.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAIAAIAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>RandoopIntegration\RandoopTestManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.RandoopIntegration.RandoopTestRewriter">
+    <Position X="6.5" Y="7.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAgAA=</HashCode>
+      <FileName>RandoopIntegration\RandoopTestRewriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.RandoopIntegration.RandoopTestRunner" BaseTypeListCollapsed="true">
+    <Position X="16" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>RandoopIntegration\RandoopTestRunner.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.AssemblyDifferenceEngine" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="12.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgAAAAAgAAAA=</HashCode>
+      <FileName>Differencing\AssemblyDifferenceEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.AssemblyDifferenceResult" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="12.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAEAAAEAAAQAAAAAAAAAAAABA=</HashCode>
+      <FileName>Differencing\AssemblyDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.TypeDifferenceEngine" BaseTypeListCollapsed="true">
+    <Position X="14.75" Y="12.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAgAAAAAgAAAA=</HashCode>
+      <FileName>Differencing\TypeDifferenceEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.TypeDifferenceResult" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="12.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAEAAAEAQEAAAAAAAAAAAAAAAAAFA=</HashCode>
+      <FileName>Differencing\TypeDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Arktos.WinBert.Instrumentation.DynamicCallGraphInstrumenter">
+    <Position X="2.75" Y="16.25" Width="2.5" />
+    <NestedTypes>
+      <Class Name="Arktos.WinBert.Instrumentation.DynamicCallGraphInstrumenter.CallGraphMethodInjector" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Instrumentation\DynamicCallGraphInstrumenter.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAACAIAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Instrumentation\DynamicCallGraphInstrumenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.Instrumentation.InstrumentationTarget" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="16.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAACAEACABAAKAADAAAAAICEAEAAgAwAABAIE=</HashCode>
+      <FileName>Instrumentation\InstrumentationTarget.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Instrumentation.MethodCallDumper" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="16.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAgAAACAAAAAAAAAA=</HashCode>
+      <FileName>Instrumentation\MethodCallDumper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Instrumentation.ObjectDumper">
+    <Position X="11.75" Y="16.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAIAAAAAAAAABACAAA=</HashCode>
+      <FileName>Instrumentation\ObjectDumper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.Instrumentation.TestStateRecorder" BaseTypeListCollapsed="true">
+    <Position X="16.75" Y="16.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>SIEAABAAAAACAAAEAACCAAAAAQAwAAAAAAAQAAAAAEA=</HashCode>
+      <FileName>Instrumentation\TestStateRecorder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Instrumentation.TestUtil">
+    <Position X="5.75" Y="16.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QYEAAACABAACgAAAAAAAAAAAAAAgAAAASAAAAAIAAAA=</HashCode>
+      <FileName>Instrumentation\TestUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Arktos.WinBert.Testing.ITestCompiler">
+    <Position X="5.25" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAFACAAAAAAAAAAAAAAAAAAAQAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestCompiler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Testing.ITestGenerator">
+    <Position X="8" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Testing.ITestManager">
+    <Position X="3" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Testing\ITestManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Testing.ITestRunner">
+    <Position X="5.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestRunner.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Testing.ITestRunResult">
+    <Position X="7.75" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Testing\ITestRunResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Testing.ITestTarget">
+    <Position X="3" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgBAAAAA=</HashCode>
+      <FileName>Testing\ITestTarget.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Differencing.IAssemblyDifferenceResult">
+    <Position X="0.5" Y="13" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAEAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Differencing\IAssemblyDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Differencing.IDifferenceEngine&lt;T, TResult&gt;">
+    <Position X="5.75" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Differencing\IDifferenceEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Differencing.IDifferenceResult">
+    <Position X="1.75" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Differencing\IDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Differencing.ITypeDifferenceResult">
+    <Position X="4" Y="12.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAQEAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Differencing\ITypeDifferenceResult.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Instrumentation.IInstrumentationTarget">
+    <Position X="0.5" Y="22.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAEAAAAAACAACAAAAAACAAAAAAAAAAAAIE=</HashCode>
+      <FileName>Instrumentation\IInstrumentationTarget.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Instrumentation.IMethodCallDumper">
+    <Position X="0.5" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Instrumentation\IMethodCallDumper.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Instrumentation.ITestInstrumenter">
+    <Position X="1.25" Y="19.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Instrumentation\ITestInstrumenter.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Arktos.WinBert.Instrumentation.ITestStateRecorder">
+    <Position X="3" Y="20.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>SIEAAAAAAAACAAAAAAAAAAAAAQAgAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Instrumentation\ITestStateRecorder.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

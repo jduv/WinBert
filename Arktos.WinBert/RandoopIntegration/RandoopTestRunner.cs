@@ -12,7 +12,21 @@
     {
         #region Fields & Constants
 
-        private static readonly string TestMethodName = "Main";
+        private readonly string testMethodName;
+
+        #endregion
+
+        #region Constructors & Destructors
+
+        public RandoopTestRunner(string testMethodName)
+        {
+            if (string.IsNullOrWhiteSpace(testMethodName))
+            {
+                throw new ArgumentException("Test method name cannot be null or whitespace!");
+            }
+
+            this.testMethodName = testMethodName;
+        }
 
         #endregion
 
@@ -21,7 +35,6 @@
         /// <inheritdoc />
         public ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests)
         {
-            // BMK: This code should ensure that the tests has the correct references target.
             var loader = new AssemblyLoader();
             loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
             loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, tests.Location);
@@ -30,20 +43,11 @@
             foreach (var type in assembly.GetTypes())
             {
                 var testObj = Activator.CreateInstance(type);
-                var method = type.GetMethods().First(x => x.Name.Equals(TestMethodName));
+                var method = type.GetMethods().First(x => x.Name.Equals(this.testMethodName));
                 method.Invoke(testObj, null);
             }
 
             return TestRunResult.Successful(@"C:\out.log");
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private void EnsureTestReference(IAssemblyTarget target, IAssemblyTarget tests)
-        {
-
         }
 
         #endregion

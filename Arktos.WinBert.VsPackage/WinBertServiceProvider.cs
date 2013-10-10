@@ -1,5 +1,10 @@
 ﻿namespace Arktos.WinBert.VsPackage
 {
+    using Arktos.WinBert.RandoopIntegration;
+    using Arktos.WinBert.Util;
+    using Arktos.WinBert.Xml;
+    using EnvDTE;
+    using EnvDTE80;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -8,11 +13,6 @@
     using System.Windows.Forms;
     using System.Xml;
     using System.Xml.Serialization;
-    using Arktos.WinBert.RandoopIntegration;
-    using Arktos.WinBert.Util;
-    using Arktos.WinBert.Xml;
-    using EnvDTE;
-    using EnvDTE80;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
@@ -23,46 +23,13 @@
     {
         #region Fields and Constants
 
-        /// <summary>
-        /// Static content for a test project GUID
-        /// </summary>
         private static readonly string TestProjGuid = @"{3AC096D0-A1C2-E12C-1390-A8335801FDAB}";
-
-        /// <summary>
-        /// Static name of the archive directory
-        /// </summary>
         private static readonly string ArchiveDir = @".winbert";
-
-        /// <summary>
-        /// Static path of the configuration file relative to the archive directory.
-        /// </summary>
         private static readonly string ConfigFilePath = Path.Combine(ArchiveDir, @"winbertconfig.xml");
-
-        /// <summary>
-        /// A dictionary that holds the build version manager objects that the currently opened solution
-        /// uses. The key is the project's unique name while the object is an instance of the BuildVersionManager
-        /// class. This enables multiple projects in a single solution.
-        /// </summary>
         private readonly Dictionary<string, BuildVersionManager> buildDictionary = null;
-
-        /// <summary>
-        /// Build events object. Need a strong reference for delegates and events to fire properly
-        /// </summary>
         private readonly BuildEvents buildEvents = null;
-
-        /// <summary>
-        /// Solution events object. Need a strong reference for delegates and events to fire properly
-        /// </summary>
         private readonly SolutionEvents solutionEvents = null;
-
-        /// <summary>
-        /// The reference to the VS DTE object.
-        /// </summary>
         private readonly DTE2 dte = null;
-
-        /// <summary>
-        /// Flags if a build has failed during this build iteration
-        /// </summary>
         private bool buildFailed = false;
 
         #endregion
@@ -284,14 +251,13 @@
             if (this.dte.Solution.IsOpen)
             {
                 string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
-
                 var config = LoadState(path) ?? GetDefaultConfig();
 
                 if (config == null)
                 {
                     var errorMessage = "Unable to load configuration at path " + path + " or create a new one. ";
-                    errorMessage += "The state of your build archive will not be maintained! ";
-                    MessageBox.Show(errorMessage, "Error!", MessageBoxButtons.OK);
+                    errorMessage += "The state of your build archive will not be maintained! WinBert analysis will not be executed.";
+                    MessageBox.Show(errorMessage, "Fatal Error!", MessageBoxButtons.OK);
                 }
                 else
                 {
@@ -413,7 +379,8 @@
         }
 
         /// <summary>
-        /// Finds a VS project given a unique name.
+        /// Finds a VS project given a unique name. Can't really use LINQ here, the DTE project list is a
+        /// remote object.
         /// </summary>
         /// <param name="name">
         /// The name to find

@@ -255,6 +255,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Xml\RandoopPluginConfigSchema.xsd">
       <SubType>Designer</SubType>

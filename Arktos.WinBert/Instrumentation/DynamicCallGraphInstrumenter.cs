@@ -25,9 +25,14 @@
 
         #region Constructors & Destructors
 
-        private DynamicCallGraphInstrumenter(IMetadataHost host)
+        public DynamicCallGraphInstrumenter(IMetadataHost host)
             : base(host)
         {
+            if (host == null)
+            {
+                throw new ArgumentNullException("host");
+            }
+
             // Load winbert core
             var winBertCore = (IAssembly)host.LoadUnitFrom(this.GetType().Assembly.Location);
 
@@ -41,25 +46,6 @@
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicCallGraphInstrumenter"/> class.
-        /// </summary>
-        /// <param name="host">
-        /// The host to initialize with.
-        /// </param>
-        /// <returns>
-        /// A new instance of the <see cref="DynamicCallGraphInstrumenter"/> class.
-        /// </returns>
-        public static DynamicCallGraphInstrumenter Create(IMetadataHost host)
-        {
-            if (host == null)
-            {
-                throw new ArgumentNullException("host");
-            }
-
-            return new DynamicCallGraphInstrumenter(host);
-        }
 
         /// <summary>
         /// Rewrites an instrumentation target.

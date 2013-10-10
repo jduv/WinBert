@@ -16,6 +16,12 @@
     /// </summary>
     public class RandoopTestManager : TestManager
     {
+        #region Fields & Constants
+
+        private static readonly string TestMethodName = "Main";
+
+        #endregion
+
         #region Constructors & Destructors
 
         /// <summary>
@@ -69,7 +75,7 @@
                 throw new ArgumentNullException("toInstrument");
             }
 
-            var instrumenter = new RandoopTestInstrumenter();
+            var instrumenter = new RandoopTestInstrumenter(TestMethodName);
             return instrumenter.InstrumentTests(toInstrument);
         }
 
@@ -97,9 +103,10 @@
                     runEnv.Domain,
                     target,
                     tests,
-                    (targetArg, testsArg) =>
+                    TestMethodName,
+                    (targetArg, testsArg, testMethodName) =>
                     {
-                        var runner = new RandoopTestRunner();
+                        var runner = new RandoopTestRunner(testMethodName);
                         return runner.RunTests(targetArg, testsArg);
                     });
             }

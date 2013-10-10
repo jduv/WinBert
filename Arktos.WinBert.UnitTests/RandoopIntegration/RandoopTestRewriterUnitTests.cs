@@ -31,20 +31,13 @@
 
         #region Test Methods
 
-        #region Create
+        #region Ctor
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Create_NullMethodName()
         {
-            var target = RandoopTestRewriter.Create(null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Create_NullMetadataHost()
-        {
-            var target = RandoopTestRewriter.Create("HelloWorld", null);
+            var target = new RandoopTestRewriter(null);
         }
 
         #endregion
@@ -55,7 +48,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public void Rewrite_NullInstrumentationTarget()
         {
-            var target = RandoopTestRewriter.Create("HelloWorld", Host);
+            var target = new RandoopTestRewriter("HelloWorld", Host);
             IInstrumentationTarget toRewrite = null;
             var expected = target.Rewrite(toRewrite);
         }
@@ -64,7 +57,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public void Rewrite_NullMethodBody()
         {
-            var target = RandoopTestRewriter.Create("HelloWorld", Host);
+            var target = new RandoopTestRewriter("HelloWorld", Host);
             IMethodBody toRewrite = null;
             var expected = target.Rewrite(toRewrite);
         }
@@ -80,7 +73,7 @@
             var toInstrument = new Mock<IInstrumentationTarget>();
             toInstrument.Setup(x => x.MutableAssembly).Returns(mutableAssembly);
 
-            var target = RandoopTestRewriter.Create(TestMethodName, Host);
+            var target = new RandoopTestRewriter(TestMethodName, Host);
             var actual = target.Rewrite(toInstrument.Object);
 
             // Should have executed save once.

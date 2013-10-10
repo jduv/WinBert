@@ -147,7 +147,6 @@
             // Invoke two versions of the stack simultaneously
             ITestRunResult oldAssemblyResults = null, newAssemblyResults = null;
             var typeNames = diff.TypeDifferences.Select(x => x.Name);
-
             var tests = this.GenerateTests(diff.NewAssemblyTarget, typeNames);
             var instrumented = this.InstrumentTests(TestTarget.Create(diff.OldAssemblyTarget, diff.NewAssemblyTarget, tests));
 

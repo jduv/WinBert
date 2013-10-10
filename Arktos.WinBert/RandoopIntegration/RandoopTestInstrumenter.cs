@@ -3,6 +3,7 @@
     using AppDomainToolkit;
     using Arktos.WinBert.Instrumentation;
     using Arktos.WinBert.Testing;
+    using System;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -10,9 +11,23 @@
     /// </summary>
     public class RandoopTestInstrumenter : ITestInstrumenter
     {
-        #region Fields & Constants
+        #region
 
-        private static readonly string testMethodName = "Main";
+        private readonly string testMethodName;
+
+        #endregion
+
+        #region Constructors & Destructors
+
+        public RandoopTestInstrumenter(string testMethodName)
+        {
+            if (string.IsNullOrWhiteSpace(testMethodName))
+            {
+                throw new ArgumentException("Test method name cannot be null or white space!");
+            }
+
+            this.testMethodName = testMethodName;
+        }
 
         #endregion
 
@@ -58,7 +73,7 @@
         {
             using (var testTarget = InstrumentationTarget.Create(toInstrument))
             {
-                var rewriter = RandoopTestRewriter.Create(testMethodName, testTarget.Host);
+                var rewriter = new RandoopTestRewriter(testMethodName, testTarget.Host);
                 return rewriter.Rewrite(testTarget);
             }
         }
@@ -77,7 +92,7 @@
         {
             using (var target = InstrumentationTarget.Create(toInstrument))
             {
-                var rewriter = DynamicCallGraphInstrumenter.Create(target.Host);
+                var rewriter = new DynamicCallGraphInstrumenter(target.Host);
                 return rewriter.Rewrite(target);
             }
         }
