@@ -65,7 +65,7 @@
             }
 
             // New up the rewriter
-            this.rewriter = new MethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
+            this.rewriter = new DCGMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
 
             // Inject calls
             this.RewriteChildren(target.MutableAssembly);
@@ -94,7 +94,7 @@
         /// <summary>
         /// This class encapuslates the call graph method injection logic.
         /// </summary>
-        private class MethodInjector : ILRewriter
+        private class DCGMethodInjector : ILRewriter
         {
 
             #region Constructors & Destructors
@@ -114,7 +114,7 @@
             /// <param name="cgMethodDefinition">
             /// The call graph method definition.
             /// </param>
-            public MethodInjector(
+            public DCGMethodInjector(
                 IMetadataHost host,
                 ILocalScopeProvider localScopeProvider,
                 ISourceLocationProvider sourceLocationProvider,
