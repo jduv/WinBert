@@ -8,6 +8,7 @@
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Xml;
+    using System.IO;
 
     /// <summary>
     /// This base class contains some basic implementations that TestManager derived classes will find useful along with
@@ -214,6 +215,9 @@
             // Boot up another application domain.
             using (var diffEnv = AppDomainContext.Create())
             {
+                diffEnv.RemoteResolver.AddProbePaths(
+                    Path.GetDirectoryName(previous.AssemblyPath), 
+                    Path.GetDirectoryName(current.AssemblyPath));
                 // Execute the diff in another application domain.
                 return RemoteFunc.Invoke(
                     diffEnv.Domain,
