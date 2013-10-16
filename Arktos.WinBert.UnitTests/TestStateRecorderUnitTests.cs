@@ -386,7 +386,6 @@
             Assert.IsNotNull(target.AnalysisLog);
             Assert.IsNotNull(target.AnalysisLog.TestExecutions);
 
-
             for (int i = 0; i < target.AnalysisLog.TestExecutions.Count; i++)
             {
                 var testExecution = target.AnalysisLog.TestExecutions[i];
@@ -402,7 +401,7 @@
                     for (int k = 0; k < methodCall.DynamicCallGraph.Count; k++)
                     {
                         // Ensure sequence number generated is correct and signature is a non-empty string
-                        var currentNode = methodCall.DynamicCallGraph[i];
+                        var currentNode = methodCall.DynamicCallGraph[k];
                         Assert.AreEqual((uint)k, currentNode.SequenceNumber);
                         Assert.IsFalse(string.IsNullOrEmpty(currentNode.Signature));
                     }
