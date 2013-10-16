@@ -37,8 +37,6 @@
         {
             var loader = new AssemblyLoader();
             loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, target.Location);
-            loader.LoadAssemblyWithReferences(LoadMethod.LoadFile, tests.Location);
-
             var assembly = loader.LoadAssembly(LoadMethod.LoadFile, tests.Location);
             foreach (var type in assembly.GetTypes())
             {

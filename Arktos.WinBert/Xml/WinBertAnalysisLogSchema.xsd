@@ -188,7 +188,13 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="TestExecutions" type="ba:TestExecution" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="TestExecutions">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="TestExecution" type="ba:TestExecution" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 

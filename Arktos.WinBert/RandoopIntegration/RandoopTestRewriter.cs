@@ -64,7 +64,13 @@
             }
 
             // New up the rewriter
-            this.rewriter = new TestUtilMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.winbertCore);
+            var uniqueId = Guid.NewGuid().ToString();
+            this.rewriter = new RandoopTestILRewriter(
+                target.Host,
+                target.LocalScopeProvider, 
+                target.SourceLocationProvider, 
+                this.winbertCore,
+                @"C:\out-" + uniqueId + ".xml");
 
             this.RewriteChildren(target.MutableAssembly);
             return target.Save();
@@ -84,16 +90,6 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
-            // debug.
-            if (methodBody.MethodDefinition.Name.Value.Equals(this.testMethodName))
-            {
-                foreach (var operation in methodBody.Operations)
-                {
-                    Debug.WriteLine("OpCode: " + operation.OperationCode);
-                    Debug.WriteLine("Value type: " + operation.Value);
-                }
-            }
-
             return this.rewriter.Rewrite(methodBody);
         }
 
@@ -104,17 +100,25 @@
         /// <summary>
         /// This class encapsulates test util method injector logic.
         /// </summary>
-        private class RandoopTestUtilMethodInjector : TestUtilMethodInjector
+        private class RandoopTestILRewriter : TestUtilMethodInjector
         {
+            #region Fields & Constants
+
+            private readonly string outputFilePath;
+
+            #endregion
+
             #region Constructors & Destructors
 
-            public RandoopTestUtilMethodInjector(
+            public RandoopTestILRewriter(
                 IMetadataHost host,
                 ILocalScopeProvider localScopeProvider,
                 ISourceLocationProvider sourceLocationProvider,
-                IAssembly winbertCore)
+                IAssembly winbertCore,
+                string outputFilePath)
                 : base(host, localScopeProvider, sourceLocationProvider, winbertCore)
             {
+                this.outputFilePath = outputFilePath;
             }
 
             #endregion
@@ -124,12 +128,33 @@
             /// <inheritdoc />
             /// <remarks>
             /// Simply grabs the method signature and emits some operations to load it and execute
-            /// a method call to the <see cref="TestUtil"/> call graph method definition passed in on 
-            /// the constructor.    
+            /// method calls to the <see cref="TestUtil"/> class.
             /// </remarks>
             protected override void EmitMethodBody(IMethodBody methodBody)
             {
-                // write me.
+                this.Generator.Emit(OperationCode.Call, this.StartTestDefinition);
+                base.EmitMethodBody(methodBody);
+            }
+
+            /// <inheritdoc />
+            /// <remarks>
+            /// Emits operations to inject <see cref="TestUtil"/> method calls into the target method body
+            /// that adhere to a Randoop test injection pattern.
+            /// </remarks>
+            protected override void EmitOperation(IOperation operation)
+            {
+                switch (operation.OperationCode)
+                {
+                    case OperationCode.Ret:
+                        // Hook in before ret and call EndTest.
+                        this.Generator.Emit(OperationCode.Ldstr, outputFilePath);
+                        this.Generator.Emit(OperationCode.Call, this.EndTestDefinition);
+                        base.EmitOperation(operation);
+                        break;
+                    default:
+                        base.EmitOperation(operation);
+                        break;
+                }
             }
 
             #endregion

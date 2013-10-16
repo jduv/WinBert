@@ -173,7 +173,6 @@ namespace Arktos.WinBert.Instrumentation
                 verified = (File.Exists(toVerify) || Directory.Exists(toVerify)) ?
                     !File.GetAttributes(toVerify).HasFlag(FileAttributes.Directory) && VerifyFileExtension(toVerify) :
                     VerifyFileExtension(toVerify);
-
             }
 
             return verified;

@@ -4,9 +4,10 @@
     using Microsoft.Cci;
 
     /// <summary>
-    /// Contains information for injecting calls to the static TestUtil class.
+    /// Contains information for injecting calls to the static TestUtil class. Extend this class with more
+    /// specific functionality.
     /// </summary>
-    public class TestUtilMethodInjector : ILRewriter
+    public abstract class TestUtilMethodInjector : ILRewriter
     {
         #region Fields & Constants
 

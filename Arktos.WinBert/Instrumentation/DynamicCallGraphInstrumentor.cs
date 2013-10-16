@@ -111,8 +111,7 @@
             /// <inheritdoc />
             /// <remarks>
             /// Simply grabs the method signature and emits some operations to load it and execute
-            /// a method call to the <see cref="TestUtil"/> call graph method definition passed in on 
-            /// the constructor.    
+            /// a method call to the <see cref="TestUtil"/> call graph method definition.
             /// </remarks>
             protected override void EmitMethodBody(IMethodBody methodBody)
             {
