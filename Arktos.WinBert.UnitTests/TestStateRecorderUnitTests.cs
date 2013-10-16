@@ -82,7 +82,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 0U,
                 numberOfTestExecutions: 0,
-                recorder: target);
+                target: target);
         }
 
         #endregion
@@ -102,7 +102,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
-                recorder: target);
+                target: target);
 
             // Check Id is set to correct counter value.
             Assert.AreEqual(0U, target.AnalysisLog.TestExecutions.First().Id);
@@ -135,7 +135,7 @@
                 expectedMethodCounter: 1U,
                 expectedTestCounter: 0U,
                 numberOfTestExecutions: 0,
-                recorder: target);
+                target: target);
 
             target.EndTest();
 
@@ -144,7 +144,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
-                recorder: target);
+                target: target);
 
             // The point here isn't to re-test the method call dumper, but just the pieces we interact
             // with in the state recorder.
@@ -178,7 +178,7 @@
                 expectedMethodCounter: 1U,
                 expectedTestCounter: 0U,
                 numberOfTestExecutions: 0,
-                recorder: target);
+                target: target);
 
             target.RecordVoidInstanceMethodCall(new TestClass(), methodSig2);
 
@@ -186,7 +186,7 @@
                 expectedMethodCounter: 2U,
                 expectedTestCounter: 0U,
                 numberOfTestExecutions: 0,
-                recorder: target);
+                target: target);
 
             target.EndTest();
 
@@ -194,7 +194,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
-                recorder: target);
+                target: target);
         }
 
         [TestMethod]
@@ -225,7 +225,7 @@
                 expectedMethodCounter: 1U,
                 expectedTestCounter: 0U,
                 numberOfTestExecutions: 0,
-                recorder: target);
+                target: target);
 
             target.EndTest();
 
@@ -234,7 +234,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
-                recorder: target);
+                target: target);
 
             // The point here isn't to re-test the method call dumper, but just the pieces we interact
             // with in the state recorder.
@@ -282,12 +282,12 @@
                 expectedMethodCounter: 1U,
                 expectedTestCounter: 0U,
                 numberOfTestExecutions: 0,
-                recorder: target);
+                target: target);
 
             // Should have three calls.
             Assert.AreEqual(3, target.CurrentMethodCall.DynamicCallGraph.Count);
 
-            AssertCallGraphIsCorrect(target);
+            AssertSequencesAreCorrect(target);
 
             target.EndTest();
 
@@ -295,7 +295,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
-                recorder: target);
+                target: target);
         }
 
         [TestMethod]
@@ -339,7 +339,7 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
-                recorder: target);
+                target: target);
 
             // Do it all again.
             target.StartTest();
@@ -355,9 +355,9 @@
                 expectedMethodCounter: 0U,
                 expectedTestCounter: 2U,
                 numberOfTestExecutions: 2,
-                recorder: target);
+                target: target);
 
-            AssertCallGraphIsCorrect(target);
+            AssertSequencesAreCorrect(target);
         }
 
         #endregion
@@ -370,30 +370,40 @@
             uint expectedMethodCounter,
             uint expectedTestCounter,
             int numberOfTestExecutions,
-            TestStateRecorder recorder)
+            TestStateRecorder target)
         {
-            Assert.IsNotNull(recorder.AnalysisLog);
-            Assert.AreEqual(expectedMethodCounter, recorder.MethodCounter);
-            Assert.AreEqual(expectedTestCounter, recorder.TestCounter);
-            Assert.IsNotNull(recorder.AnalysisLog.TestExecutions);
-            Assert.AreEqual(numberOfTestExecutions, recorder.AnalysisLog.TestExecutions.Count());
+            Assert.IsNotNull(target);
+            Assert.IsNotNull(target.AnalysisLog);
+            Assert.AreEqual(expectedMethodCounter, target.MethodCounter);
+            Assert.AreEqual(expectedTestCounter, target.TestCounter);
+            Assert.IsNotNull(target.AnalysisLog.TestExecutions);
+            Assert.AreEqual(numberOfTestExecutions, target.AnalysisLog.TestExecutions.Count());
         }
 
-        private static void AssertCallGraphIsCorrect(TestStateRecorder target)
+        private static void AssertSequencesAreCorrect(TestStateRecorder target)
         {
+            Assert.IsNotNull(target);
             Assert.IsNotNull(target.AnalysisLog);
             Assert.IsNotNull(target.AnalysisLog.TestExecutions);
-            foreach (var testExecution in target.AnalysisLog.TestExecutions)
+
+
+            for (int i = 0; i < target.AnalysisLog.TestExecutions.Count; i++)
             {
+                var testExecution = target.AnalysisLog.TestExecutions[i];
                 Assert.IsNotNull(testExecution.MethodCalls);
-                foreach (var methodCall in testExecution.MethodCalls)
+                Assert.AreEqual((uint)i, testExecution.Id);
+
+                for (int j = 0; j < testExecution.MethodCalls.Count; j++)
                 {
+                    var methodCall = testExecution.MethodCalls[j];
                     Assert.IsNotNull(methodCall.DynamicCallGraph);
-                    for (int i = 0; i < methodCall.DynamicCallGraph.Count; i++)
+                    Assert.AreEqual((uint)j, methodCall.Id);
+
+                    for (int k = 0; k < methodCall.DynamicCallGraph.Count; k++)
                     {
                         // Ensure sequence number generated is correct and signature is a non-empty string
                         var currentNode = methodCall.DynamicCallGraph[i];
-                        Assert.AreEqual((uint)i, currentNode.SequenceNumber);
+                        Assert.AreEqual((uint)k, currentNode.SequenceNumber);
                         Assert.IsFalse(string.IsNullOrEmpty(currentNode.Signature));
                     }
                 }

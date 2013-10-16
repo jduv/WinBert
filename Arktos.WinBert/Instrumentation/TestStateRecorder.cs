@@ -83,7 +83,7 @@
         public void StartTest()
         {
             // Create a new execution.
-            this.CurrentTest = new TestExecution() { Id = this.MethodCounter, MethodCalls = new List<MethodCall>() };
+            this.CurrentTest = new TestExecution() { Id = this.TestCounter, MethodCalls = new List<MethodCall>() };
         }
 
         ///<inheritdoc />
