@@ -92,7 +92,7 @@
         {
             using (var target = InstrumentationTarget.Create(toInstrument))
             {
-                var rewriter = new DynamicCallGraphInjector(target.Host);
+                var rewriter = new DynamicCallGraphInstrumentor(target.Host);
                 return rewriter.Rewrite(target);
             }
         }

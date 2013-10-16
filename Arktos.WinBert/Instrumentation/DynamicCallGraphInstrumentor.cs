@@ -1,7 +1,6 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
     using System;
-    using System.Diagnostics;
     using AppDomainToolkit;
     using Microsoft.Cci;
     using Microsoft.Cci.MutableCodeModel;
@@ -13,19 +12,18 @@
     /// assembly to be executable. This state is managed by the set of injections by the <see cref="RandoopTestRewriter"/>
     /// class.
     /// </summary>
-    public class DynamicCallGraphInjector : MetadataRewriter
+    public class DynamicCallGraphInstrumentor : MetadataRewriter
     {
         #region Fields & Constants
 
-        private static readonly string InjectedMethodName = "AddMethodToDynamicCallGraph";
-        private readonly IMethodDefinition cgMethod;
+        private readonly IAssembly winbertCore;
         private ILRewriter rewriter;
 
         #endregion
 
         #region Constructors & Destructors
 
-        public DynamicCallGraphInjector(IMetadataHost host)
+        public DynamicCallGraphInstrumentor(IMetadataHost host)
             : base(host)
         {
             if (host == null)
@@ -34,13 +32,7 @@
             }
 
             // Load winbert core
-            var winBertCore = (IAssembly)host.LoadUnitFrom(this.GetType().Assembly.Location);
-
-            // Grab the test utility type definition.
-            var testUtilDefinition = (INamespaceTypeDefinition)UnitHelper.FindType(host.NameTable, winBertCore, typeof(TestUtil).FullName);
-
-            // Grab the call graph method to be injected
-            this.cgMethod = TypeHelper.GetMethod(testUtilDefinition, host.NameTable.GetNameFor(InjectedMethodName), host.PlatformType.SystemString);
+            this.winbertCore = (IAssembly)host.LoadUnitFrom(this.GetType().Assembly.Location);
         }
 
         #endregion
@@ -65,7 +57,7 @@
             }
 
             // New up the rewriter
-            this.rewriter = new DCGMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.cgMethod);
+            this.rewriter = new DCGMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.winbertCore);
 
             // Inject calls
             this.RewriteChildren(target.MutableAssembly);
@@ -84,63 +76,37 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
-            return rewriter.Rewrite(methodBody);
+            if (this.rewriter == null)
+            {
+                throw new InvalidOperationException("Unable to rewrite method body. Call Rewrite(IInstrumentationTarget target) instead of calling this directly.");
+            }
+
+            return this.rewriter.Rewrite(methodBody);
         }
 
         #endregion
 
-        #region Private Inner Classes
+        #region Private Classes
 
         /// <summary>
         /// This class encapuslates the call graph method injection logic.
         /// </summary>
-        private class DCGMethodInjector : ILRewriter
+        private class DCGMethodInjector : TestUtilMethodInjector
         {
-
             #region Constructors & Destructors
 
-            /// <summary>
-            /// Creates a new instance of the CallGraphMethodInjector class.
-            /// </summary>
-            /// <param name="host">
-            /// The metadata host.
-            /// </param>
-            /// <param name="localScopeProvider">
-            /// The local scope provider.
-            /// </param>
-            /// <param name="sourceLocationProvider">
-            /// The source location provider.
-            /// </param>
-            /// <param name="cgMethodDefinition">
-            /// The call graph method definition.
-            /// </param>
             public DCGMethodInjector(
                 IMetadataHost host,
                 ILocalScopeProvider localScopeProvider,
                 ISourceLocationProvider sourceLocationProvider,
-                IMethodDefinition cgMethodDefinition)
-                : base(host, localScopeProvider, sourceLocationProvider)
+                IAssembly winbertCore)
+                : base(host, localScopeProvider, sourceLocationProvider, winbertCore)
             {
-                if (cgMethodDefinition == null)
-                {
-                    throw new ArgumentNullException("cgMethodDefinition");
-                }
-
-                this.CallGraphMethodDefinition = cgMethodDefinition;
             }
 
             #endregion
 
-            #region Properties
-
-            /// <summary>
-            /// Gets the call graph method definition.
-            /// </summary>
-            protected IMethodDefinition CallGraphMethodDefinition { get; private set; }
-
-            #endregion
-
-            #region Protected Methods                                                                                                                               
+            #region Protected Methods
 
             /// <inheritdoc />
             /// <remarks>
@@ -152,7 +118,7 @@
             {
                 var signature = MemberHelper.GetMethodSignature(methodBody.MethodDefinition);
                 this.Generator.Emit(OperationCode.Ldstr, signature);
-                this.Generator.Emit(OperationCode.Call, this.CallGraphMethodDefinition);
+                this.Generator.Emit(OperationCode.Call, this.AddMethodToDynamicCallGraphDefinition);
                 base.EmitMethodBody(methodBody);
             }
 

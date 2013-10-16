@@ -16,6 +16,8 @@
         #region Fields & Constants
 
         private readonly string testMethodName;
+        private readonly IAssembly winbertCore;
+        private ILRewriter rewriter;
 
         #endregion
 
@@ -35,6 +37,9 @@
             }
 
             this.testMethodName = testMethodName;
+
+            // Load winbert core
+            this.winbertCore = (IAssembly)host.LoadUnitFrom(this.GetType().Assembly.Location);
         }
 
         #endregion
@@ -58,6 +63,9 @@
                 throw new ArgumentNullException("target");
             }
 
+            // New up the rewriter
+            this.rewriter = new TestUtilMethodInjector(target.Host, target.LocalScopeProvider, target.SourceLocationProvider, this.winbertCore);
+
             this.RewriteChildren(target.MutableAssembly);
             return target.Save();
         }
@@ -76,11 +84,7 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
-            if (methodBody == null)
-            {
-                throw new ArgumentNullException("methodBody");
-            }
-
+            // debug.
             if (methodBody.MethodDefinition.Name.Value.Equals(this.testMethodName))
             {
                 foreach (var operation in methodBody.Operations)
@@ -90,7 +94,45 @@
                 }
             }
 
-            return methodBody;
+            return this.rewriter.Rewrite(methodBody);
+        }
+
+        #endregion
+
+        #region Private classes
+
+        /// <summary>
+        /// This class encapsulates test util method injector logic.
+        /// </summary>
+        private class RandoopTestUtilMethodInjector : TestUtilMethodInjector
+        {
+            #region Constructors & Destructors
+
+            public RandoopTestUtilMethodInjector(
+                IMetadataHost host,
+                ILocalScopeProvider localScopeProvider,
+                ISourceLocationProvider sourceLocationProvider,
+                IAssembly winbertCore)
+                : base(host, localScopeProvider, sourceLocationProvider, winbertCore)
+            {
+            }
+
+            #endregion
+
+            #region Protected Methods
+
+            /// <inheritdoc />
+            /// <remarks>
+            /// Simply grabs the method signature and emits some operations to load it and execute
+            /// a method call to the <see cref="TestUtil"/> call graph method definition passed in on 
+            /// the constructor.    
+            /// </remarks>
+            protected override void EmitMethodBody(IMethodBody methodBody)
+            {
+                // write me.
+            }
+
+            #endregion
         }
 
         #endregion
