@@ -11,11 +11,12 @@
     {
         #region Fields & Constants
 
-        private static readonly string StartTestName = "StartTest";
-        private static readonly string RecordVoidInstanceMethodCallName = "RecordVoidInstanceMethodCall";
-        private static readonly string RecordInstanceMethodCallName = "RecordInstanceMethodCall";
-        private static readonly string AddMethodToDynamicCallGraphName = "AddMethodToDynamicCallGraph";
-        private static readonly string EndTestName = "EndTest";
+        public static readonly string StartTestName = "StartTest";
+        public static readonly string RecordVoidInstanceMethodCallName = "RecordVoidInstanceMethodCall";
+        public static readonly string RecordInstanceMethodCallName = "RecordInstanceMethodCall";
+        public static readonly string AddMethodToDynamicCallGraphName = "AddMethodToDynamicCallGraph";
+        public static readonly string EndTestName = "EndTest";
+        public static readonly string SaveResultsName = "SaveResults";
 
         #endregion
 
@@ -61,10 +62,15 @@
                 host.PlatformType.SystemObject,
                 host.PlatformType.SystemString);
 
-            // EndTest(string)
+            // EndTest()
             this.EndTestDefinition = TypeHelper.GetMethod(
                 testUtilDefinition,
-                host.NameTable.GetNameFor(EndTestName), 
+                host.NameTable.GetNameFor(EndTestName));
+
+            // SaveResults(string)
+            this.SaveResultsDefinition = TypeHelper.GetMethod(
+                testUtilDefinition,
+                host.NameTable.GetNameFor(SaveResultsName),
                 host.PlatformType.SystemString);
         }
 
@@ -96,6 +102,11 @@
         /// Gets the method definition for <see cref="TestUtil.AddMethodToDynamicCallGraph"/>
         /// </summary>
         public IMethodDefinition AddMethodToDynamicCallGraphDefinition  { get; private set; }
+
+        /// <summary>
+        /// Gets the method definition for <see cref="TestUtil.SaveResults"/>
+        /// </summary>
+        public IMethodDefinition SaveResultsDefinition { get; private set; }
 
         #endregion
     }

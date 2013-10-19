@@ -104,26 +104,10 @@ namespace Arktos.WinBert.Instrumentation
         /// <summary>
         /// Static implementation of <see cref="ITestStateRecorder.EndTest"/>.
         /// </summary>
-        public static void EndTest(string path)
+        public static void EndTest()
         {
-            // End state in the dumper. Always do this first.
+            // End state in the dumper then save the file.
             StateRecorder.EndTest();
-
-            // Do some simple verification.
-            if (!VerifyFilePath(path))
-            {
-                throw new ArgumentException("Cannot save analysis due to an invalid path! Did not pass verification: " + path);
-            }
-
-            // Deserialize dumper.
-            var value = Serializer.XmlSerialize(recorder.AnalysisLog);
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new InvalidOperationException("Deserialized analysis log cannot be empty!");
-            }
-
-            // Write all text. If this blows due to a bad path, it should be caught.
-            FileSystem.WriteAllText(path, value);
         }
 
         /// <summary>
@@ -148,6 +132,29 @@ namespace Arktos.WinBert.Instrumentation
         public static void AddMethodToDynamicCallGraph(string signature)
         {
             StateRecorder.AddMethodToDynamicCallGraph(signature);
+        }
+
+        /// <summary>
+        /// Saves the results of the state recorder to the target path.
+        /// </summary>
+        /// <param name="path"></param>
+        public static void SaveResults(string path)
+        {
+            // Do some simple verification.
+            if (!VerifyFilePath(path))
+            {
+                throw new ArgumentException("Cannot save analysis due to an invalid path! Did not pass verification: " + path);
+            }
+
+            // Deserialize dumper.
+            var value = Serializer.XmlSerialize(recorder.AnalysisLog);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new InvalidOperationException("Deserialized analysis log cannot be empty!");
+            }
+
+            // Write all text. If this blows due to a bad path, it should be caught.
+            FileSystem.WriteAllText(path, value);
         }
 
         #endregion

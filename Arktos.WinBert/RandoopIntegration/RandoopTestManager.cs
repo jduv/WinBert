@@ -92,7 +92,6 @@
                 throw new ArgumentNullException("tests");
             }
 
-            // First, execute the tests against the new assembly.
             using (var runEnv = AppDomainContext.Create())
             {
                 runEnv.RemoteResolver.AddProbePaths(

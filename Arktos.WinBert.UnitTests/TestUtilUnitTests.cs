@@ -77,9 +77,10 @@
         public void StartTest_StateRecorderCalledOnce()
         {
             var mock = new Mock<ITestStateRecorder>();
-            mock.Verify(x => x.StartTest(), Times.AtMostOnce());
             TestUtil.StateRecorder = mock.Object;
             TestUtil.StartTest();
+
+            mock.Verify(x => x.StartTest(), Times.Once());
         }
 
         #endregion
@@ -87,37 +88,14 @@
         #region EndTest
 
         [TestMethod]
-        public void EndTest_SavesSuccessfully()
+        public void EndTest_StateRecorderCalledOnce()
         {
-            var targetPath = @"./out.xml";
-
-            // Set up the state recorder
-            this.stateRecorderMock.Verify(x => x.EndTest(), Times.AtMostOnce());
-            this.stateRecorderMock.Setup(x => x.AnalysisLog).Returns(new WinBertAnalysisLog());
-
-            // File system mock.
-            this.fileSystemMock.Setup(x => x.WriteAllText(It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string>(
-                (path, xml) =>
-                {
-                    // Verify the deserialization at least looks OK in a basic sense.
-                    Assert.IsFalse(string.IsNullOrWhiteSpace(xml));
-
-                    // Verify path. Not really needed, but just in case.
-                    Assert.AreEqual(targetPath, path);
-                });
-
-            // Mocks are assigned in test init, Go!
+            var mock = new Mock<ITestStateRecorder>();
+            TestUtil.StateRecorder = mock.Object;
             TestUtil.StartTest();
-            TestUtil.EndTest(targetPath);
-        }
+            TestUtil.EndTest();
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void EndTest_NullArgument()
-        {
-            TestUtil.StartTest();
-            TestUtil.EndTest(null);
+            mock.Verify(x => x.EndTest(), Times.Once());
         }
 
         #endregion
@@ -163,6 +141,37 @@
 
             this.stateRecorderMock.Verify(x => x.AddMethodToDynamicCallGraph(signature), Times.AtMostOnce());
             TestUtil.AddMethodToDynamicCallGraph(signature);
+        }
+
+        #endregion
+
+        #region SaveResults
+
+        [TestMethod]
+        public void SaveResults_SavesSuccessfully()
+        {
+            var targetPath = @"./out.xml";
+
+            // Set up the state recorder
+            this.stateRecorderMock.Verify(x => x.EndTest(), Times.AtMostOnce());
+            this.stateRecorderMock.Setup(x => x.AnalysisLog).Returns(new WinBertAnalysisLog());
+
+            // File system mock.
+            this.fileSystemMock.Setup(x => x.WriteAllText(It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string>(
+                (path, xml) =>
+                {
+                    // Verify the deserialization at least looks OK in a basic sense.
+                    Assert.IsFalse(string.IsNullOrWhiteSpace(xml));
+
+                    // Verify path. Not really needed, but just in case.
+                    Assert.AreEqual(targetPath, path);
+                });
+
+            // Mocks are assigned in test init, Go!
+            TestUtil.StartTest();
+            TestUtil.EndTest();
+            TestUtil.SaveResults(targetPath);
         }
 
         #endregion

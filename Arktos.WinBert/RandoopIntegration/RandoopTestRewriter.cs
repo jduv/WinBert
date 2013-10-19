@@ -69,8 +69,7 @@
                 target.Host,
                 target.LocalScopeProvider, 
                 target.SourceLocationProvider, 
-                this.winbertCore,
-                @"C:\out-" + uniqueId + ".xml");
+                this.winbertCore);
 
             this.RewriteChildren(target.MutableAssembly);
             return target.Save();
@@ -102,23 +101,15 @@
         /// </summary>
         private class RandoopTestILRewriter : TestUtilMethodInjector
         {
-            #region Fields & Constants
-
-            private readonly string outputFilePath;
-
-            #endregion
-
             #region Constructors & Destructors
 
             public RandoopTestILRewriter(
                 IMetadataHost host,
                 ILocalScopeProvider localScopeProvider,
                 ISourceLocationProvider sourceLocationProvider,
-                IAssembly winbertCore,
-                string outputFilePath)
+                IAssembly winbertCore)
                 : base(host, localScopeProvider, sourceLocationProvider, winbertCore)
             {
-                this.outputFilePath = outputFilePath;
             }
 
             #endregion
@@ -147,7 +138,6 @@
                 {
                     case OperationCode.Ret:
                         // Hook in before ret and call EndTest.
-                        this.Generator.Emit(OperationCode.Ldstr, outputFilePath);
                         this.Generator.Emit(OperationCode.Call, this.EndTestDefinition);
                         base.EmitOperation(operation);
                         break;
