@@ -7,6 +7,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// Class that rewrites a generated randoop test.
@@ -67,8 +68,8 @@
             var uniqueId = Guid.NewGuid().ToString();
             this.rewriter = new RandoopTestILRewriter(
                 target.Host,
-                target.LocalScopeProvider, 
-                target.SourceLocationProvider, 
+                target.LocalScopeProvider,
+                target.SourceLocationProvider,
                 this.winbertCore);
 
             this.RewriteChildren(target.MutableAssembly);
@@ -78,8 +79,9 @@
         /// <summary>
         /// Rewrites the target method body. Method bodies will be assumed to follow the Randoop
         /// pattern of a target object instantiation followed by some number of method calls on 
-        /// that object. All of this will usually be wrapped in a try/catch block, but the rewriter
-        /// will try to ignore those as best it can.
+        /// that object. All of this will usually be wrapped in a single try/catch block. If we detect that
+        /// there are multiple exception flows in the test we won't instrument it because that configuration
+        /// is unsupported.
         /// </summary>
         /// <param name="methodBody">
         /// The method body to rewrite.
@@ -89,7 +91,7 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
-            return this.rewriter.Rewrite(methodBody);
+            return methodBody.OperationExceptionInformation.Count() == 1 ? this.rewriter.Rewrite(methodBody) : base.Rewrite(methodBody);
         }
 
         #endregion
@@ -101,6 +103,12 @@
         /// </summary>
         private class RandoopTestILRewriter : TestUtilMethodInjector
         {
+            #region Fields  & Constants 
+
+            private IOperationExceptionInformation handlerBounds;
+
+            #endregion
+
             #region Constructors & Destructors
 
             public RandoopTestILRewriter(
@@ -123,6 +131,10 @@
             /// </remarks>
             protected override void EmitMethodBody(IMethodBody methodBody)
             {
+                // Should only ever be one as checked in the test rewriter.
+                this.handlerBounds = methodBody.OperationExceptionInformation.First();
+                
+                // Emit start test
                 this.Generator.Emit(OperationCode.Call, this.StartTestDefinition);
                 base.EmitMethodBody(methodBody);
             }
@@ -134,6 +146,22 @@
             /// </remarks>
             protected override void EmitOperation(IOperation operation)
             {
+                if (this.IsOperationInTryBlock(operation))
+                {
+                    this.InstrumentTryBlockOperation(operation);
+                }
+                else
+                {
+                    base.EmitOperation(operation);
+                }
+            }
+
+            #endregion
+
+            #region Private Methods
+
+            private void InstrumentTryBlockOperation(IOperation operation)
+            {
                 switch (operation.OperationCode)
                 {
                     case OperationCode.Ret:
@@ -141,10 +169,41 @@
                         this.Generator.Emit(OperationCode.Call, this.EndTestDefinition);
                         base.EmitOperation(operation);
                         break;
-                    default:
-                        base.EmitOperation(operation);
+                    case OperationCode.Newobj:
+                        Debug.WriteLine("Found newObj");
+                        Debug.WriteLine(operation.Value);
                         break;
                 }
+
+                base.EmitOperation(operation);
+            }
+
+            /// <summary>
+            /// Is the target operation in the try block of the test?
+            /// </summary>
+            /// <param name="operation">
+            /// The operation to test.
+            /// </param>
+            /// <returns>
+            /// True if the operation is in the test try block, false otherwise.
+            /// </returns>
+            private bool IsOperationInTryBlock(IOperation operation)
+            {
+                return operation.Offset >= this.handlerBounds.TryStartOffset && operation.Offset <= this.handlerBounds.TryEndOffset;
+            }
+
+            /// <summary>
+            /// Is the target operation in the catch block of the test?
+            /// </summary>
+            /// <param name="operation">
+            /// The operation to test.
+            /// </param>
+            /// <returns>
+            /// True if the operation is in the test catch block, false otherwise.
+            /// </returns>
+            private bool IsOperationInCatchBlock(IOperation operation)
+            {
+                return operation.Offset >= this.handlerBounds.HandlerStartOffset && operation.Offset <= this.handlerBounds.HandlerEndOffset;
             }
 
             #endregion

@@ -182,7 +182,8 @@
         /// </returns>
         protected virtual AnalysisResult Analyze(ITestRunResult oldAssemblyResults, ITestRunResult newAssemblyResults)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return null;
         }
 
         /// <summary>
