@@ -284,7 +284,7 @@
                 var nextOp = nextNode != null ? nextNode.Value : null;
                 var methodDef = operation.Value as IMethodReference;
 
-                // If the next operation after this callvirt is a store local, then we may
+                // If the next operation after this callvirt is not a store local, then we may
                 // assume that no return values are being saved to the stack. Hence, 
                 // we have a void method call here.
                 if (nextOp != null && !nextOp.IsStoreLocal() && methodDef != null)
