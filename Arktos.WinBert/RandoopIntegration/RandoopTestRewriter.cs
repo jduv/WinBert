@@ -8,6 +8,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Class that rewrites a generated randoop test.
@@ -103,9 +104,11 @@
         /// </summary>
         private class RandoopTestILRewriter : TestUtilMethodInjector
         {
-            #region Fields  & Constants 
+            #region Fields  & Constants
 
             private IOperationExceptionInformation handlerBounds;
+            private IDictionary<uint, LinkedListNode<IOperation>> operationLookup;
+            private LinkedList<IOperation> operationStack;
 
             #endregion
 
@@ -131,9 +134,12 @@
             /// </remarks>
             protected override void EmitMethodBody(IMethodBody methodBody)
             {
+                // Initialize operation metadata.
+                this.InitializeOperationMetadata(methodBody);
+
                 // Should only ever be one as checked in the test rewriter.
                 this.handlerBounds = methodBody.OperationExceptionInformation.First();
-                
+
                 // Emit start test
                 this.Generator.Emit(OperationCode.Call, this.StartTestDefinition);
                 base.EmitMethodBody(methodBody);
@@ -150,6 +156,12 @@
                 {
                     this.InstrumentTryBlockOperation(operation);
                 }
+                else if (operation.OperationCode == OperationCode.Ret)
+                {
+                    // Hook in before ret and call EndTest.
+                    this.Generator.Emit(OperationCode.Call, this.EndTestDefinition);
+                    base.EmitOperation(operation);
+                }
                 else
                 {
                     base.EmitOperation(operation);
@@ -160,22 +172,70 @@
 
             #region Private Methods
 
+            /// <summary>
+            /// Sets up internal data types so that operations and their neighbors can be efficiently inspected
+            /// as needed.
+            /// </summary>
+            /// <param name="methodBody">
+            /// The method body to process.
+            /// </param>
+            private void InitializeOperationMetadata(IMethodBody methodBody)
+            {
+                this.operationLookup = new Dictionary<uint, LinkedListNode<IOperation>>();
+                this.operationStack = new LinkedList<IOperation>();
+                foreach (var operation in methodBody.Operations)
+                {
+                    var listNode = this.operationStack.AddLast(operation);
+                    this.operationLookup[operation.Offset] = listNode;
+                }
+            }
+
+            /// <summary>
+            /// Instruments the try block of a Randoop test.
+            /// </summary>
+            /// <param name="operation">
+            /// The operation to process.
+            /// </param>
             private void InstrumentTryBlockOperation(IOperation operation)
             {
                 switch (operation.OperationCode)
                 {
-                    case OperationCode.Ret:
-                        // Hook in before ret and call EndTest.
-                        this.Generator.Emit(OperationCode.Call, this.EndTestDefinition);
+                    case OperationCode.Stloc:
+                    case OperationCode.Stloc_0:
+                    case OperationCode.Stloc_2:
+                    case OperationCode.Stloc_3:
+                    case OperationCode.Stloc_S:
+                        this.HandleStoreLocal(operation);
+                        break;
+                    default:
                         base.EmitOperation(operation);
                         break;
-                    case OperationCode.Newobj:
-                        Debug.WriteLine("Found newObj");
-                        Debug.WriteLine(operation.Value);
-                        break;
                 }
+            }
 
+            private void HandleStoreLocal(IOperation operation)
+            {
+                // First, emit the store local
                 base.EmitOperation(operation);
+
+                var previousNode = this.operationLookup[operation.Offset].Previous;
+                var previousOp = previousNode != null ? previousNode.Value : null;
+                if (previousOp != null)
+                {
+                    if (previousOp.OperationCode == OperationCode.Newobj)
+                    {
+                        // Instrument .ctor call
+                        var methodDef = previousOp.Value as IMethodReference;
+                        if (methodDef != null)
+                        {
+                            // Grab the saved object
+                            var newObj = operation.Value as ILocalDefinition;
+                            this.Generator.Emit(OperationCode.Ldloc, newObj);
+                            this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
+                            this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
+                        }
+                    }
+                }
             }
 
             /// <summary>
@@ -189,7 +249,8 @@
             /// </returns>
             private bool IsOperationInTryBlock(IOperation operation)
             {
-                return operation.Offset >= this.handlerBounds.TryStartOffset && operation.Offset <= this.handlerBounds.TryEndOffset;
+                return operation.Offset >= this.handlerBounds.TryStartOffset &&
+                    operation.Offset <= this.handlerBounds.TryEndOffset;
             }
 
             /// <summary>
@@ -203,7 +264,8 @@
             /// </returns>
             private bool IsOperationInCatchBlock(IOperation operation)
             {
-                return operation.Offset >= this.handlerBounds.HandlerStartOffset && operation.Offset <= this.handlerBounds.HandlerEndOffset;
+                return operation.Offset >= this.handlerBounds.HandlerStartOffset &&
+                    operation.Offset <= this.handlerBounds.HandlerEndOffset;
             }
 
             #endregion

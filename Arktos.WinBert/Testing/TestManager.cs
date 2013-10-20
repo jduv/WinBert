@@ -158,7 +158,7 @@
                 },
                 () =>
                 {
-                    oldAssemblyResults = this.RunTests(instrumented.TargetOldAssembly, instrumented.TestAssembly);
+                    // oldAssemblyResults = this.RunTests(instrumented.TargetOldAssembly, instrumented.TestAssembly);
                 });
 
             // Perform analysis and we're done.
