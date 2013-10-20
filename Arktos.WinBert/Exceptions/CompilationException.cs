@@ -21,49 +21,22 @@
 
         #region Constructors & Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompilationException"/> class.
-        /// </summary>
-        /// <param name="message">
-        /// A message describing the exception.
-        /// </param>
         public CompilationException(string message)
             : base(message)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompilationException"/> class.
-        /// </summary>
-        /// <param name="message">
-        /// A message describing the exception.
-        /// </param>
-        /// <param name="innerException">
-        /// An inner exception.
-        /// </param>
         public CompilationException(string message, Exception innerException) 
             : base(message, innerException)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompilationException"/> class.
-        /// </summary>
-        /// <param name="message">
-        /// A message describing the exception.
-        /// </param>
-        /// <param name="result">
-        /// The compiler result that caused this exception.
-        /// </param>
         public CompilationException(string message, CompilerResults result)
             : this(message)
         {
             this.Results = result;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompilationException"/> class.
-        /// </summary>
         public CompilationException(CompilerResults result)
             : this(DefaultErrorMessage, result)
         {

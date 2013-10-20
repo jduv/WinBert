@@ -4,19 +4,21 @@
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// This exception should be thrown when some piece of configuration is in an invalid state.
+    /// Thrown when a Randoop test doesn't match the expected pattern implemented inside the
+    /// test rewriter.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
-    public sealed class InvalidConfigurationException : Exception
+    [Serializable]
+    public class InvalidTestConfigurationException : Exception
     {
         #region Constructors & Destructors
 
-        public InvalidConfigurationException(string message)
+        public InvalidTestConfigurationException(string message)
             : base(message)
         {
         }
 
-        public InvalidConfigurationException(string message, Exception innerException)
+        public InvalidTestConfigurationException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

@@ -9,6 +9,8 @@
     using System.IO;
     using System.Linq;
     using System.Collections.Generic;
+    using Arktos.WinBert.Exceptions;
+    using Arktos.WinBert.Extensions;
 
     /// <summary>
     /// Class that rewrites a generated randoop test.
@@ -92,6 +94,7 @@
         /// </returns>
         public override IMethodBody Rewrite(IMethodBody methodBody)
         {
+            // This is where we should catch exceptions if they occur.
             return methodBody.OperationExceptionInformation.Count() == 1 ? this.rewriter.Rewrite(methodBody) : base.Rewrite(methodBody);
         }
 
@@ -109,6 +112,7 @@
             private IOperationExceptionInformation handlerBounds;
             private IDictionary<uint, LinkedListNode<IOperation>> operationLookup;
             private LinkedList<IOperation> operationStack;
+            private ILocalDefinition target;
 
             #endregion
 
@@ -137,7 +141,7 @@
                 // Initialize operation metadata.
                 this.InitializeOperationMetadata(methodBody);
 
-                // Should only ever be one as checked in the test rewriter.
+                // Should only ever be one as checked in the test rewriter that calls this guy.
                 this.handlerBounds = methodBody.OperationExceptionInformation.First();
 
                 // Emit start test
@@ -152,11 +156,12 @@
             /// </remarks>
             protected override void EmitOperation(IOperation operation)
             {
-                if (this.IsOperationInTryBlock(operation))
+                if (operation.IsOperationInTryBlock(this.handlerBounds))
                 {
+                    // Instrument standard Randoop method body patterns.
                     this.InstrumentTryBlockOperation(operation);
                 }
-                else if (operation.OperationCode == OperationCode.Ret)
+                else if (operation.IsRet())
                 {
                     // Hook in before ret and call EndTest.
                     this.Generator.Emit(OperationCode.Call, this.EndTestDefinition);
@@ -164,6 +169,7 @@
                 }
                 else
                 {
+                    // Emit operation, nothing special here.
                     base.EmitOperation(operation);
                 }
             }
@@ -174,7 +180,8 @@
 
             /// <summary>
             /// Sets up internal data types so that operations and their neighbors can be efficiently inspected
-            /// as needed.
+            /// as needed. We should have a hash map for O(1) lookups and a linked list for quick access to
+            /// peeks for previous and next IL instructions.
             /// </summary>
             /// <param name="methodBody">
             /// The method body to process.
@@ -198,74 +205,94 @@
             /// </param>
             private void InstrumentTryBlockOperation(IOperation operation)
             {
-                switch (operation.OperationCode)
+                if (operation.IsNewObj())
                 {
-                    case OperationCode.Stloc:
-                    case OperationCode.Stloc_0:
-                    case OperationCode.Stloc_2:
-                    case OperationCode.Stloc_3:
-                    case OperationCode.Stloc_S:
-                        this.HandleStoreLocal(operation);
-                        break;
-                    default:
-                        base.EmitOperation(operation);
-                        break;
+                    // Set local target so other calls can use it.
+                    var nextNode = this.operationLookup[operation.Offset];
+                    var nextOp = nextNode != null ? nextNode.Value : null;
+                    this.target = nextOp.Value as ILocalDefinition;
+                }
+                else if (operation.IsStoreLocal())
+                {
+                    // Handle store local. Couple of cases in here.
+                    this.InstrumentCtorOrMethodCallWithReturn(operation);
+                }
+                else if (operation.IsCallVirt())
+                {
+                    // Handle call virtual in cases where store local doesn't (i.e. void method calls).
+                    this.InstrumentVoidMethodCall(operation);
+                }
+                else
+                {
+                    // In all other cases, continue as normal.
+                    base.EmitOperation(operation);
                 }
             }
 
-            private void HandleStoreLocal(IOperation operation)
+            /// <summary>
+            /// Handles a store local operation. This method should handle cases for object constructor 
+            /// calls and non-void method call patterns.
+            /// </summary>
+            /// <param name="storeLocal">
+            /// The operation to handle.
+            /// </param>
+            private void InstrumentCtorOrMethodCallWithReturn(IOperation storeLocal)
             {
                 // First, emit the store local
-                base.EmitOperation(operation);
+                base.EmitOperation(storeLocal);
 
-                var previousNode = this.operationLookup[operation.Offset].Previous;
+                var previousNode = this.operationLookup[storeLocal.Offset].Previous;
                 var previousOp = previousNode != null ? previousNode.Value : null;
-                if (previousOp != null)
+                var methodDef = previousOp != null ? previousOp.Value as IMethodReference : null;
+                var returnValue = storeLocal.Value as ILocalDefinition; // Grab what we stored.
+
+                // This hinges on the previous operation having a method definition as it's value. This
+                // will occur in two cases: 1. Constructor call, i.e. newobj, and 2. a virtual object call,
+                // i.e. callvirt.
+                if (previousOp != null && methodDef != null)
                 {
-                    if (previousOp.OperationCode == OperationCode.Newobj)
+                    if (previousOp.IsNewObj())
                     {
                         // Instrument .ctor call
-                        var methodDef = previousOp.Value as IMethodReference;
-                        if (methodDef != null)
-                        {
-                            // Grab the saved object
-                            var newObj = operation.Value as ILocalDefinition;
-                            this.Generator.Emit(OperationCode.Ldloc, newObj);
-                            this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
-                            this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
-                        }
+                        this.Generator.Emit(OperationCode.Ldloc, this.target);
+                        this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
+                        this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
+                    }
+                    else if (previousOp.IsCallVirt() && returnValue != null)
+                    {
+                        // Previous call was a call virtual and the current operation is a store local
+                        // by assumption. That means we're storing a return value onto the stack.
+                        this.Generator.Emit(OperationCode.Ldloc, this.target);
+                        this.Generator.Emit(OperationCode.Ldloc, returnValue);
+                        this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
+                        this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
                     }
                 }
             }
 
             /// <summary>
-            /// Is the target operation in the try block of the test?
+            /// Specifically handles void method call patterns.
             /// </summary>
             /// <param name="operation">
-            /// The operation to test.
+            /// The operation to handle.
             /// </param>
-            /// <returns>
-            /// True if the operation is in the test try block, false otherwise.
-            /// </returns>
-            private bool IsOperationInTryBlock(IOperation operation)
+            private void InstrumentVoidMethodCall(IOperation operation)
             {
-                return operation.Offset >= this.handlerBounds.TryStartOffset &&
-                    operation.Offset <= this.handlerBounds.TryEndOffset;
-            }
+                base.EmitOperation(operation);
 
-            /// <summary>
-            /// Is the target operation in the catch block of the test?
-            /// </summary>
-            /// <param name="operation">
-            /// The operation to test.
-            /// </param>
-            /// <returns>
-            /// True if the operation is in the test catch block, false otherwise.
-            /// </returns>
-            private bool IsOperationInCatchBlock(IOperation operation)
-            {
-                return operation.Offset >= this.handlerBounds.HandlerStartOffset &&
-                    operation.Offset <= this.handlerBounds.HandlerEndOffset;
+                var nextNode = this.operationLookup[operation.Offset].Next;
+                var nextOp = nextNode != null ? nextNode.Value : null;
+                var methodDef = operation.Value as IMethodReference;
+
+                // If the next operation after this callvirt is a store local, then we may
+                // assume that no return values are being saved to the stack. Hence, 
+                // we have a void method call here.
+                if (nextOp != null && !nextOp.IsStoreLocal() && methodDef != null)
+                {
+                    this.Generator.Emit(OperationCode.Ldloc, this.target);
+                    this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
+                    this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
+                }
             }
 
             #endregion
