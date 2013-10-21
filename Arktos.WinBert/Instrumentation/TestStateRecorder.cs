@@ -16,6 +16,7 @@
         #region Fields & Constants
 
         private readonly IMethodCallDumper methodDumper;
+        private List<CallGraphNode> currentCallGraph = new List<CallGraphNode>();
 
         #endregion
 
@@ -105,9 +106,11 @@
             this.ValidateCurrentTestState();
             // Add method and increment method counter
             var dumpedMethod = this.methodDumper.DumpVoidInstanceMethod(this.MethodCounter++, target, signature);
+            dumpedMethod.DynamicCallGraph = this.currentCallGraph;
             this.CurrentMethodCall = dumpedMethod;
             this.CurrentTest.MethodCalls.Add(dumpedMethod);
             this.CallGraphCounter = 0; // Reset the call graph counter.
+            this.currentCallGraph = new List<CallGraphNode>(); // Reset the internal cg node list.
         }
 
         ///<inheritdoc />
@@ -116,18 +119,19 @@
             this.ValidateCurrentTestState();
             // Add method and increment method counter
             var dumpedMethod = this.methodDumper.DumpInstanceMethod(this.MethodCounter++, target, returnValue, signature);
+            dumpedMethod.DynamicCallGraph = this.currentCallGraph;
             this.CurrentMethodCall = dumpedMethod;
             this.CurrentTest.MethodCalls.Add(dumpedMethod);
             this.CallGraphCounter = 0; // Reset the call graph counter.
+            this.currentCallGraph = new List<CallGraphNode>(); // Reset the internal cg node list.
         }
 
         ///<inheritdoc />
         public void AddMethodToDynamicCallGraph(string signature)
         {
             this.ValidateCurrentTestState();
-            this.ValidateCurrentMethodCallState();
             // Add node and increment call graph counter.
-            this.CurrentMethodCall.DynamicCallGraph.Add(new Xml.CallGraphNode() { SequenceNumber = this.CallGraphCounter++, Signature = signature });
+            this.currentCallGraph.Add(new Xml.CallGraphNode() { SequenceNumber = this.CallGraphCounter++, Signature = signature });
         }
 
         #endregion
@@ -146,20 +150,6 @@
                     "Ensure that StartTest has already been called.";
                 throw new InvalidOperationException(msg);
             }
-        }
-
-        /// <summary>
-        /// Simply throws an exception if the current method call is null.
-        /// </summary>
-        private void ValidateCurrentMethodCallState()
-        {
-            if (this.CurrentMethodCall == null)
-            {
-                var msg = "Invalid state: current method call is null and must not be! " +
-                    "Ensure that StartTest and a method call logging function have already been called.";
-                throw new InvalidOperationException(msg);
-            }
-
         }
 
         #endregion

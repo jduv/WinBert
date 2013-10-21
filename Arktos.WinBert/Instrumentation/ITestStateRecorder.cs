@@ -69,7 +69,8 @@
         void RecordInstanceMethodCall(object target, object returnValue, string signature);
 
         /// <summary>
-        /// Adds the target signature to the dynamic call graph of the executing context.
+        /// Adds the target signature to the dynamic call graph of the executing context. This method can be
+        /// called after StartTest and before any recording calls.
         /// </summary>
         /// <param name="signature">
         /// The signature of the method that was executed.

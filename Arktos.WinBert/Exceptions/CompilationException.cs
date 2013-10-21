@@ -4,6 +4,7 @@
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Thrown whenever a compiler implementation fails to compile some piece
@@ -20,6 +21,15 @@
         #endregion
 
         #region Constructors & Destructors
+
+        public CompilationException()
+        {
+        }
+
+        public CompilationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
 
         public CompilationException(string message)
             : base(message)

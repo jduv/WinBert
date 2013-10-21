@@ -272,10 +272,11 @@
         {
             var target = new TestStateRecorder(mockMethodDumper);
             target.StartTest();
-            target.RecordVoidInstanceMethodCall("Hello World", "Foo");
+
             target.AddMethodToDynamicCallGraph("Bar");
             target.AddMethodToDynamicCallGraph("Baz");
             target.AddMethodToDynamicCallGraph("Biff");
+            target.RecordVoidInstanceMethodCall("Hello World", "Foo");
 
             // Assert counter stats
             AssertRecorderListAndCounterStates(
@@ -296,15 +297,6 @@
                 expectedTestCounter: 1U,
                 numberOfTestExecutions: 1,
                 target: target);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void AddMethodToDynamicCallGraph_NoTestMethodCalledYet()
-        {
-            var target = new TestStateRecorder(mockMethodDumper);
-            target.StartTest();
-            target.AddMethodToDynamicCallGraph("Foo");
         }
 
         [TestMethod]
@@ -343,11 +335,11 @@
 
             // Do it all again.
             target.StartTest();
-            target.RecordVoidInstanceMethodCall(testClass, "Foo");
             target.AddMethodToDynamicCallGraph("Baz");
-            target.RecordInstanceMethodCall(testClass, 5, "Bar");
+            target.RecordVoidInstanceMethodCall(testClass, "Foo");
             target.AddMethodToDynamicCallGraph("Zoo");
             target.AddMethodToDynamicCallGraph("Boo");
+            target.RecordInstanceMethodCall(testClass, 5, "Bar");
             target.EndTest();
 
             // Test counter state

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Throw this exception when an error or issue occurs during test generation.
@@ -18,36 +19,25 @@
 
         #region Constructors & Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the TestGenerationException class.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
+        public TestGenerationException()
+        {
+        }
+
+        public TestGenerationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+
         public TestGenerationException(string message)
             : base(message)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the TestGenerationException class.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="cause">
-        /// The inner exception.
-        /// </param>
         public TestGenerationException(string message, Exception cause)
             : base(message, cause)
         {
         }
-        /// <summary>
-        /// Initializes a new instance of the TestGenerationException class.
-        /// </summary>
-        /// <param name="cause">
-        /// The inner exception.
-        /// </param>
+
         public TestGenerationException(Exception cause)
             : base(DefaultErrorMessage, cause)
         {

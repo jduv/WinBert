@@ -158,8 +158,16 @@
             {
                 if (operation.IsOperationInTryBlock(this.handlerBounds))
                 {
-                    // Instrument standard Randoop method body patterns.
-                    this.InstrumentTryBlockOperation(operation);
+                    // If we see a store local, look at the previous op for a newobj and process.
+                    if (operation.IsStoreLocal())
+                    {
+                        this.FindAndProcessNewObj(operation);
+                    }
+                    else
+                    {
+                        // For all other instructions, look at the previous for a callvirt and process.
+                        this.FindAndProcessCallVirt(operation);
+                    }
                 }
                 else if (operation.IsRet())
                 {
@@ -198,100 +206,74 @@
             }
 
             /// <summary>
-            /// Instruments the try block of a Randoop test.
+            /// The method will look at the previous operation and if it is a newobj will insert an instrumentation call and set
+            /// the object target local definition on the rewriter.
             /// </summary>
             /// <param name="operation">
-            /// The operation to process.
-            /// </param>
-            private void InstrumentTryBlockOperation(IOperation operation)
-            {
-                if (operation.IsNewObj())
-                {
-                    // Set local target so other calls can use it.
-                    var nextNode = this.operationLookup[operation.Offset];
-                    var nextOp = nextNode != null ? nextNode.Value : null;
-                    this.target = nextOp.Value as ILocalDefinition;
-                }
-                else if (operation.IsStoreLocal())
-                {
-                    // Handle store local. Couple of cases in here.
-                    this.InstrumentCtorOrMethodCallWithReturn(operation);
-                }
-                else if (operation.IsCallVirt())
-                {
-                    // Handle call virtual in cases where store local doesn't (i.e. void method calls).
-                    this.InstrumentVoidMethodCall(operation);
-                }
-                else
-                {
-                    // In all other cases, continue as normal.
-                    base.EmitOperation(operation);
-                }
-            }
-
-            /// <summary>
-            /// Handles a store local operation. This method should handle cases for object constructor 
-            /// calls and non-void method call patterns.
-            /// </summary>
-            /// <param name="storeLocal">
             /// The operation to handle.
             /// </param>
-            private void InstrumentCtorOrMethodCallWithReturn(IOperation storeLocal)
+            private void FindAndProcessNewObj(IOperation operation)
             {
                 // First, emit the store local
-                base.EmitOperation(storeLocal);
-
-                var previousNode = this.operationLookup[storeLocal.Offset].Previous;
-                var previousOp = previousNode != null ? previousNode.Value : null;
-                var methodDef = previousOp != null ? previousOp.Value as IMethodReference : null;
-                var returnValue = storeLocal.Value as ILocalDefinition; // Grab what we stored.
-
-                // This hinges on the previous operation having a method definition as it's value. This
-                // will occur in two cases: 1. Constructor call, i.e. newobj, and 2. a virtual object call,
-                // i.e. callvirt.
-                if (previousOp != null && methodDef != null)
-                {
-                    if (previousOp.IsNewObj())
-                    {
-                        // Instrument .ctor call
-                        this.Generator.Emit(OperationCode.Ldloc, this.target);
-                        this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
-                        this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
-                    }
-                    else if (previousOp.IsCallVirt() && returnValue != null)
-                    {
-                        // Previous call was a call virtual and the current operation is a store local
-                        // by assumption. That means we're storing a return value onto the stack.
-                        this.Generator.Emit(OperationCode.Ldloc, this.target);
-                        this.Generator.Emit(OperationCode.Ldloc, returnValue);
-                        this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
-                        this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Specifically handles void method call patterns.
-            /// </summary>
-            /// <param name="operation">
-            /// The operation to handle.
-            /// </param>
-            private void InstrumentVoidMethodCall(IOperation operation)
-            {
                 base.EmitOperation(operation);
 
-                var nextNode = this.operationLookup[operation.Offset].Next;
-                var nextOp = nextNode != null ? nextNode.Value : null;
-                var methodDef = operation.Value as IMethodReference;
+                var previousNode = this.operationLookup[operation.Offset].Previous;
+                var previousOp = previousNode != null ? previousNode.Value : null;
+                var methodDef = previousOp != null ? previousOp.Value as IMethodReference : null;
 
-                // If the next operation after this callvirt is not a store local, then we may
-                // assume that no return values are being saved to the stack. Hence, 
-                // we have a void method call here.
-                if (nextOp != null && !nextOp.IsStoreLocal() && methodDef != null)
+                // Look for newobj instructions.
+                if (previousOp != null && previousOp.IsNewObj() && methodDef != null)
                 {
+                    // Instrument .ctor call
+                    this.target = operation.Value as ILocalDefinition;
                     this.Generator.Emit(OperationCode.Ldloc, this.target);
                     this.Generator.Emit(OperationCode.Ldstr, methodDef.Name.Value);
                     this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
+                }
+            }
+
+            /// <summary>
+            /// This method processes any instruction but looks for a callvirt in the previous spot. If a callvirt is 
+            /// discovered, then some logic will kick in to generate the correct instrumentation call depending on 
+            /// if the method has a return value or not. Methods with return values will have a pop call immediately 
+            /// preceding the call virt, and that instruction will be replaced to a store local before emitting the dumping
+            /// code.
+            /// </summary>
+            /// <param name="operation">
+            /// The operation to handle.
+            /// </param>
+            private void FindAndProcessCallVirt(IOperation operation)
+            {
+                var previousNode = this.operationLookup[operation.Offset].Previous;
+                var previousOp = previousNode != null ? previousNode.Value : null;
+                var methodDef = previousOp != null ? previousOp.Value as IMethodReference : null;
+
+                if (previousOp != null && previousOp.IsCallVirt() && methodDef != null)
+                {
+                    if (operation.IsPop())
+                    {
+                        // FIX ME: For now, emit pop. This should go away when the store local is implemented.
+                        base.EmitOperation(operation);
+
+                        var signature = MemberHelper.GetMethodSignature(methodDef);
+                        this.Generator.Emit(OperationCode.Ldloc, this.target);
+                        this.Generator.Emit(OperationCode.Ldnull); // Fix this.
+                        this.Generator.Emit(OperationCode.Ldstr, signature);
+                        this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
+                    }
+                    else
+                    {
+                        // Called a void instance method. Emit dumping method, then current operation.
+                         var signature = MemberHelper.GetMethodSignature(methodDef);
+                        this.Generator.Emit(OperationCode.Ldloc, this.target);
+                        this.Generator.Emit(OperationCode.Ldstr, signature);
+                        this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
+                        base.EmitOperation(operation);
+                    }
+                }
+                else
+                {
+                    base.EmitOperation(operation);
                 }
             }
 

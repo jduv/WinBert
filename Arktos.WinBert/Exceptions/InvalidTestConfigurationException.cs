@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Thrown when a Randoop test doesn't match the expected pattern implemented inside the
@@ -12,6 +13,15 @@
     public class InvalidTestConfigurationException : Exception
     {
         #region Constructors & Destructors
+                
+        public InvalidTestConfigurationException()
+        {
+        }
+
+        public InvalidTestConfigurationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
 
         public InvalidTestConfigurationException(string message)
             : base(message)

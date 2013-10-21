@@ -94,10 +94,6 @@
 
             using (var runEnv = AppDomainContext.Create())
             {
-                runEnv.RemoteResolver.AddProbePaths(
-                    Path.GetDirectoryName(target.Location), 
-                    Path.GetDirectoryName(tests.Location));
-
                 return RemoteFunc.Invoke(
                     runEnv.Domain,
                     target,

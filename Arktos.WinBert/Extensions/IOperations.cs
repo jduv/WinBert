@@ -41,6 +41,20 @@
         }
 
         /// <summary>
+        /// Is the target operation a stack pop?
+        /// </summary>
+        /// <param name="operation">
+        /// The operation to test.
+        /// </param>
+        /// <returns>
+        /// True if the target operation is a store local, false otherwise.
+        /// </returns>
+        public static bool IsPop(this IOperation operation)
+        {
+            return operation.OperationCode == OperationCode.Pop;
+        }
+
+        /// <summary>
         /// Is the target operation a call virtual?
         /// </summary>
         /// <param name="operation">

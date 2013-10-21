@@ -39,7 +39,8 @@
         public ITestRunResult RunTests(IAssemblyTarget target, IAssemblyTarget tests)
         {
             var loader = new AssemblyLoader();
-            var testAssembly = loader.LoadAssembly(LoadMethod.LoadFile, tests.Location);
+            loader.LoadAssemblyWithReferences(LoadMethod.LoadFrom, target.Location);
+            var testAssembly = loader.LoadAssembly(LoadMethod.LoadFrom, tests.Location);
             foreach (var type in testAssembly.GetTypes())
             {
                 var testObj = Activator.CreateInstance(type);
@@ -49,7 +50,7 @@
 
             // Execute Save by finding the loaded winbert assembly and calling TestUtil.SaveResults()
             TestRunResult result;
-            var analysisLogPath = CreateAnalysisFilePath(target);
+            var analysisLogPath = CreateAnalysisFilePath(target, tests);
             var winbert = loader.GetAssemblies().FirstOrDefault(x => x.FullName.Equals(Assembly.GetExecutingAssembly().FullName));
             var testUtil = winbert == null ? null : winbert.GetTypes().FirstOrDefault(x => x.Name.Equals(typeof(TestUtil).Name));
 
@@ -77,12 +78,16 @@
         /// <param name="target">
         /// The assembly target to create the analysis file path for.
         /// </param>
+        /// <param name="tests">
+        /// The tests.
+        /// </param>
         /// <returns>
         /// A string path to an XML file that should contain analysis information.
         /// </returns>
-        private static string CreateAnalysisFilePath(IAssemblyTarget target)
+        private static string CreateAnalysisFilePath(IAssemblyTarget target, IAssemblyTarget tests)
         {
-            var uniqueId = Guid.NewGuid().ToString().Substring(0, 6);
+            var endingIdx = tests.Location.LastIndexOf(".instrumented.dll");
+            var uniqueId = tests.Location.Substring(endingIdx - 7, 7);
             var analysisFileName = Path.GetFileName(target.Location);
             var extension = Path.GetExtension(analysisFileName);
             analysisFileName = Path.ChangeExtension(analysisFileName, extension + "." + uniqueId + ".analysis.xml");

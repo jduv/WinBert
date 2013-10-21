@@ -15,7 +15,13 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="MethodCalls" type="ba:MethodCall" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="MethodCalls">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="MethodCall" type="ba:MethodCall" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
     <xs:attribute name="Id" type="xs:unsignedInt" use="required"/>
   </xs:complexType>
@@ -29,11 +35,11 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
+      <xs:element name="Signature" type="xs:string" />
       <xs:element name="DynamicCallGraph" type="ba:DynamicCallGraph" />
       <xs:element name="PostCallInstance" type="ba:Object" />
       <xs:element name="ReturnValue" type="ba:Value" minOccurs="0" />
     </xs:sequence>
-    <xs:attribute name="Signature" type="xs:string" use="required"/>
     <xs:attribute name="Id" type="xs:unsignedInt" use="required"/>
     <xs:attribute name="Type" type="ba:MethodCallType" use="required" />
   </xs:complexType>
