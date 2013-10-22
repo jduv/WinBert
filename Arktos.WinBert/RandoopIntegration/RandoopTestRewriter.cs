@@ -252,12 +252,15 @@
                 {
                     if (operation.IsPop())
                     {
-                        // FIX ME: For now, emit pop. This should go away when the store local is implemented.
-                        base.EmitOperation(operation);
+                        // Store the return value into a local definition.
+                        var localdef = GenerateReturnValueLocalDefinition(methodDef);
+
+                        // Add to current scope and store.
+                        this.Generator.Emit(OperationCode.Stloc, localdef);
 
                         var signature = MemberHelper.GetMethodSignature(methodDef);
                         this.Generator.Emit(OperationCode.Ldloc, this.target);
-                        this.Generator.Emit(OperationCode.Ldnull); // Fix this.
+                        this.Generator.Emit(OperationCode.Ldloc, localdef);
                         this.Generator.Emit(OperationCode.Ldstr, signature);
                         this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
                     }
@@ -275,6 +278,22 @@
                 {
                     base.EmitOperation(operation);
                 }
+            }
+
+            private LocalDefinition GenerateReturnValueLocalDefinition(IMethodReference methodCalled)
+            {
+                var uniqueId = Guid.NewGuid().ToString().Substring(0, 6);
+                var localdef = new LocalDefinition()
+                {
+                    Name = this.host.NameTable.GetNameFor("ret_" + uniqueId),
+                    Type = methodCalled.Type,
+                    MethodDefinition = this.Generator.Method
+                };
+
+                this.Generator.AddVariableToCurrentScope(localdef);
+                this.TrackLocal(localdef);
+
+                return localdef;
             }
 
             #endregion
