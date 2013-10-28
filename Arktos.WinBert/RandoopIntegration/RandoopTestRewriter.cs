@@ -145,7 +145,9 @@
                 this.handlerBounds = methodBody.OperationExceptionInformation.First();
 
                 // Emit start test
-                this.Generator.Emit(OperationCode.Call, this.StartTestDefinition);
+                var testName = TypeHelper.GetTypeName(methodBody.MethodDefinition.ContainingType);
+                this.Generator.Emit(OperationCode.Ldstr, testName);
+                this.Generator.Emit(OperationCode.Call, this.StartTestWithNameDefinition);
                 base.EmitMethodBody(methodBody);
             }
 
@@ -260,9 +262,17 @@
 
                         var signature = MemberHelper.GetMethodSignature(methodDef);
                         this.Generator.Emit(OperationCode.Ldloc, this.target);
-                        this.Generator.Emit(OperationCode.Ldloc, localdef);
+                        //this.Generator.Emit(OperationCode.Ldloc, localdef);
+
+                        // Box value types.
+                        //if (localdef.Type.IsValueType)
+                        //{
+                        //    this.Generator.Emit(OperationCode.Box, localdef.Type);
+                        //}
+
                         this.Generator.Emit(OperationCode.Ldstr, signature);
-                        this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
+                        this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
+                        this.Generator.Emit(OperationCode.Nop);
                     }
                     else
                     {

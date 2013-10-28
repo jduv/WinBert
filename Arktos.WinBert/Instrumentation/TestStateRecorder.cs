@@ -87,6 +87,12 @@
             this.CurrentTest = new TestExecution() { Id = this.TestCounter, MethodCalls = new List<MethodCall>() };
         }
 
+        /// <inheritdoc />
+        public void StartTest(string testName)
+        {
+            this.CurrentTest = new TestExecution() { Id = this.TestCounter, MethodCalls = new List<MethodCall>(), Name = testName };
+        }
+
         ///<inheritdoc />
         public void EndTest()
         {

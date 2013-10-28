@@ -39,6 +39,14 @@
         void StartTest();
 
         /// <summary>
+        /// Starts a test case, but optionally allows a string identifier name.
+        /// </summary>
+        /// <param name="testName">
+        /// The name to assign to the test.
+        /// </param>
+        void StartTest(string testName);
+
+        /// <summary>
         /// Ends a test case, setting the state of the dumper up for the next call to <see cref="StartTest"/>.
         /// </summary>
         void EndTest();

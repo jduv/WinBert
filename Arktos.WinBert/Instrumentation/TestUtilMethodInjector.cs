@@ -47,6 +47,12 @@
                 testUtilDefinition,
                 host.NameTable.GetNameFor(StartTestName));
 
+            // StartTest(string)
+            this.StartTestWithNameDefinition = TypeHelper.GetMethod(
+                testUtilDefinition,
+                host.NameTable.GetNameFor(StartTestName),
+                host.PlatformType.SystemString);
+
             // RecordVoidInstanceMethod(object, string)
              this.RecordVoidInstanceMethodDefinition = TypeHelper.GetMethod(
                 testUtilDefinition,
@@ -82,6 +88,11 @@
         /// Gets the method definition for <see cref="TestUtil.StartTest"/>
         /// </summary>
         public IMethodDefinition StartTestDefinition { get; private set; }
+
+        /// <summary>
+        /// Gets the method definition for <see cref="TestUtil.StartTest"/> with a test name parameter.
+        /// </summary>
+        public IMethodDefinition StartTestWithNameDefinition { get; private set; }
 
         /// <summary>
         /// Gets the method definition for <see cref="TestUtil.RecordVoidInstanceMethod"/>

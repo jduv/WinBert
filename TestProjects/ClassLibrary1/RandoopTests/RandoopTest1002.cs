@@ -17,9 +17,10 @@ namespace RandoopTests
                 InterfaceTestAssembly2.Class1 v0 = new InterfaceTestAssembly2.Class1();
                 TestUtil.RecordVoidInstanceMethodCall(v0, ".ctor");
                 System.String v1 = ((InterfaceTestAssembly2.Class1)v0).I1Boo();
+                TestUtil.RecordInstanceMethodCall(v0, v1, "I1Boo");
                 var hello = 1;
                 ((InterfaceTestAssembly2.Class1)v0).simpleTest(hello);
-                TestUtil.RecordInstanceMethodCall(v0, null, ".ctor");
+                TestUtil.RecordVoidInstanceMethodCall(v0, "simpleTest");
 
                 //END TEST
                 System.Console.WriteLine("This was expected behavior. Will exit with code 100.");
