@@ -262,7 +262,7 @@
 
                         var signature = MemberHelper.GetMethodSignature(methodDef);
                         this.Generator.Emit(OperationCode.Ldloc, this.target);
-                        //this.Generator.Emit(OperationCode.Ldloc, localdef);
+                        this.Generator.Emit(OperationCode.Ldloc, localdef);
 
                         // Box value types.
                         //if (localdef.Type.IsValueType)
@@ -271,8 +271,7 @@
                         //}
 
                         this.Generator.Emit(OperationCode.Ldstr, signature);
-                        this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);
-                        this.Generator.Emit(OperationCode.Nop);
+                        this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
                     }
                     else
                     {
@@ -290,7 +289,16 @@
                 }
             }
 
-            private LocalDefinition GenerateReturnValueLocalDefinition(IMethodReference methodCalled)
+            /// <summary>
+            /// Generates a local definition for saving return values to.
+            /// </summary>
+            /// <param name="methodCalled">
+            /// The method called.
+            /// </param>
+            /// <returns>
+            /// The local definition.
+            /// </returns>
+            private ILocalDefinition GenerateReturnValueLocalDefinition(IMethodReference methodCalled)
             {
                 var uniqueId = Guid.NewGuid().ToString().Substring(0, 6);
                 var localdef = new LocalDefinition()

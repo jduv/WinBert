@@ -279,9 +279,6 @@
       <Name>RandoopImpl</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="XMLFile1.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
     <Exec Command="&quot;$(SolutionDir)ExternalTools\Xsd\x86\xsd.exe&quot; /c /n:$(RootNamespace).Xml WinBertConfigSchema.xsd" WorkingDirectory="$(ProjectDir)/Xml" />

@@ -65,9 +65,9 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
+      <xs:element name="Name" type="xs:string" />
       <xs:element name="Value" type="ba:Value" />
     </xs:sequence>
-    <xs:attribute name="Name" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="Property">
@@ -77,10 +77,10 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
+      <xs:element name="Name" type="xs:string" />
+      <xs:element name="BackingFieldName" type="xs:string" />
       <xs:element name="Value" type="ba:Value" />
     </xs:sequence>
-    <xs:attribute name="Name" type="xs:string" use="required" />
-    <xs:attribute name="BackingFieldName" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="Value">
@@ -107,8 +107,20 @@
       </xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="Fields" type="ba:Field" minOccurs="0" maxOccurs="unbounded" />
-      <xs:element name="Properties" type="ba:Property" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Fields">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Field" type="ba:Field" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Properties">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Property" type="ba:Property" minOccurs="0" maxOccurs="unbounded" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
     <xs:attribute name="Type" type="xs:string" use="required"/>
   </xs:complexType>
