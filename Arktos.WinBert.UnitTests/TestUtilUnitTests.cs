@@ -78,9 +78,9 @@
         {
             var mock = new Mock<ITestStateRecorder>();
             TestUtil.StateRecorder = mock.Object;
-            TestUtil.StartTest();
+            TestUtil.StartTest("MyTest");
 
-            mock.Verify(x => x.StartTest(), Times.Once());
+            mock.Verify(x => x.StartTest(It.IsAny<string>()), Times.Once());
         }
 
         #endregion
@@ -92,7 +92,7 @@
         {
             var mock = new Mock<ITestStateRecorder>();
             TestUtil.StateRecorder = mock.Object;
-            TestUtil.StartTest();
+            TestUtil.StartTest("MyTest");
             TestUtil.EndTest();
 
             mock.Verify(x => x.EndTest(), Times.Once());
@@ -169,7 +169,7 @@
                 });
 
             // Mocks are assigned in test init, Go!
-            TestUtil.StartTest();
+            TestUtil.StartTest("MyTest");
             TestUtil.EndTest();
             TestUtil.SaveResults(targetPath);
         }

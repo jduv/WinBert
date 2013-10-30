@@ -42,11 +42,6 @@
                 host.NameTable.GetNameFor(AddMethodToDynamicCallGraphName), 
                 host.PlatformType.SystemString);
 
-            // StartTest()
-            this.StartTestDefinition =  TypeHelper.GetMethod(
-                testUtilDefinition,
-                host.NameTable.GetNameFor(StartTestName));
-
             // StartTest(string)
             this.StartTestWithNameDefinition = TypeHelper.GetMethod(
                 testUtilDefinition,
@@ -83,6 +78,8 @@
         #endregion
 
         #region Properties
+
+        public IMethodDefinition TestDefinition { get; private set; }
 
         /// <summary>
         /// Gets the method definition for <see cref="TestUtil.StartTest"/>

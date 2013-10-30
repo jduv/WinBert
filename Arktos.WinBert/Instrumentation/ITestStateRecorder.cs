@@ -22,7 +22,7 @@
         /// <summary>
         /// Gets the current test counter.
         /// </summary>
-        uint TestCounter { get;  }
+        uint TestCounter { get; }
 
         /// <summary>
         /// Gets the analysis log that was recorded.
@@ -32,14 +32,9 @@
         #endregion
 
         /// <summary>
-        /// Starts a test case. This method should set up all the required state for a test case to execute in-
-        /// context. This means that a call to anything other than <see cref="EndTest"/> should log any data
-        /// captured to the current test.
-        /// </summary>
-        void StartTest();
-
-        /// <summary>
-        /// Starts a test case, but optionally allows a string identifier name.
+        /// Starts a test case, but optionally allows a string identifier name. This method should set up all the 
+        /// required state for a test case to execute in-context. This means that a call to anything other than 
+        /// <see cref="EndTest"/> should log any data captured to the current test.
         /// </summary>
         /// <param name="testName">
         /// The name to assign to the test.

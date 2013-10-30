@@ -48,7 +48,7 @@ namespace ConsoleApplication1
 
         public void Twiddle()
         {
-            this.twiddle = 1000;
+            this.twiddle = 1110;
         }
 
         public static void Main(string[] args)

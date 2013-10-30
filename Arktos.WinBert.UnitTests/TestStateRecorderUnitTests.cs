@@ -73,10 +73,12 @@
         [TestMethod]
         public void StartTest_CorrectState()
         {
+            var testName = "MyTest";
             var target = new TestStateRecorder();
-            target.StartTest();
+            target.StartTest(testName);
 
             Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName, target.CurrentTest.Name);
             Assert.IsNull(target.CurrentMethodCall);
             AssertRecorderListAndCounterStates(
                 expectedMethodCounter: 0U,
@@ -92,11 +94,15 @@
         [TestMethod]
         public void EndTest_CorrectState()
         {
+            var testName = "MyTest";
             var target = new TestStateRecorder();
-            target.StartTest();
-            target.EndTest();
+            target.StartTest(testName);
 
             Assert.IsNull(target.CurrentMethodCall);
+            Assert.AreEqual(testName, target.CurrentTest.Name);
+
+            target.EndTest();
+
             Assert.IsNull(target.CurrentTest);
             AssertRecorderListAndCounterStates(
                 expectedMethodCounter: 0U,
@@ -123,14 +129,16 @@
         [TestMethod]
         public void RecordVoidInstanceMethodCall_CorrectState()
         {
+            var testName = "MyTest";
             var methodSig = "Foo";
             var target = new TestStateRecorder(mockMethodDumper);
-            target.StartTest();
+            target.StartTest(testName);
             target.RecordVoidInstanceMethodCall(new TestClass(), methodSig);
 
             // Before: method counter incremented, test counter hasn't yet. Methods has one
             // element, tests has none until EndTest is called.
             Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName, target.CurrentTest.Name);
             AssertRecorderListAndCounterStates(
                 expectedMethodCounter: 1U,
                 expectedTestCounter: 0U,
@@ -168,10 +176,15 @@
         [TestMethod]
         public void RecordVoidInstanceMethodCall_EnsureMethodCounterIncrements()
         {
+            var testName = "MyTest";
             var methodSig1 = "Foo";
             var methodSig2 = "Bar";
             var target = new TestStateRecorder(mockMethodDumper);
-            target.StartTest();
+            target.StartTest(testName);
+
+            Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName, target.CurrentTest.Name);
+
             target.RecordVoidInstanceMethodCall(new TestClass(), methodSig1);
 
             AssertRecorderListAndCounterStates(
@@ -212,15 +225,17 @@
         [TestMethod]
         public void RecordInstanceMethodCall_CorrectState()
         {
+            var testName = "MyTest";
             var methodSig = "Foo";
             var retVal = 3.0F;
             var target = new TestStateRecorder(mockMethodDumper);
-            target.StartTest();
+            target.StartTest(testName);
             target.RecordInstanceMethodCall(new TestClass(), retVal, methodSig);
 
             // Before: method counter incremented, test counter hasn't yet. Methods has one
             // element, tests has none until EndTest is called.
             Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName, target.CurrentTest.Name);
             AssertRecorderListAndCounterStates(
                 expectedMethodCounter: 1U,
                 expectedTestCounter: 0U,
@@ -270,8 +285,12 @@
         [TestMethod]
         public void AddMethodToDynamicCallGraph_CorrectState()
         {
+            var testName = "MyTest";
             var target = new TestStateRecorder(mockMethodDumper);
-            target.StartTest();
+            target.StartTest(testName);
+
+            Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName, target.CurrentTest.Name);
 
             target.AddMethodToDynamicCallGraph("Bar");
             target.AddMethodToDynamicCallGraph("Baz");
@@ -314,11 +333,15 @@
         [TestMethod]
         public void EndToEndTest_PassTestBoundary_CorrectState()
         {
+            var testName1 = "MyTest1";
+            var testName2 = "MyTest2";
             var testClass = new TestClass();
             var target = new TestStateRecorder(mockMethodDumper);
+            target.StartTest(testName1);
 
-            // Begin.
-            target.StartTest();
+            Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName1, target.CurrentTest.Name);
+
             target.RecordVoidInstanceMethodCall(testClass, "Foo");
             target.AddMethodToDynamicCallGraph("Baz");
             target.AddMethodToDynamicCallGraph("Biff");
@@ -334,7 +357,11 @@
                 target: target);
 
             // Do it all again.
-            target.StartTest();
+            target.StartTest(testName2);
+
+            Assert.IsNotNull(target.CurrentTest);
+            Assert.AreEqual(testName2, target.CurrentTest.Name);
+
             target.AddMethodToDynamicCallGraph("Baz");
             target.RecordVoidInstanceMethodCall(testClass, "Foo");
             target.AddMethodToDynamicCallGraph("Zoo");

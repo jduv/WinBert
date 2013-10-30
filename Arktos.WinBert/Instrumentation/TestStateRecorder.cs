@@ -80,13 +80,6 @@
 
         #region Public Methods
 
-        ///<inheritdoc />
-        public void StartTest()
-        {
-            // Create a new execution.
-            this.CurrentTest = new TestExecution() { Id = this.TestCounter, MethodCalls = new List<MethodCall>() };
-        }
-
         /// <inheritdoc />
         public void StartTest(string testName)
         {

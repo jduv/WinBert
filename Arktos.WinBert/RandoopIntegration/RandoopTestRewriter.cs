@@ -146,6 +146,11 @@
 
                 // Emit start test
                 var testName = TypeHelper.GetTypeName(methodBody.MethodDefinition.ContainingType);
+
+                // modify max stack if applicable, should be at least three.
+                ushort three = 3;
+                this.maxStack = this.maxStack < three ? three : this.maxStack;
+
                 this.Generator.Emit(OperationCode.Ldstr, testName);
                 this.Generator.Emit(OperationCode.Call, this.StartTestWithNameDefinition);
                 base.EmitMethodBody(methodBody);
@@ -276,7 +281,7 @@
                     else
                     {
                         // Called a void instance method. Emit dumping method, then current operation.
-                         var signature = MemberHelper.GetMethodSignature(methodDef);
+                        var signature = MemberHelper.GetMethodSignature(methodDef);
                         this.Generator.Emit(OperationCode.Ldloc, this.target);
                         this.Generator.Emit(OperationCode.Ldstr, signature);
                         this.Generator.Emit(OperationCode.Call, this.RecordVoidInstanceMethodDefinition);

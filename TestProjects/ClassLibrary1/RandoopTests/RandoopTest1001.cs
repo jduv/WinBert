@@ -26,6 +26,10 @@ namespace RandoopTests
                 TestUtil.RecordInstanceMethodCall(v0, v4, "I1Boo");
                 System.String v5 = ((InterfaceTestAssembly2.Class1)v0).I1Boo();
                 TestUtil.RecordInstanceMethodCall(v0, v5, "I1Boo");
+                System.DateTime v6 = ((InterfaceTestAssembly2.Class1)v0).I1Baz();
+                TestUtil.RecordInstanceMethodCall(v0, v6, "I1Baz");
+                int v7 = ((InterfaceTestAssembly2.Class1)v0).I1Bar();
+                TestUtil.RecordInstanceMethodCall(v0, v7, "I1Baz");
                 //END TEST
                 System.Console.WriteLine("This was expected behavior. Will exit with code 100.");
                 return 100;

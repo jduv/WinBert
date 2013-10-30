@@ -96,15 +96,6 @@ namespace Arktos.WinBert.Instrumentation
         /// <summary>
         /// Static implementation of <see cref="ITestStateRecorder.StartTest"/>.
         /// </summary>
-        public static void StartTest()
-        {
-            StateRecorder.StartTest();
-        }
-
-
-        /// <summary>
-        /// Static implementation of <see cref="ITestStateRecorder.StartTest"/>.
-        /// </summary>
         public static void StartTest(string testName)
         {
             StateRecorder.StartTest(testName);
