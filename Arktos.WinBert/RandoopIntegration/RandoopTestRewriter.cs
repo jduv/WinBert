@@ -270,10 +270,10 @@
                         this.Generator.Emit(OperationCode.Ldloc, localdef);
 
                         // Box value types.
-                        //if (localdef.Type.IsValueType)
-                        //{
-                        //    this.Generator.Emit(OperationCode.Box, localdef.Type);
-                        //}
+                        if (localdef.Type.IsValueType)
+                        {
+                            this.Generator.Emit(OperationCode.Box, localdef.Type);
+                        }
 
                         this.Generator.Emit(OperationCode.Ldstr, signature);
                         this.Generator.Emit(OperationCode.Call, this.RecordInstanceMethodDefinition);
