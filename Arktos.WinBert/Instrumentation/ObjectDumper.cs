@@ -21,12 +21,12 @@
         /// The target to dump.
         /// </param>
         /// <param name="maxDepth">
-        /// The maximum depth to go when recursively logging instance fields and properties. Defaults to 5.
+        /// The maximum depth to go when recursively logging instance fields and properties. Defaults to 3.
         /// </param>
         /// <returns>
         /// An Xml.Object instance representing the passed in target.
         /// </returns>
-        public Xml.Object DumpObject(object target, ushort maxDepth = 5)
+        public Xml.Object DumpObject(object target, ushort maxDepth = 3)
         {
             Xml.Object obj;
             if (target == null)
@@ -103,6 +103,20 @@
 
         #region Private Methods
 
+        /// <summary>
+        /// Dump all fields and properties of the target object up to the maximum supplied depth. Note that
+        /// only auto-generated properties will be dumped, and the fields corresponding to those properties
+        /// will be pushed into the property as the backing field element.
+        /// </summary>
+        /// <param name="target">
+        /// The target to dump.
+        /// </param>
+        /// <param name="maxDepth">
+        /// The maximum depth to dump.
+        /// </param>
+        /// <returns>
+        /// A FieldsAndProperties class containing the dumped fields and properties.
+        /// </returns>
         private FieldsAndProperties DumpFieldsAndProperties(object target, ushort maxDepth)
         {
             var dumpedFields = new List<Xml.Field>();
@@ -155,6 +169,21 @@
             return new FieldsAndProperties(dumpedFields, dumpedProps);
         }
 
+        /// <summary>
+        /// Finds the backing field for the target property.
+        /// </summary>
+        /// <param name="target">
+        /// The target object.
+        /// </param>
+        /// <param name="compilerGeneratedFields">
+        /// The list of fields to search.
+        /// </param>
+        /// <param name="prop">
+        /// The property whose backing field to find.
+        /// </param>
+        /// <returns>
+        /// The backing field.
+        /// </returns>
         private static FieldInfo FindBackingField(object target, List<FieldInfo> compilerGeneratedFields, PropertyInfo prop)
         {
             return compilerGeneratedFields.FirstOrDefault(
@@ -166,6 +195,21 @@
                 });
         }
 
+        /// <summary>
+        /// Dumps the target field and any containing members up to the supplied depth.
+        /// </summary>
+        /// <param name="target">
+        /// The target object.
+        /// </param>
+        /// <param name="field">
+        /// The field to dump.
+        /// </param>
+        /// <param name="maxDepth">
+        /// The maximum depth to traverse members.
+        /// </param>
+        /// <returns>
+        /// The dumped field.
+        /// </returns>
         private Xml.Field DumpField(object target, FieldInfo field, ushort maxDepth)
         {
             var dumpedField = new Xml.Field()
@@ -195,6 +239,24 @@
             return dumpedField;
         }
 
+        /// <summary>
+        /// Dumps the target field and any containing members up to the supplied depth.
+        /// </summary>
+        /// <param name="target">
+        /// The target object.
+        /// </param>
+        /// <param name="backingField">
+        /// The backing field of the target property.
+        /// </param>
+        /// <param name="prop">
+        /// The property to dump.
+        /// </param>
+        /// <param name="maxDepth">
+        /// The maximum depth to traverse members.
+        /// </param>
+        /// <returns>
+        /// The dumped property.
+        /// </returns>
         private Xml.Property DumpProperty(object target, FieldInfo backingField, PropertyInfo prop, ushort maxDepth)
         {
             var dumpedProperty = new Xml.Property()
