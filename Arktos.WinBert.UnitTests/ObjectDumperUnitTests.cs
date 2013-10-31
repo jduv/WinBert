@@ -4,6 +4,7 @@
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
+    using System.Xml;
 
     [TestClass]
     public class ObjectDumperUnitTests
@@ -25,7 +26,7 @@
         {
             var target = new ObjectDumper();
             var actual = target.DumpObject(null);
-            Assert.AreEqual(NullDump, Serializer.XmlSerialize(actual, asFragment: true));
+            Assert.AreEqual(NullDump, Serializer.XmlSerialize(actual, new XmlWriterSettings() { OmitXmlDeclaration = true }));
         }
 
         [TestMethod]
@@ -33,7 +34,7 @@
         {
             var target = new ObjectDumper();
             var actual = target.DumpObject(null, maxDepth: 0);
-            Assert.AreEqual(NullDump, Serializer.XmlSerialize(actual, asFragment: true));
+            Assert.AreEqual(NullDump, Serializer.XmlSerialize(actual, new XmlWriterSettings() { OmitXmlDeclaration = true }));
         }
 
         [TestMethod]
@@ -41,7 +42,7 @@
         {
             var target = new ObjectDumper();
             var actual = target.DumpObject(new { x = 1, y = 2 }, maxDepth: 0);
-            Assert.AreEqual(NotNullDump, Serializer.XmlSerialize(actual, asFragment: true));
+            Assert.AreEqual(NotNullDump, Serializer.XmlSerialize(actual, new XmlWriterSettings() { OmitXmlDeclaration = true }));
         }
 
         [TestMethod]
@@ -70,7 +71,7 @@
 
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.AreEqual(2, actual.Fields.Count);
-            Assert.AreEqual(2, actual.Properties.Count);
+            Assert.AreEqual(0, actual.AutoProperties.Count);
 
             // Fields
             var xFieldValue = actual.Fields[0].Value.Item as Xml.Primitive;
@@ -85,20 +86,6 @@
             Assert.AreEqual("y", actual.Fields[1].Name);
             Assert.AreEqual(toDump.Y.GetType().FullName, yFieldValue.Type);
             Assert.AreEqual(toDump.Y.ToString(), yFieldValue.Value);
-
-            // Properties
-            var xPropValue = actual.Properties[0].Value.Item as Xml.Primitive;
-            var yPropValue = actual.Properties[0].Value.Item as Xml.Primitive;
-            Assert.IsNotNull(xPropValue);
-            Assert.IsNotNull(yPropValue);
-
-            Assert.AreEqual("X", actual.Properties[0].Name);
-            Assert.AreEqual(toDump.X.GetType().FullName, xPropValue.Type);
-            Assert.AreEqual(toDump.X.ToString(), xPropValue.Value);
-
-            Assert.AreEqual("Y", actual.Properties[1].Name);
-            Assert.AreEqual(toDump.Y.GetType().FullName, yPropValue.Type);
-            Assert.AreEqual(toDump.Y.ToString(), yPropValue.Value);
         }
 
         [TestMethod]
@@ -109,9 +96,9 @@
             var actual = target.DumpObject(toDump);
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.IsNotNull(actual.Fields);
-            Assert.IsNotNull(actual.Properties);
+            Assert.IsNotNull(actual.AutoProperties);
             Assert.AreEqual(12, actual.Fields.Count);
-            Assert.AreEqual(0, actual.Properties.Count);
+            Assert.AreEqual(0, actual.AutoProperties.Count);
         }
 
         [TestMethod]
@@ -123,50 +110,53 @@
 
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.IsNotNull(actual.Fields);
-            Assert.IsNotNull(actual.Properties);
-            Assert.AreEqual(12, actual.Fields.Count);
-            Assert.AreEqual(12, actual.Properties.Count);
+            Assert.IsNotNull(actual.AutoProperties);
+            Assert.AreEqual(0, actual.Fields.Count);
+            Assert.AreEqual(12, actual.AutoProperties.Count);
         }
 
         [TestMethod]
-        public void DumpObject_ComplexObjectDepthOfOne()
+        public void DumpObject_ObjectWithFieldsAndProperties()
+        {
+            var toDump = new FieldsAndProperties();
+            var target = new ObjectDumper();
+            var actual = target.DumpObject(toDump);
+
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.IsNotNull(actual.Fields);
+            Assert.IsNotNull(actual.AutoProperties);
+            Assert.AreEqual(6, actual.Fields.Count);
+            Assert.AreEqual(6, actual.AutoProperties.Count);
+        }
+
+        [TestMethod]
+        public void DumpObject_ComplexAnonymousObjectDepthOfOne()
         {
             var toDump = new { x = 1, y = new { a = 2, b = 3, c = 4 }, z = (string)null };
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump, 1);
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
             Assert.IsNotNull(actual.Fields);
-            Assert.IsNotNull(actual.Properties);
+            Assert.IsNotNull(actual.AutoProperties);
 
-            Assert.AreEqual(3, actual.Fields.Count);
-            Assert.AreEqual(3, actual.Properties.Count);
+            Assert.AreEqual(0, actual.Fields.Count);
+            Assert.AreEqual(3, actual.AutoProperties.Count);
 
-            Assert.IsNotNull(actual.Fields[0]);
-            Assert.IsNotNull(actual.Fields[1]);
-            Assert.IsNotNull(actual.Fields[2]);
-
-            Assert.IsNotNull(actual.Properties[0]);
-            Assert.IsNotNull(actual.Properties[1]);
-            Assert.IsNotNull(actual.Properties[2]);
+            Assert.IsNotNull(actual.AutoProperties[0]);
+            Assert.IsNotNull(actual.AutoProperties[1]);
+            Assert.IsNotNull(actual.AutoProperties[2]);
 
             // Check first field/prop
-            var xFieldValue = actual.Fields[0].Value.Item as Xml.Primitive;
-            var xPropValue = actual.Properties[0].Value.Item as Xml.Primitive;
-            Assert.IsNotNull(xFieldValue);
-            Assert.AreEqual(toDump.x.ToString(), xFieldValue.Value);
+            var xPropValue = actual.AutoProperties[0].Value.Item as Xml.Primitive;
             Assert.IsNotNull(xPropValue);
             Assert.AreEqual(toDump.x.ToString(), xPropValue.Value);
 
             // Check second field/prop
-            var yFieldValue = actual.Fields[1].Value.Item as Xml.NotNull;
-            var yPropValue = actual.Properties[1].Value.Item as Xml.NotNull;
-            Assert.IsNotNull(yFieldValue);
+            var yPropValue = actual.AutoProperties[1].Value.Item as Xml.NotNull;
             Assert.IsNotNull(yPropValue);
 
             // Check last field/prop
-            var zFieldValue = actual.Fields[2].Value.Item as Xml.Null;
-            var zPropValue = actual.Properties[2].Value.Item as Xml.Null;
-            Assert.IsNotNull(zFieldValue);
+            var zPropValue = actual.AutoProperties[2].Value.Item as Xml.Null;
             Assert.IsNotNull(zPropValue);
         }
 
@@ -181,7 +171,7 @@
             Assert.AreEqual(toDump.GetType().FullName, actual.Type);
 
             Assert.AreEqual(1, actual.Fields.Count);
-            Assert.AreEqual(0, actual.Properties.Count);
+            Assert.AreEqual(0, actual.AutoProperties.Count);
 
             var refValue = actual.Fields[0].Value.Item as Xml.This;
             Assert.AreEqual("reference", actual.Fields[0].Name);
@@ -339,6 +329,46 @@
             public uint UnsignedIntField { get; private set; }
             public ulong UnsignedLongField { get; protected set; }
             public ushort UnsignedShortField { get; set; }
+        }
+
+        private class FieldsAndProperties
+        {
+            // Private fields
+            private bool boolField;
+            private readonly string stringField;
+            private readonly char charField;
+            private readonly uint unsignedIntField;
+            private readonly ulong unsignedLongField;
+            private readonly ushort unsignedShortField;
+
+            // Auto-Properties
+            private int IntField { get; set; }
+            public short ShortField { get; set; }
+            protected byte ByteField { get; set; }
+            private static long LongField { get; set; }
+            public static decimal DecimalField { get; set; }
+            protected static double DoubleField { get; set; }
+
+            // Fields that access properties
+            public bool GetSetBoolField
+            {
+                get
+                {
+                    return this.boolField;
+                }
+                set
+                {
+                    this.boolField = value;
+                }
+            }
+
+            public string GetStringField
+            {
+                get
+                {
+                    return this.stringField;
+                }
+            }
         }
 
         /// <summary>

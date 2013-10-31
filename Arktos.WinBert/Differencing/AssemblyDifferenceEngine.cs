@@ -14,7 +14,7 @@
     public sealed class AssemblyDifferenceEngine : MarshalByRefObject,
         IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
     {
-        #region Constants & Fields
+        #region Fields & Constants
 
         private readonly IList<IgnoreTarget> ignoreTargets = null;
         private readonly TypeDifferenceEngine typeDiffer = null;

@@ -78,7 +78,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:element name="Name" type="xs:string" />
-      <xs:element name="BackingFieldName" type="xs:string" />
+      <xs:element name="BackingField" type="ba:Field" />
       <xs:element name="Value" type="ba:Value" />
     </xs:sequence>
   </xs:complexType>
@@ -114,7 +114,7 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="Properties">
+      <xs:element name="AutoProperties">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Property" type="ba:Property" minOccurs="0" maxOccurs="unbounded" />

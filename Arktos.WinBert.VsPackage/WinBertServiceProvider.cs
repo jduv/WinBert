@@ -78,7 +78,7 @@
             {
                 try
                 {
-                    return WinBertConfig.XmlDeserialize(File.OpenRead(path));
+                    return Serializer.XmlDeserialize<WinBertConfig>(File.OpenRead(path));
                 }
                 catch (Exception exc)
                 {
@@ -92,6 +92,70 @@
         }
 
         /// <summary>
+        /// Saves a configuration file to the target path.
+        /// </summary>
+        private void SaveState()
+        {
+            if (this.Config != null)
+            {
+                string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
+
+                var config = new WinBertConfig();
+                var projects = this.GetWinBertProjects();
+
+                config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
+                config.Projects = projects;
+                config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
+                config.IgnoreList = this.Config.IgnoreList ?? new IgnoreTarget[0];
+
+                try
+                {
+                    Serializer.XmlSerialize(this.Config, path, new XmlWriterSettings() { Indent = true });
+                }
+                catch (Exception exception)
+                {
+                    var errorMessage = "Unable to serialize the configuration file!" + Environment.NewLine;
+                    errorMessage += "Exception: " + Environment.NewLine + exception;
+                    MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of WinBertProject objects translated directly from this WinBert instance's BuildDictionary.
+        /// </summary>
+        /// <returns>
+        /// A list of WinBertProjects.
+        /// </returns>
+        private WinBertProject[] GetWinBertProjects()
+        {
+            int i = 0;
+            var projects = new WinBertProject[this.buildDictionary.Count];
+
+            foreach (var buildManagerEntry in this.buildDictionary)
+            {
+                var project = new WinBertProject();
+                var manager = buildManagerEntry.Value;
+
+                project.Name = buildManagerEntry.Key;
+                project.BuildsList = new Build[manager.BuildArchive.Count];
+
+                int j = 0;
+                foreach (var buildEntry in manager.BuildArchive)
+                {
+                    project.BuildsList[j] = buildEntry.Value;
+                    j++;
+                }
+
+                projects[i] = project;
+                i++;
+            }
+
+            return projects;
+        }
+
+
+        /// <summary>
         /// Reads in a default configuration file stored inside the package DLL.
         /// </summary>
         /// <returns></returns>
@@ -99,8 +163,7 @@
         {
             try
             {
-                var data = Encoding.ASCII.GetBytes(Resources.winbertconfig);
-                return WinBertConfig.XmlDeserialize(new MemoryStream(data));
+                return Serializer.XmlDeserialize<WinBertConfig>(Resources.winbertconfig);
             }
             catch (Exception exc)
             {
@@ -308,74 +371,6 @@
 
                 this.buildDictionary.Add(project.Name, manager);
             }
-        }
-
-        /// <summary>
-        /// Saves a configuration file to the target path.
-        /// </summary>
-        private void SaveState()
-        {
-            if (this.Config != null)
-            {
-                string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
-
-                var config = new WinBertConfig();
-                var projects = this.GetWinBertProjects();
-
-                config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
-                config.Projects = projects;
-                config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
-                config.IgnoreList = this.Config.IgnoreList ?? new IgnoreTarget[0];
-
-                try
-                {
-                    using (XmlWriter writer
-                        = XmlWriter.Create(path))
-                    {
-                        var serializer = new XmlSerializer(typeof(WinBertConfig));
-                        serializer.Serialize(writer, config);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    var errorMessage = "Unable to serialize the configuration file!" + Environment.NewLine;
-                    errorMessage += "Exception: " + Environment.NewLine + exception;
-                    MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns a list of WinBertProject objects translated directly from this WinBert instance's BuildDictionary.
-        /// </summary>
-        /// <returns>
-        /// A list of WinBertProjects.
-        /// </returns>
-        private WinBertProject[] GetWinBertProjects()
-        {
-            int i = 0;
-            var projects = new WinBertProject[this.buildDictionary.Count];
-
-            foreach (var buildManagerEntry in this.buildDictionary)
-            {
-                var project = new WinBertProject();
-                var manager = buildManagerEntry.Value;
-
-                project.Name = buildManagerEntry.Key;
-                project.BuildsList = new Build[manager.BuildArchive.Count];
-
-                int j = 0;
-                foreach (var buildEntry in manager.BuildArchive)
-                {
-                    project.BuildsList[j] = buildEntry.Value;
-                    j++;
-                }
-
-                projects[i] = project;
-                i++;
-            }
-
-            return projects;
         }
 
         /// <summary>

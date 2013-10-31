@@ -11,6 +11,8 @@
     /// </summary>
     public static class IOperations
     {
+        #region Extension Methods
+
         /// <summary>
         /// Is the target operation a store local?
         /// </summary>
@@ -135,5 +137,7 @@
             return operation.Offset >= handlerBounds.HandlerStartOffset &&
                 operation.Offset <= handlerBounds.HandlerEndOffset;
         }
+
+        #endregion
     }
 }

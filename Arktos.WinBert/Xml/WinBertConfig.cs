@@ -5,6 +5,7 @@
     using System.IO;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Xml;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -57,37 +58,6 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Deserilizes the target stream into a configuration object.
-        /// </summary>
-        /// <param name="stream">The stream to deserialize.</param>
-        /// <returns>A deserialized configuration object.</returns>
-        public static WinBertConfig XmlDeserialize(Stream stream)
-        {
-            var serializer = new XmlSerializer(typeof(WinBertConfig));
-            using (stream)
-            {
-                return (WinBertConfig)serializer.Deserialize(stream);
-            }
-        }
-
-        /// <summary>
-        /// Serializes the target WinBertConfig object.
-        /// </summary>
-        /// <param name="toSerialize">
-        /// The object to serialize.
-        /// </param>
-        /// <returns>
-        /// A string representation of the target object.
-        /// </returns>
-        public static string XmlSerialize(WinBertConfig toSerialize)
-        {
-            var buffer = new StringBuilder();
-            var serializer = new XmlSerializer(typeof(WinBertConfig));
-            serializer.Serialize(new StringWriter(buffer), toSerialize);
-            return buffer.ToString();
-        }
-
         /// <inheritdoc />
         /// <remarks>
         /// Because a WinBertConfig object has an ANY xml element in it's schema, it's not deserializable
@@ -97,7 +67,7 @@
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             // Xml serialize the whole thin and ship it as a string.
-            info.AddValue(XmlSerializationKey, WinBertConfig.XmlSerialize(this), typeof(string));
+            info.AddValue(XmlSerializationKey, Serializer.XmlSerialize(this), typeof(string));
         }
 
         #endregion

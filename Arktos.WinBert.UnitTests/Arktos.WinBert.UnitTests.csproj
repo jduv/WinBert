@@ -157,6 +157,7 @@
   <ItemGroup>
     <Compile Include="TestUtilUnitTests.cs" />
     <Compile Include="TestStateRecorderUnitTests.cs" />
+    <Compile Include="UnitTest1.cs" />
     <None Include="packages.config" />
     <None Include="test-src\TestSrc04.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -2,6 +2,7 @@
 using Arktos.WinBert.Xml;
 using System;
 using System.IO;
+using System.Xml;
 namespace Arktos.WinBert.Instrumentation
 {
     /// <summary>
@@ -147,7 +148,7 @@ namespace Arktos.WinBert.Instrumentation
             }
 
             // Deserialize dumper.
-            var value = Serializer.XmlSerialize(recorder.AnalysisLog);
+            var value = Serializer.XmlSerialize(recorder.AnalysisLog, new XmlWriterSettings() { Indent = true });
             if (string.IsNullOrWhiteSpace(value))
             {
                 throw new InvalidOperationException("Deserialized analysis log cannot be empty!");

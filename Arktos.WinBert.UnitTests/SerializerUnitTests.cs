@@ -3,6 +3,7 @@
     using System;
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System.IO;
 
     [TestClass]
     public class SerializerUnitTests
@@ -24,9 +25,16 @@
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void XmlDeserialize_NullArgument()
+        public void XmlDeserialize_NullStringArgument()
         {
-            var target = Serializer.XmlDeserialize<string>(null);
+            var target = Serializer.XmlDeserialize<string>((string)null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void XmlDeserialize_NullStreamArgument()
+        {
+            var target = Serializer.XmlDeserialize<string>((Stream)null);
         }
 
         #endregion

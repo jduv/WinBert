@@ -65,8 +65,8 @@
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
             Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(3, targetInstance.Fields.Count);
-            Assert.AreEqual(3, targetInstance.Properties.Count);
+            Assert.AreEqual(0, targetInstance.Fields.Count);
+            Assert.AreEqual(3, targetInstance.AutoProperties.Count);
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@
 
             Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
             Assert.AreEqual(2, targetInstance.Fields.Count);
-            Assert.AreEqual(2, targetInstance.Properties.Count);
+            Assert.AreEqual(0, targetInstance.AutoProperties.Count);
         }
 
         #endregion
@@ -154,8 +154,8 @@
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
             Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(3, targetInstance.Fields.Count);
-            Assert.AreEqual(3, targetInstance.Properties.Count);
+            Assert.AreEqual(0, targetInstance.Fields.Count);
+            Assert.AreEqual(3, targetInstance.AutoProperties.Count);
         }
 
         [TestMethod]
@@ -186,8 +186,8 @@
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
             Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
-            Assert.AreEqual(3, targetInstance.Fields.Count);
-            Assert.AreEqual(3, targetInstance.Properties.Count);
+            Assert.AreEqual(0, targetInstance.Fields.Count);
+            Assert.AreEqual(3, targetInstance.AutoProperties.Count);
         }
 
         [TestMethod]
@@ -215,7 +215,7 @@
 
             Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
             Assert.AreEqual(2, targetInstance.Fields.Count);
-            Assert.AreEqual(2, targetInstance.Properties.Count);
+            Assert.AreEqual(0, targetInstance.AutoProperties.Count);
         }
 
         #endregion
@@ -272,6 +272,7 @@
             public int Sum()
             {
                 return this.X + this.Y;
+  
             }
         }
 

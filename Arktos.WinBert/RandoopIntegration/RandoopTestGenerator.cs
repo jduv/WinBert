@@ -206,7 +206,7 @@
                 actions);
 
             // Time it out, and we're done.
-            ITimer timer = new Timer(randoopConfig.timelimit);
+            ITimer timer = new Timer(0.5);
             try
             {
                 explorer.Explore(timer, planManager, randoopConfig.methodweighing, randoopConfig.forbidnull, true, randoopConfig.fairOpt);
@@ -338,8 +338,6 @@
             config.statsFile = new FileName(Path.Combine(workingDir, StatsFileName));
             config.executionLog = Path.Combine(workingDir, ExecutionLogName);
             config.singledir = true; // always write to a single directory.
-            config.timelimit = 1;    // go with 1 second for now.
-            config.singledir = true;
             config.randomseed = rand.Next();
             config.planstartid = 0;
             config.useinternal = false;

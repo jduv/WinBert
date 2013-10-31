@@ -160,6 +160,7 @@
     <Compile Include="Exceptions\InvalidTestConfigurationException.cs" />
     <Compile Include="Exceptions\TestGenerationException.cs" />
     <Compile Include="Extensions\IOperations.cs" />
+    <Compile Include="Extensions\Members.cs" />
     <Compile Include="Extensions\Strings.cs" />
     <Compile Include="Extensions\Objects.cs" />
     <Compile Include="Instrumentation\DynamicCallGraphInstrumentor.cs" />
