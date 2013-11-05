@@ -16,7 +16,7 @@
     {
         #region Fields & Constants
 
-        private readonly IList<IgnoreTarget> ignoreTargets = null;
+        private readonly IList<DiffIgnoreTarget> ignoreTargets = null;
         private readonly TypeDifferenceEngine typeDiffer = null;
 
         #endregion
@@ -27,7 +27,7 @@
         /// Initializes a new instance of the AssemblyDifferenceEngine class.
         /// </summary>
         public AssemblyDifferenceEngine()
-            : this(new IgnoreTarget[0])
+            : this(new DiffIgnoreTarget[0])
         {
         }
 
@@ -37,7 +37,7 @@
         /// <param name="ignoreTargets">
         /// A list of ignore targets.
         /// </param>
-        public AssemblyDifferenceEngine(IgnoreTarget[] ignoreTargets)
+        public AssemblyDifferenceEngine(DiffIgnoreTarget[] ignoreTargets)
         {
             if (ignoreTargets == null)
             {
@@ -45,7 +45,7 @@
             }
 
             this.typeDiffer = new TypeDifferenceEngine(ignoreTargets);
-            this.ignoreTargets = ignoreTargets.Where(x => x.Type == IgnoreType.Type).ToList();
+            this.ignoreTargets = ignoreTargets.Where(x => x.Type == DiffIgnoreType.Type).ToList();
         }
 
         #endregion

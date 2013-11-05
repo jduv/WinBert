@@ -223,7 +223,7 @@
                 // Execute the diff in another application domain.
                 return RemoteFunc.Invoke(
                     diffEnv.Domain,
-                    this.Config.IgnoreList,
+                    this.Config.DiffIgnoreList,
                     previous.AssemblyPath,
                     current.AssemblyPath,
                     (ignoreTargets, previousTargetPath, currentTargetPath) =>

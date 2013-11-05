@@ -13,7 +13,7 @@
     {
         #region Fields & Constants
 
-        private readonly IList<IgnoreTarget> ignoreTargets;
+        private readonly IList<DiffIgnoreTarget> ignoreTargets;
 
         #endregion
 
@@ -25,14 +25,14 @@
         /// <param name="ignoreTargets">
         /// A list of ignore targets.
         /// </param>
-        public TypeDifferenceEngine(IgnoreTarget[] ignoreTargets)
+        public TypeDifferenceEngine(DiffIgnoreTarget[] ignoreTargets)
         {
             if (ignoreTargets == null)
             {
                 throw new ArgumentNullException("ignoreTargets");
             }
 
-            this.ignoreTargets = ignoreTargets.Where(x => x.Type == IgnoreType.Method).ToList();
+            this.ignoreTargets = ignoreTargets.Where(x => x.Type == DiffIgnoreType.Method).ToList();
         }
 
         #endregion

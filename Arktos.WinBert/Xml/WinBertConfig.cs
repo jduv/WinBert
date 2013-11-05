@@ -48,7 +48,7 @@
                 WinBertConfig config = (WinBertConfig)serializer.Deserialize(reader);
 
                 this.EmbeddedConfigurations = config.EmbeddedConfigurations;
-                this.IgnoreList = config.ignoreListField;
+                this.DiffIgnoreList = config.diffIgnoreListField;
                 this.MasterArchivePath = config.MasterArchivePath;
                 this.Projects = config.Projects;
             }
@@ -158,14 +158,14 @@
     /// Partial implementation of a generated class.
     /// </summary>
     [ExcludeFromCodeCoverageAttribute]
-    public partial class IgnoreTarget
+    public partial class DiffIgnoreTarget
     {
         #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the IgnoreTarget class.
         /// </summary>
-        public IgnoreTarget()
+        public DiffIgnoreTarget()
         {
         }
 
@@ -178,7 +178,7 @@
         /// <param name="name">
         /// The name for the new IgnoreTarget.
         /// </param>
-        public IgnoreTarget(IgnoreType type, string name)
+        public DiffIgnoreTarget(DiffIgnoreType type, string name)
         {
             this.Type = type;
             this.Name = name;

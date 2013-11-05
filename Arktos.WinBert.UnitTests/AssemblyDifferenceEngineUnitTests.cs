@@ -58,10 +58,10 @@
         }
 
         [TestMethod]
-        public void Diff_IgnoreTargetsWithType_NoDiff()
+        public void Diff_DiffIgnoreTargetsWithType_NoDiff()
         {
-            IgnoreTarget[] targets = new IgnoreTarget[1];
-            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "BankAccount.BankAccount");
+            DiffIgnoreTarget[] targets = new DiffIgnoreTarget[1];
+            DiffIgnoreTarget target0 = new DiffIgnoreTarget(DiffIgnoreType.Type, "BankAccount.BankAccount");
             targets[0] = target0;
 
             AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
@@ -78,15 +78,15 @@
         }
 
         [TestMethod]
-        public void Diff_IgnoreTargetsWithMethod_NoDiff()
+        public void Diff_DiffIgnoreTargetsWithMethod_NoDiff()
         {
             // create a mixed list of ignore targets
-            IgnoreTarget[] targets = new IgnoreTarget[2];
+            DiffIgnoreTarget[] targets = new DiffIgnoreTarget[2];
 
-            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "Nonexistant.Type");
+            DiffIgnoreTarget target0 = new DiffIgnoreTarget(DiffIgnoreType.Type, "Nonexistant.Type");
             targets[0] = target0;
 
-            IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Withdraw");
+            DiffIgnoreTarget target1 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
             AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
@@ -105,12 +105,12 @@
         public void Diff_IgnoreUnchangedMethodAndNonExistingType_Different()
         {
             // create a mixed list of ignore targets
-            IgnoreTarget[] targets = new IgnoreTarget[2];
+            DiffIgnoreTarget[] targets = new DiffIgnoreTarget[2];
 
-            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Type, "Nonexistant.Type");
+            DiffIgnoreTarget target0 = new DiffIgnoreTarget(DiffIgnoreType.Type, "Nonexistant.Type");
             targets[0] = target0;
 
-            IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Deposit");
+            DiffIgnoreTarget target1 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Deposit");
             targets[1] = target1;
 
             AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
@@ -129,12 +129,12 @@
         public void Diff_IgnoreAllNamedMethods_NoDiff()
         {
             // create a mixed list of ignore targets
-            IgnoreTarget[] targets = new IgnoreTarget[2];
+            DiffIgnoreTarget[] targets = new DiffIgnoreTarget[2];
 
-            IgnoreTarget target0 = new IgnoreTarget(IgnoreType.Method, "Deposit");
+            DiffIgnoreTarget target0 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Deposit");
             targets[0] = target0;
 
-            IgnoreTarget target1 = new IgnoreTarget(IgnoreType.Method, "Withdraw");
+            DiffIgnoreTarget target1 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
             AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);

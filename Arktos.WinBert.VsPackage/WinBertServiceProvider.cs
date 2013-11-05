@@ -106,7 +106,7 @@
                 config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
                 config.Projects = projects;
                 config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
-                config.IgnoreList = this.Config.IgnoreList ?? new IgnoreTarget[0];
+                config.DiffIgnoreList = this.Config.DiffIgnoreList ?? new DiffIgnoreTarget[0];
 
                 try
                 {
