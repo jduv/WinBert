@@ -10,34 +10,33 @@
     /// <summary>
     /// Logs objects of various types, converting them to a simple XML representation.
     /// </summary>
-    public sealed class ObjectDumper
+    public sealed class ObjectDumper : Arktos.WinBert.Instrumentation.IObjectDumper
     {
         #region Fields & Constants
 
-        private HashSet<string> ignoreTargetLookup = new HashSet<string>();
+        private readonly HashSet<string> ignoreTargetLookup;
 
         #endregion
 
-        #region Properties
+        #region Constructors & Destructors
 
-        /// <summary>
-        /// Sets a list of values that the object dumper will ignore. This setter will push all the
-        /// values inside the list of ignore targets into an internal HashSet based lookup. 
-        /// </summary>
-        public IEnumerable<DumpIgnoreTarget> IgnoreTargets
+        public ObjectDumper()
+            : this(null)
         {
-            set
+        }
+
+        public ObjectDumper(IEnumerable<DumpIgnoreTarget> ignoreTargets)
+        {
+            this.ignoreTargetLookup = new HashSet<string>();
+            if (ignoreTargets != null)
             {
-                if (value != null)
+                // This looks quite ugly but it simply concatenates the fully qualified type name with the field and property
+                // names stored inside the ignore type objects. This is then added ot the hash set for O(1) lookups later.
+                var toIgnore = ignoreTargets.SelectMany(i => i.FieldAndPropertyNames == null ? new string[0] : i.FieldAndPropertyNames,
+                    (t, n) => string.Join(".", t.Type, n));
+                foreach (var item in toIgnore)
                 {
-                    // This looks quite ugly but it basically concatenates the type name with the field and property
-                    // names stored inside the ignore types.
-                    var toIgnore = value.SelectMany(i => i.FieldAndPropertyNames == null ? new string[0] : i.FieldAndPropertyNames, 
-                        (t, n) => string.Join(".", t.Type, n));
-                    foreach (var item in toIgnore)
-                    {
-                        ignoreTargetLookup.Add(item);
-                    }
+                    ignoreTargetLookup.Add(item);
                 }
             }
         }
@@ -46,19 +45,7 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// In essence, this is a factory method for creating Xml.Object instances. This only works for non-primitive
-        /// objects and structs.
-        /// </summary>
-        /// <param name="target">
-        /// The target to dump.
-        /// </param>
-        /// <param name="maxDepth">
-        /// The maximum depth to go when recursively logging instance fields and properties. Defaults to 3.
-        /// </param>
-        /// <returns>
-        /// An Xml.Object instance representing the passed in target.
-        /// </returns>
+        /// <inheritdoc/>
         public Xml.Object DumpObject(object target, ushort maxDepth = 3)
         {
             Xml.Object obj;
@@ -95,19 +82,7 @@
             return obj;
         }
 
-        /// <summary>
-        /// Creates Xml.Primitive instances. This only works for objects that are considered to be
-        /// "primtive," which isn't precisly correlated to the obj.GetType().IsPrimitive property. There
-        /// are a couple of other CLR types that can be considered primitives for our purposes here
-        /// even if there are no IL instructions that operate on them (which is the CLR's definition of
-        /// a primitive as of now).
-        /// </summary>
-        /// <param name="target">
-        /// The target primitive object to dump.
-        /// </param>
-        /// <returns>
-        /// An Xml.Primitive object representing the passed in target.
-        /// </returns>
+        /// <inheritdoc />
         public Xml.Primitive DumpPrimitive(object target)
         {
             if (target == null)

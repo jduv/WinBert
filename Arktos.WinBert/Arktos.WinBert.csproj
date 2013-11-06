@@ -167,6 +167,7 @@
     <Compile Include="Instrumentation\IInstrumentationTarget.cs" />
     <Compile Include="Instrumentation\IMethodCallDumper.cs" />
     <Compile Include="Instrumentation\InstrumentationTarget.cs" />
+    <Compile Include="Instrumentation\IObjectDumper.cs" />
     <Compile Include="Instrumentation\ITestStateRecorder.cs" />
     <Compile Include="Instrumentation\ITestInstrumentor.cs" />
     <Compile Include="Instrumentation\MethodCallDumper.cs" />

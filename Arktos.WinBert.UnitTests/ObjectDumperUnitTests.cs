@@ -186,8 +186,7 @@
         public void DumpObject_NullIgnoreTargets()
         {
             var toDump = new FieldsAndProperties();
-            var target = new ObjectDumper();
-            target.IgnoreTargets = null;
+            var target = new ObjectDumper(null);
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
@@ -201,15 +200,13 @@
         public void DumpObject_EmptyNamesIgnoreTarget()
         {
             var toDump = new FieldsAndProperties();
-            var target = new ObjectDumper();
-
             var toIgnore = new DumpIgnoreTarget()
             {
                 Type = toDump.GetType().FullName,
                 FieldAndPropertyNames = null,
             };
 
-            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+            var target = new ObjectDumper(new List<DumpIgnoreTarget> { toIgnore });
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
@@ -223,15 +220,13 @@
         public void DumpObject_NoHitIgnoreTargets()
         {
             var toDump = new FieldsAndProperties();
-            var target = new ObjectDumper();
-
             var toIgnore = new DumpIgnoreTarget()
             {
                 Type = toDump.GetType().FullName,
                 FieldAndPropertyNames = new string[] { "bippity", "boppity", "boo" },
             };
 
-            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+            var target = new ObjectDumper(new List<DumpIgnoreTarget> { toIgnore });
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
@@ -245,15 +240,13 @@
         public void DumpObject_WithIgnoreTargets()
         {
             var toDump = new FieldsAndProperties();
-            var target = new ObjectDumper();
-
             var toIgnore = new DumpIgnoreTarget()
             {
                 Type = toDump.GetType().FullName,
                 FieldAndPropertyNames = new string[] { "boolField", "unsignedLongField", "IntProp" },
             };
 
-            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+            var target = new ObjectDumper(new List<DumpIgnoreTarget> { toIgnore });
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
@@ -264,18 +257,49 @@
         }
 
         [TestMethod]
+        public void DumpObject_MultipleIgnoreTargets()
+        {
+            var toDump = new FieldsAndProperties();
+            var toIgnore0 = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = new string[] { "boolField", "IntProp" },
+            };
+
+            var toIgnore1 = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = new string[] { "unsignedLongField" },
+            };
+
+            // This guy should contain a duplicate of the first guy
+            var toIgnore2 = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = new string[] { "boolField", "LongProp" },
+            };
+
+            var target = new ObjectDumper(new List<DumpIgnoreTarget> { toIgnore0, toIgnore1, toIgnore2 });
+
+            var actual = target.DumpObject(toDump);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(4, actual.Fields.Count);
+            Assert.AreEqual(4, actual.AutoProperties.Count);
+        }
+
+        [TestMethod]
         public void DumpObject_AnonymousTypeWithIgnoreTargets()
         {
             var toDump = new { X = 1, Y = 2, Z = 3 };
-            var target = new ObjectDumper();
-
             var toIgnore = new DumpIgnoreTarget()
             {
                 Type = toDump.GetType().FullName,
                 FieldAndPropertyNames = new string[] { "X", "Z" }
             };
 
-            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+            var target = new ObjectDumper(new List<DumpIgnoreTarget> { toIgnore });
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);

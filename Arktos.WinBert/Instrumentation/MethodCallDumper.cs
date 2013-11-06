@@ -12,18 +12,20 @@
     {
         #region Constants & Fields
 
-        private static readonly ObjectDumper ObjDumper;
+        private readonly IObjectDumper objectDumper;
 
         #endregion
 
         #region Constructors & Destructors
 
-        /// <summary>
-        /// Static constructor.
-        /// </summary>
-        static MethodCallDumper()
+        public MethodCallDumper()
+            : this(new ObjectDumper())
         {
-            ObjDumper = new ObjectDumper();
+        }
+
+        public MethodCallDumper(IObjectDumper objectDumper)
+        {
+            this.objectDumper = objectDumper;
         }
 
         #endregion
@@ -39,7 +41,7 @@
             }
             if (target == null)
             {
-                // Instance method target shouldn't be null.....
+                // Instance method target shouldn't be null
                 throw new ArgumentNullException("target");
             }
 
@@ -48,7 +50,7 @@
                 Id = id,
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
-                PostCallInstance = ObjDumper.DumpObject(target),
+                PostCallInstance = this.objectDumper.DumpObject(target),
                 DynamicCallGraph = new List<Xml.CallGraphNode>()
             };
         }
@@ -63,7 +65,7 @@
 
             if (target == null)
             {
-                // Instance method target shouldn't be null.....
+                // Instance method target shouldn't be null
                 throw new ArgumentNullException("target");
             }
 
@@ -72,18 +74,18 @@
                 Id = id,
                 Signature = signature,
                 Type = Xml.MethodCallType.Instance,
-                PostCallInstance = ObjDumper.DumpObject(target),
+                PostCallInstance = this.objectDumper.DumpObject(target),
                 ReturnValue = new Xml.Value(),
                 DynamicCallGraph = new List<Xml.CallGraphNode>()
             };
 
             if (returnValue.IsPrimitive())
             {
-                call.ReturnValue.Item = ObjDumper.DumpPrimitive(returnValue);
+                call.ReturnValue.Item = this.objectDumper.DumpPrimitive(returnValue);
             }
             else
             {
-                call.ReturnValue.Item = ObjDumper.DumpObject(returnValue);
+                call.ReturnValue.Item = this.objectDumper.DumpObject(returnValue);
             }
 
             return call;

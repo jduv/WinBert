@@ -1,10 +1,11 @@
-﻿using Arktos.WinBert.Util;
-using Arktos.WinBert.Xml;
-using System;
-using System.IO;
-using System.Xml;
-namespace Arktos.WinBert.Instrumentation
+﻿namespace Arktos.WinBert.Instrumentation
 {
+    using Arktos.WinBert.Util;
+    using Arktos.WinBert.Xml;
+    using System;
+    using System.IO;
+    using System.Xml;
+
     /// <summary>
     /// The main class that's injected into every test assembly and target assembly that handles
     /// building the logging object model and writing it out to file. This class may also be used to
