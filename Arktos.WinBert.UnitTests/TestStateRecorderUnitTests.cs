@@ -74,7 +74,7 @@
         public void StartTest_CorrectState()
         {
             var testName = "MyTest";
-            var target = new TestStateRecorder();
+            var target = new TestStateRecorder(mockMethodDumper);
             target.StartTest(testName);
 
             Assert.IsNotNull(target.CurrentTest);
@@ -95,7 +95,7 @@
         public void EndTest_CorrectState()
         {
             var testName = "MyTest";
-            var target = new TestStateRecorder();
+            var target = new TestStateRecorder(mockMethodDumper);
             target.StartTest(testName);
 
             Assert.IsNull(target.CurrentMethodCall);
@@ -118,7 +118,7 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public void EndTest_CalledWithoutStartTest()
         {
-            var target = new TestStateRecorder();
+            var target = new TestStateRecorder(mockMethodDumper);
             target.EndTest();
         }
 
@@ -214,7 +214,7 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public void RecordVoidInstanceMethodCall_CalledWithoutStartTest()
         {
-            var target = new TestStateRecorder();
+            var target = new TestStateRecorder(mockMethodDumper);
             target.RecordVoidInstanceMethodCall(new TestClass(), "SayHello");
         }
 
@@ -274,7 +274,7 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public void RecordInstanceMethodCall_CalledWithoutStartTest()
         {
-            var target = new TestStateRecorder();
+            var target = new TestStateRecorder(mockMethodDumper);
             target.RecordVoidInstanceMethodCall(new TestClass(), "SayHello");
         }
 
@@ -322,7 +322,7 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public void AddMethodToDynamicCallGraph_CalledWithoutStartTest()
         {
-            var target = new TestStateRecorder();
+            var target = new TestStateRecorder(mockMethodDumper);
             target.RecordVoidInstanceMethodCall(new TestClass(), "SayHello");
         }
 

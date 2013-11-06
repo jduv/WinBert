@@ -29,7 +29,10 @@
         /// </summary>
         static TestUtil()
         {
-            recorder = new TestStateRecorder();
+            // create a default method call dumper to assign to the default state
+            // recorder. This won't include any ignore targets.
+            var methodDumper = new MethodCallDumper();
+            recorder = new TestStateRecorder(methodDumper);
             fileSystem = new FileSystem();
         }
 

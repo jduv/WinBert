@@ -23,14 +23,6 @@
         #region Constructors & Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestStateRecorder"/> class.
-        /// </summary>
-        public TestStateRecorder()
-            : this(new MethodCallDumper())
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TestStateRecorder"/> class. This constructor is more or less
         /// a seam for testing.
         /// </summary>
