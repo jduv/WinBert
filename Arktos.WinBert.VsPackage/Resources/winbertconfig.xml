@@ -4,11 +4,10 @@
   <DumpIgnoreList>
     <DumpIgnoreTarget>
       <Type>System.DateTime</Type>
-      <Fields>
+      <FieldAndPropertyNames>
         <Name>MinValue</Name>
         <Name>MaxValue</Name>
-      </Fields>
-      <Properties />
+      </FieldAndPropertyNames>
     </DumpIgnoreTarget>
   </DumpIgnoreList>
   <Projects />
