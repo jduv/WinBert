@@ -5,12 +5,45 @@
     using System.Collections.Generic;
     using System.Reflection;
     using Arktos.WinBert.Extensions;
+    using Arktos.WinBert.Xml;
 
     /// <summary>
     /// Logs objects of various types, converting them to a simple XML representation.
     /// </summary>
     public sealed class ObjectDumper
     {
+        #region Fields & Constants
+
+        private HashSet<string> ignoreTargetLookup = new HashSet<string>();
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Sets a list of values that the object dumper will ignore. This setter will push all the
+        /// values inside the list of ignore targets into an internal HashSet based lookup. 
+        /// </summary>
+        public IEnumerable<DumpIgnoreTarget> IgnoreTargets
+        {
+            set
+            {
+                if (value != null)
+                {
+                    // This looks quite ugly but it basically concatenates the type name with the field and property
+                    // names stored inside the ignore types.
+                    var toIgnore = value.SelectMany(i => i.FieldAndPropertyNames == null ? new string[0] : i.FieldAndPropertyNames, 
+                        (t, n) => string.Join(".", t.Type, n));
+                    foreach (var item in toIgnore)
+                    {
+                        ignoreTargetLookup.Add(item);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -128,7 +161,8 @@
                 BindingFlags.Instance |
                 BindingFlags.NonPublic |
                 BindingFlags.Public |
-                BindingFlags.Static))
+                BindingFlags.Static)
+                .Where(x => !this.IsTargetIgnored(x.DeclaringType.FullName, x.Name)))
             {
                 if (!(field.IsCompilerGenerated() || target.CouldBeAnonymousType()))
                 {
@@ -154,8 +188,14 @@
                     var backingField = FindBackingField(target, compilerGeneratedFields, prop);
                     if (backingField != null)
                     {
-                        dumpedProps.Add(DumpProperty(target, backingField, prop, maxDepth));
-                        compilerGeneratedFields.Remove(backingField); // remove backing field
+                        // Don't dump the field if it's ignored.
+                        if (!this.IsTargetIgnored(prop.DeclaringType.FullName, prop.Name))
+                        {
+                            dumpedProps.Add(DumpProperty(target, backingField, prop, maxDepth));
+                        }
+
+                        // Remove the field no matter what, else dumped values might not line up.
+                        compilerGeneratedFields.Remove(backingField);
                     }
                 }
             }
@@ -190,7 +230,7 @@
                 (x) =>
                 {
                     return x.Name.StartsWith("<" + prop.Name + ">") &&
-                        ((target.CouldBeAnonymousType() && x.Name.Contains(Members.AnonymousTypeFieldDesignation)) || 
+                        ((target.CouldBeAnonymousType() && x.Name.Contains(Members.AnonymousTypeFieldDesignation)) ||
                         x.Name.Contains(Members.BackingFieldDesignation));
                 });
         }
@@ -285,6 +325,25 @@
             }
 
             return dumpedProperty;
+        }
+
+        /// <summary>
+        /// Checks to see if the target type and field or property name exists in the
+        /// ignore targets list.
+        /// </summary>
+        /// <param name="type">
+        /// The type name.
+        /// </param>
+        /// <param name="name">
+        /// the field or property name.
+        /// </param>
+        /// <returns>
+        /// True if the ignore type is in the lookup, false otherwise.
+        /// </returns>
+        private bool IsTargetIgnored(string type, string name)
+        {
+            var qualifiedMember = string.Join(".", type, name);
+            return this.ignoreTargetLookup.Contains(qualifiedMember);
         }
 
         #endregion

@@ -80,14 +80,7 @@
   <xs:complexType name="DumpIgnoreTarget">
     <xs:sequence>
       <xs:element name="Type" type="xs:string" />
-      <xs:element name="Fields">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="Properties">
+      <xs:element name="FieldAndPropertyNames">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Name" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>

@@ -4,7 +4,11 @@
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Reflection;
     using System.Xml;
+    using System.Runtime.CompilerServices;
 
     [TestClass]
     public class ObjectDumperUnitTests
@@ -178,6 +182,109 @@
             Assert.IsNotNull(refValue);
         }
 
+        [TestMethod]
+        public void DumpObject_NullIgnoreTargets()
+        {
+            var toDump = new FieldsAndProperties();
+            var target = new ObjectDumper();
+            target.IgnoreTargets = null;
+
+            var actual = target.DumpObject(toDump);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(6, actual.Fields.Count);
+            Assert.AreEqual(6, actual.AutoProperties.Count);
+        }
+
+        [TestMethod]
+        public void DumpObject_EmptyNamesIgnoreTarget()
+        {
+            var toDump = new FieldsAndProperties();
+            var target = new ObjectDumper();
+
+            var toIgnore = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = null,
+            };
+
+            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+
+            var actual = target.DumpObject(toDump);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(6, actual.Fields.Count);
+            Assert.AreEqual(6, actual.AutoProperties.Count);
+        }
+
+        [TestMethod]
+        public void DumpObject_NoHitIgnoreTargets()
+        {
+            var toDump = new FieldsAndProperties();
+            var target = new ObjectDumper();
+
+            var toIgnore = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = new string[] { "bippity", "boppity", "boo" },
+            };
+
+            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+
+            var actual = target.DumpObject(toDump);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(6, actual.Fields.Count);
+            Assert.AreEqual(6, actual.AutoProperties.Count);
+        }
+
+        [TestMethod]
+        public void DumpObject_WithIgnoreTargets()
+        {
+            var toDump = new FieldsAndProperties();
+            var target = new ObjectDumper();
+
+            var toIgnore = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = new string[] { "boolField", "unsignedLongField", "IntProp" },
+            };
+
+            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+
+            var actual = target.DumpObject(toDump);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(4, actual.Fields.Count);
+            Assert.AreEqual(5, actual.AutoProperties.Count);
+        }
+
+        [TestMethod]
+        public void DumpObject_AnonymousTypeWithIgnoreTargets()
+        {
+            var toDump = new { X = 1, Y = 2, Z = 3 };
+            var target = new ObjectDumper();
+
+            var toIgnore = new DumpIgnoreTarget()
+            {
+                Type = toDump.GetType().FullName,
+                FieldAndPropertyNames = new string[] { "X", "Z" }
+            };
+
+            target.IgnoreTargets = new List<DumpIgnoreTarget> { toIgnore };
+
+            var actual = target.DumpObject(toDump);
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+
+            Assert.AreEqual(0, actual.Fields.Count);
+            Assert.AreEqual(1, actual.AutoProperties.Count);
+        }
+
         #endregion
 
         #region DumpPrimitive
@@ -336,21 +443,21 @@
             // Private fields
             private bool boolField;
             private readonly string stringField;
-            private readonly char charField;
-            private readonly uint unsignedIntField;
-            private readonly ulong unsignedLongField;
+            protected readonly char charField;
+            public readonly uint unsignedIntField;
+            public readonly ulong unsignedLongField;
             private readonly ushort unsignedShortField;
 
             // Auto-Properties
-            private int IntField { get; set; }
-            public short ShortField { get; set; }
-            protected byte ByteField { get; set; }
-            private static long LongField { get; set; }
-            public static decimal DecimalField { get; set; }
-            protected static double DoubleField { get; set; }
+            private int IntProp { get; set; }
+            public short ShortProp { get; set; }
+            protected byte ByteProp { get; set; }
+            private static long LongProp { get; set; }
+            public static decimal DecimalProp { get; set; }
+            protected static double DoubleProp { get; set; }
 
             // Fields that access properties
-            public bool GetSetBoolField
+            public bool GetSetBoolProp
             {
                 get
                 {
@@ -385,8 +492,8 @@
                 this.y = y;
             }
 
-            public int X 
-            { 
+            public int X
+            {
                 get
                 {
                     return this.x;
@@ -416,5 +523,485 @@
         }
 
         #endregion
+
+        //#region Object Dumper Impl
+
+        ///// <summary>
+        ///// Logs objects of various types, converting them to a simple XML representation.
+        ///// </summary>
+        //public sealed class ObjectDumper
+        //{
+        //    #region Fields & Constants
+
+        //    private HashSet<string> ignoreTargetLookup = new HashSet<string>();
+
+        //    #endregion
+
+        //    #region Properties
+
+        //    /// <summary>
+        //    /// Sets a list of values that the object dumper will ignore. This setter will push all the
+        //    /// values inside the list of ignore targets into an internal HashSet based lookup. 
+        //    /// </summary>
+        //    public IEnumerable<DumpIgnoreTarget> IgnoreTargets
+        //    {
+        //        set
+        //        {
+        //            if (value != null)
+        //            {
+        //                // This looks quite ugly but it basically concatenates the type name with the field and property
+        //                // names stored inside the ignore types.
+        //                var toIgnore = value.SelectMany(i => i.FieldAndPropertyNames,
+        //                    (t, n) => string.Join(".", t.Type, n));
+        //                foreach (var item in toIgnore)
+        //                {
+        //                    ignoreTargetLookup.Add(item);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    #endregion
+
+        //    #region Public Methods
+
+        //    /// <summary>
+        //    /// In essence, this is a factory method for creating Xml.Object instances. This only works for non-primitive
+        //    /// objects and structs.
+        //    /// </summary>
+        //    /// <param name="target">
+        //    /// The target to dump.
+        //    /// </param>
+        //    /// <param name="maxDepth">
+        //    /// The maximum depth to go when recursively logging instance fields and properties. Defaults to 3.
+        //    /// </param>
+        //    /// <returns>
+        //    /// An Xml.Object instance representing the passed in target.
+        //    /// </returns>
+        //    public Xml.Object DumpObject(object target, ushort maxDepth = 3)
+        //    {
+        //        Xml.Object obj;
+        //        if (target == null)
+        //        {
+        //            obj = new Xml.Null();
+        //        }
+        //        else
+        //        {
+        //            if (maxDepth > 0)
+        //            {
+        //                if (Objects.IsPrimitive(target))
+        //                {
+        //                    throw new ArgumentException("Cannot dump a primitive type from this method!");
+        //                }
+        //                else
+        //                {
+        //                    var fieldsAndProps = DumpFieldsAndProperties(target, maxDepth);
+        //                    obj = new Xml.Object()
+        //                    {
+        //                        Type = target.GetType().FullName,
+        //                        Fields = fieldsAndProps.Fields,
+        //                        AutoProperties = fieldsAndProps.Properties
+        //                    };
+        //                }
+        //            }
+        //            else
+        //            {
+        //                // Target will never be null here, that'll get caught earlier.
+        //                obj = (Xml.Object)new Xml.NotNull();
+        //            }
+        //        }
+
+        //        return obj;
+        //    }
+
+        //    /// <summary>
+        //    /// Creates Xml.Primitive instances. This only works for objects that are considered to be
+        //    /// "primtive," which isn't precisly correlated to the obj.GetType().IsPrimitive property. There
+        //    /// are a couple of other CLR types that can be considered primitives for our purposes here
+        //    /// even if there are no IL instructions that operate on them (which is the CLR's definition of
+        //    /// a primitive as of now).
+        //    /// </summary>
+        //    /// <param name="target">
+        //    /// The target primitive object to dump.
+        //    /// </param>
+        //    /// <returns>
+        //    /// An Xml.Primitive object representing the passed in target.
+        //    /// </returns>
+        //    public Xml.Primitive DumpPrimitive(object target)
+        //    {
+        //        if (target == null)
+        //        {
+        //            throw new ArgumentNullException("target");
+        //        }
+
+        //        Xml.Primitive primitive;
+        //        if (Objects.IsPrimitive(target))
+        //        {
+        //            primitive = new Xml.Primitive()
+        //            {
+        //                Type = target.GetType().FullName,
+        //                Value = target.ToString()
+        //            };
+        //        }
+        //        else
+        //        {
+        //            throw new ArgumentException("Cannot dump non-primitive type from this method!");
+        //        }
+
+        //        return primitive;
+        //    }
+
+        //    #endregion
+
+        //    #region Private Methods
+
+        //    /// <summary>
+        //    /// Dump all fields and properties of the target object up to the maximum supplied depth. Note that
+        //    /// only auto-generated properties will be dumped, and the fields corresponding to those properties
+        //    /// will be pushed into the property as the backing field element.
+        //    /// </summary>
+        //    /// <param name="target">
+        //    /// The target to dump.
+        //    /// </param>
+        //    /// <param name="maxDepth">
+        //    /// The maximum depth to dump.
+        //    /// </param>
+        //    /// <returns>
+        //    /// A FieldsAndProperties class containing the dumped fields and properties.
+        //    /// </returns>
+        //    private FieldsAndProperties DumpFieldsAndProperties(object target, ushort maxDepth)
+        //    {
+        //        var dumpedFields = new List<Xml.Field>();
+        //        var dumpedProps = new List<Xml.Property>();
+        //        var compilerGeneratedFields = new List<FieldInfo>();
+
+        //        // First, spin through the fields.
+        //        foreach (var field in target.GetType().GetFields(
+        //            BindingFlags.Instance |
+        //            BindingFlags.NonPublic |
+        //            BindingFlags.Public |
+        //            BindingFlags.Static)
+        //            .Where(x => !this.IsTargetIgnored(x.DeclaringType.FullName, x.Name)))
+        //        {
+        //            if (!(Members.IsCompilerGenerated(field) || Objects.CouldBeAnonymousType(target)))
+        //            {
+        //                dumpedFields.Add(DumpField(target, field, maxDepth));
+        //            }
+        //            else
+        //            {
+        //                compilerGeneratedFields.Add(field);
+        //            }
+        //        }
+
+        //        // Next, spin through the properties, looking for only auto generated
+        //        // ones. Match the compiler generated field with the property.
+        //        foreach (var prop in target.GetType().GetProperties(
+        //            BindingFlags.Instance |
+        //            BindingFlags.Static |
+        //            BindingFlags.NonPublic |
+        //            BindingFlags.Public))
+        //        {
+        //            if (prop.GetIndexParameters().Length == 0 &&
+        //                (Objects.CouldBeAnonymousType(target) || Members.MightBeAutoGenerated(prop)))
+        //            {
+        //                // Look for backing field.
+        //                var backingField = FindBackingField(target, compilerGeneratedFields, prop);
+        //                if (backingField != null)
+        //                {
+        //                    if (!this.IsTargetIgnored(prop.DeclaringType.FullName, prop.Name))
+        //                    {
+        //                        dumpedProps.Add(DumpProperty(target, backingField, prop, maxDepth));
+        //                    }
+
+        //                    // remove backing field no matter what, else field counts will be wrong
+        //                    compilerGeneratedFields.Remove(backingField);
+        //                }
+        //            }
+        //        }
+
+        //        // Process what's left of the backing fields list--just in case something didn't line up with a property.
+        //        foreach (var leftoverField in compilerGeneratedFields)
+        //        {
+        //            dumpedFields.Add(DumpField(target, leftoverField, maxDepth));
+        //        }
+
+        //        return new FieldsAndProperties(dumpedFields, dumpedProps);
+        //    }
+
+        //    /// <summary>
+        //    /// Finds the backing field for the target property.
+        //    /// </summary>
+        //    /// <param name="target">
+        //    /// The target object.
+        //    /// </param>
+        //    /// <param name="compilerGeneratedFields">
+        //    /// The list of fields to search.
+        //    /// </param>
+        //    /// <param name="prop">
+        //    /// The property whose backing field to find.
+        //    /// </param>
+        //    /// <returns>
+        //    /// The backing field.
+        //    /// </returns>
+        //    private static FieldInfo FindBackingField(object target, List<FieldInfo> compilerGeneratedFields, PropertyInfo prop)
+        //    {
+        //        return compilerGeneratedFields.FirstOrDefault(
+        //            (x) =>
+        //            {
+        //                return x.Name.StartsWith("<" + prop.Name + ">") &&
+        //                    ((Objects.CouldBeAnonymousType(target) && x.Name.Contains(Members.AnonymousTypeFieldDesignation)) ||
+        //                    x.Name.Contains(Members.BackingFieldDesignation));
+        //            });
+        //    }
+
+        //    /// <summary>
+        //    /// Dumps the target field and any containing members up to the supplied depth.
+        //    /// </summary>
+        //    /// <param name="target">
+        //    /// The target object.
+        //    /// </param>
+        //    /// <param name="field">
+        //    /// The field to dump.
+        //    /// </param>
+        //    /// <param name="maxDepth">
+        //    /// The maximum depth to traverse members.
+        //    /// </param>
+        //    /// <returns>
+        //    /// The dumped field.
+        //    /// </returns>
+        //    private Xml.Field DumpField(object target, FieldInfo field, ushort maxDepth)
+        //    {
+        //        var dumpedField = new Xml.Field()
+        //        {
+        //            Name = field.Name,
+        //            Value = new Xml.Value()
+        //        };
+
+        //        var value = field.GetValue(target);
+        //        if (value == null)
+        //        {
+        //            dumpedField.Value.Item = new Xml.Null();
+        //        }
+        //        else if (value == target)
+        //        {
+        //            dumpedField.Value.Item = new Xml.This();
+        //        }
+        //        else if (Objects.IsPrimitive(value))
+        //        {
+        //            dumpedField.Value.Item = DumpPrimitive(value);
+        //        }
+        //        else
+        //        {
+        //            dumpedField.Value.Item = DumpObject(value, (ushort)(maxDepth - 1));
+        //        }
+
+        //        return dumpedField;
+        //    }
+
+        //    /// <summary>
+        //    /// Dumps the target field and any containing members up to the supplied depth.
+        //    /// </summary>
+        //    /// <param name="target">
+        //    /// The target object.
+        //    /// </param>
+        //    /// <param name="backingField">
+        //    /// The backing field of the target property.
+        //    /// </param>
+        //    /// <param name="prop">
+        //    /// The property to dump.
+        //    /// </param>
+        //    /// <param name="maxDepth">
+        //    /// The maximum depth to traverse members.
+        //    /// </param>
+        //    /// <returns>
+        //    /// The dumped property.
+        //    /// </returns>
+        //    private Xml.Property DumpProperty(object target, FieldInfo backingField, PropertyInfo prop, ushort maxDepth)
+        //    {
+        //        var dumpedProperty = new Xml.Property()
+        //        {
+        //            Name = prop.Name,
+        //            Value = new Xml.Value(),
+        //            BackingField = DumpField(target, backingField, (ushort)(maxDepth - 1))
+        //        };
+
+        //        var value = prop.GetValue(target, null);
+        //        if (value == null)
+        //        {
+        //            dumpedProperty.Value.Item = new Xml.Null();
+        //        }
+        //        else if (value == target)
+        //        {
+        //            dumpedProperty.Value.Item = new Xml.This();
+        //        }
+        //        else if (Objects.IsPrimitive(value))
+        //        {
+        //            dumpedProperty.Value.Item = DumpPrimitive(value);
+        //        }
+        //        else
+        //        {
+        //            dumpedProperty.Value.Item = DumpObject(value, (ushort)(maxDepth - 1));
+        //        }
+
+        //        return dumpedProperty;
+        //    }
+
+        //    /// <summary>
+        //    /// Checks to see if the target type and field or property name exists in the
+        //    /// ignore targets list.
+        //    /// </summary>
+        //    /// <param name="type">
+        //    /// The type name.
+        //    /// </param>
+        //    /// <param name="name">
+        //    /// the field or property name.
+        //    /// </param>
+        //    /// <returns>
+        //    /// True if the ignore type is in the lookup, false otherwise.
+        //    /// </returns>
+        //    private bool IsTargetIgnored(string type, string name)
+        //    {
+        //        var qualifiedMember = string.Join(".", type, name);
+        //        return this.ignoreTargetLookup.Contains(qualifiedMember);
+        //    }
+
+        //    #endregion
+
+        //    #region Private Classes
+
+        //    /// <summary>
+        //    /// Simple inner class to represent a combined return value of the field/property dumping
+        //    /// algorithm. The need for this stemmed from a combining of the logic to generate both lists
+        //    /// for performance reasons.
+        //    /// </summary>
+        //    private class FieldsAndProperties
+        //    {
+        //        #region Constructors & Destructors
+
+        //        public FieldsAndProperties(List<Xml.Field> fields, List<Xml.Property> properties)
+        //        {
+        //            if (fields == null || properties == null)
+        //            {
+        //                throw new ArgumentNullException(fields == null ? "fields" : "properties");
+        //            }
+
+        //            this.Fields = fields;
+        //            this.Properties = properties;
+        //        }
+
+        //        #endregion
+
+        //        #region Properties
+
+        //        /// <summary>
+        //        /// Gets a list of fields.
+        //        /// </summary>
+        //        public List<Xml.Field> Fields { get; private set; }
+
+        //        /// <summary>
+        //        /// Gets the list of properties.
+        //        /// </summary>
+        //        public List<Xml.Property> Properties { get; private set; }
+
+        //        #endregion
+        //    }
+
+        //    #endregion
+
+        //}
+
+        ///// <summary>
+        ///// Contains extension methods for classes dealing with reflection based class members.
+        ///// </summary>
+        //public static class Members
+        //{
+        //    #region Fields & Constants
+
+        //    public static readonly string BackingFieldDesignation = "_BackingField";
+        //    public static readonly string AnonymousTypeFieldDesignation = "_Field";
+
+        //    #endregion
+
+        //    #region Extension Methods
+
+        //    /// <summary>
+        //    /// Detects if the target member is compiler generated.
+        //    /// </summary>
+        //    /// <param name="info">
+        //    /// This MemberInfo.
+        //    /// </param>
+        //    /// <returns>
+        //    /// True if the compiler generated attribute is set, false otherwise.
+        //    /// </returns>
+        //    public static bool IsCompilerGenerated(MemberInfo info)
+        //    {
+        //        return info.GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+        //    }
+
+        //    /// <summary>
+        //    /// Detects if the target property is automatically implemented.
+        //    /// </summary>
+        //    /// <param name="prop">
+        //    /// The property to test. 
+        //    /// </param>
+        //    /// <returns>
+        //    /// True if the property is auto implemented, false otherwise.
+        //    /// </returns>
+        //    public static bool MightBeAutoGenerated(PropertyInfo prop)
+        //    {
+        //        var getMethod = prop.GetGetMethod();
+        //        var setMethod = prop.GetSetMethod();
+        //        return (getMethod == null || IsCompilerGenerated(getMethod)) && (setMethod == null || IsCompilerGenerated(setMethod));
+        //    }
+
+        //    #endregion
+        //}
+
+        ///// <summary>
+        ///// Object extension methods.
+        ///// </summary>
+        //public static class Objects
+        //{
+        //    #region Fields & Constants
+
+        //    public static readonly string AnonymousTypeDesignation = "AnonymousType";
+
+        //    #endregion
+
+        //    #region Extension Methods
+
+        //    /// <summary>
+        //    /// Determines if the target object is primitive.
+        //    /// </summary>
+        //    /// <param name="obj">
+        //    /// The object to test.
+        //    /// </param>
+        //    /// <returns>
+        //    /// True if the object is primitive, false otherwise.
+        //    /// </returns>
+        //    public static bool IsPrimitive(object obj)
+        //    {
+        //        return obj.GetType().IsPrimitive || obj is decimal || obj is string;
+        //    }
+
+        //    /// <summary>
+        //    /// Determins if the target object *might* be an anonymous type. You could break this by simply
+        //    /// creating a class with the CompilerGenerated attribute and adding "AnonymousType" to the name.
+        //    /// </summary>
+        //    /// <param name="obj">
+        //    /// The object to test.
+        //    /// </param>
+        //    /// <returns></returns>
+        //    public static bool CouldBeAnonymousType(object obj)
+        //    {
+        //        var type = obj.GetType();
+        //        return Members.IsCompilerGenerated(type) && type.FullName.Contains(AnonymousTypeDesignation) &&
+        //            type.Name.StartsWith("<>") && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
+        //    }
+
+        //    #endregion
+        //}
+
+        //#endregion
     }
 }

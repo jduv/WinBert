@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.Xml
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Runtime.Serialization;
@@ -22,22 +23,10 @@
 
         #region Constructors & Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the WinBertConfig class.
-        /// </summary>
         public WinBertConfig()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the WinBertConfig class. This is the deserialization constructor.
-        /// </summary>
-        /// <param name="info">
-        /// The serialization info.
-        /// </param>
-        /// <param name="context">
-        /// The streaming context.
-        /// </param>
         public WinBertConfig(SerializationInfo info, StreamingContext context)
         {
             var payload = (string)info.GetValue(XmlSerializationKey, typeof(string));
@@ -81,22 +70,10 @@
     {
         #region Constructors and Destructors
 
-        /// <summary>
-        ///   Initializes a new instance of the Build class.
-        /// </summary>
         public Build()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the Build class.
-        /// </summary>
-        /// <param name="sequenceNumber">
-        /// The sequence number for the build.
-        /// </param>
-        /// <param name="AssemblyPath">
-        /// The AssemblyPath to the target.
-        /// </param>
         public Build(uint sequenceNumber, string AssemblyPath)
         {
             this.SequenceNumber = sequenceNumber;
@@ -107,9 +84,10 @@
 
         #region Public Methods
 
-        /// <summary>
+        /// <inheritdoc />
+        /// <remarks>
         /// Override of Equals to make comparisons easier.
-        /// </summary>
+        /// </remarks>
         /// <param name="obj">
         /// The object to compare ourselves to.
         /// </param>
@@ -126,9 +104,10 @@
             return false;
         }
 
-        /// <summary>
+        /// <inheritdoc/>
+        /// <remarks>
         /// Compares this build to the target build object.
-        /// </summary>
+        /// </remarks>
         /// <param name="build">
         /// The build to compare to.
         /// </param>
@@ -140,9 +119,10 @@
             return this.SequenceNumber == build.SequenceNumber && this.AssemblyPath.Equals(build.AssemblyPath);
         }
 
-        /// <summary>
+        /// <inheritdoc />
+        /// <remarks>
         /// Override of GetHashCode for uniqueness.
-        /// </summary>
+        /// </remarks>
         /// <returns>
         /// A semi-unique hash code for this object.
         /// </returns>
@@ -162,26 +142,35 @@
     {
         #region Constructors & Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the IgnoreTarget class.
-        /// </summary>
         public DiffIgnoreTarget()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the IgnoreTarget class.
-        /// </summary>
-        /// <param name="type">
-        /// The type for the new IgnoreTarget.
-        /// </param>
-        /// <param name="name">
-        /// The name for the new IgnoreTarget.
-        /// </param>
         public DiffIgnoreTarget(DiffIgnoreType type, string name)
         {
             this.Type = type;
             this.Name = name;
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Partial implementation of a generated class.
+    /// </summary>
+    [ExcludeFromCodeCoverageAttribute]
+    public partial class DumpIgnoreTarget
+    {
+        #region Constructors & Destructors
+
+        public DumpIgnoreTarget()
+        {
+        }
+
+        public DumpIgnoreTarget(string type, string[] fieldAndPropertyNames)
+        {
+            this.Type = type;
+            this.FieldAndPropertyNames = fieldAndPropertyNames;
         }
 
         #endregion
