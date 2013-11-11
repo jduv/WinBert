@@ -99,9 +99,10 @@
                     target,
                     tests,
                     TestMethodName,
-                    (targetArg, testsArg, testMethodName) =>
+                    this.Config.DumpIgnoreList,
+                    (targetArg, testsArg, testMethodName, ignoreTargets) =>
                     {
-                        var runner = new RandoopTestRunner(testMethodName);
+                        var runner = new RandoopTestRunner(testMethodName, ignoreTargets);
                         return runner.RunTests(targetArg, testsArg);
                     });
             }

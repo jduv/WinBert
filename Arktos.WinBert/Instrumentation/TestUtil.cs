@@ -41,8 +41,8 @@
         #region Properties
 
         /// <summary>
-        /// Gets or sets the dumper implementation. Primarily exists as a test seam--it is not recommended
-        /// to re-set this in the middle of a testing session. That will likely result in unknown behavior.
+        /// Gets or sets the dumper implementation. It is not recommended to reset this in the middle
+        /// of a test session. That will result in unknown behavior.
         /// </summary>
         public static ITestStateRecorder StateRecorder
         {

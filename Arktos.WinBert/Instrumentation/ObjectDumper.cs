@@ -10,7 +10,7 @@
     /// <summary>
     /// Logs objects of various types, converting them to a simple XML representation.
     /// </summary>
-    public sealed class ObjectDumper : Arktos.WinBert.Instrumentation.IObjectDumper
+    public sealed class ObjectDumper : IObjectDumper
     {
         #region Fields & Constants
 

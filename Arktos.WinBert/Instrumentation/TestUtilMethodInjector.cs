@@ -17,6 +17,7 @@
         public static readonly string AddMethodToDynamicCallGraphName = "AddMethodToDynamicCallGraph";
         public static readonly string EndTestName = "EndTest";
         public static readonly string SaveResultsName = "SaveResults";
+        public static readonly string StateRecorderPropName = "StateRecorder";
 
         #endregion
 
