@@ -1,5 +1,6 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Testing;
 
     /// <summary>
@@ -13,16 +14,19 @@
         /// <summary>
         /// Performs basic behavioral analysis on the target test run results.
         /// </summary>
-        /// <param name="currentBuildResults">
-        /// The test results for the current build.
+        /// <param name="diff">
+        /// The difference between assemblies.
         /// </param>
-        /// <param name="previousBuildResults">
+        /// <param name="previousResults">
         /// The test results for the previous build.
+        /// </param>
+        /// <param name="currentResults">
+        /// The test results for the current build.
         /// </param>
         /// <returns>
         /// An analysis result.
         /// </returns>
-        AnalysisResult Analyze(TestRunResult currentBuildResults, TestRunResult previousBuildResults);
+        AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults);
 
         #endregion
     }

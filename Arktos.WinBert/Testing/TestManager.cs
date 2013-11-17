@@ -22,6 +22,12 @@
     /// </remarks>
     public abstract class TestManager : ITestManager
     {
+        #region Fields & Constants
+
+        private readonly IBehavioralAnalyzer defaultAnalyzer;
+
+        #endregion
+
         #region Constructors & Destructors
 
         /// <summary>
@@ -38,6 +44,7 @@
             }
 
             this.Config = config;
+            this.defaultAnalyzer = new BertBehavioralAnalyzer();
         }
 
         #endregion
@@ -162,28 +169,45 @@
                 });
 
             // Perform analysis and we're done.
-            return this.Analyze(oldAssemblyResults, newAssemblyResults);
+            return this.Analyze(diff, oldAssemblyResults, newAssemblyResults);
         }
 
         /// <summary>
         /// Performs analysis on the target test run results. Override this  if you need to do anything special while generating
         /// the analysis restuls or if you use a specialized representation during instrumentation else just use the default 
-        /// mplementation. It will use a standard BERT analyzer to load up the analysis results log files and perform a regression
+        /// implementation. It will use a standard BERT analyzer to load up the analysis results log files and perform a regression
         /// test analysis.
         /// </summary>
-        /// <param name="oldAssemblyResults">
-        /// Results from running the tests on the old assembly.
+        /// <param name="diff">
+        /// The difference between assemblies.
         /// </param>
-        /// <param name="newAssemblyResults">
-        /// Results from running the tests on the new assembly.
+        /// <param name="previousResults">
+        /// The test results for the previous build.
+        /// </param>
+        /// <param name="currentResults">
+        /// The test results for the current build.
         /// </param>
         /// <returns>
-        /// An AnalysisResult containing the results of an analysis pass on the target two test run results.
+        /// An analysis result.
         /// </returns>
-        protected virtual AnalysisResult Analyze(ITestRunResult oldAssemblyResults, ITestRunResult newAssemblyResults)
+        protected virtual AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
-            //throw new NotImplementedException();
-            return null;
+            if (diff == null)
+            {
+                throw new ArgumentNullException("diff");
+            }
+
+            if (previousResults == null)
+            {
+                throw new ArgumentNullException("previousResults");
+            }
+
+            if (currentResults == null)
+            {
+                throw new ArgumentNullException("currentResults");
+            }
+
+            return this.defaultAnalyzer.Analyze(diff, previousResults, currentResults);
         }
 
         /// <summary>
@@ -217,7 +241,7 @@
             {
                 // Pull in paths of the targets in case of dependencies.
                 diffEnv.RemoteResolver.AddProbePaths(
-                    Path.GetDirectoryName(previous.AssemblyPath), 
+                    Path.GetDirectoryName(previous.AssemblyPath),
                     Path.GetDirectoryName(current.AssemblyPath));
 
                 // Execute the diff in another application domain.
@@ -239,6 +263,6 @@
             }
         }
 
-        #endregion 
+        #endregion
     }
 }

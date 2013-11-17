@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
     using System;
+    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Testing;
 
     /// <summary>
@@ -11,7 +12,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public AnalysisResult Analyze(TestRunResult previousResults, TestRunResult currentResults)
+        public AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
             throw new NotImplementedException();
         }

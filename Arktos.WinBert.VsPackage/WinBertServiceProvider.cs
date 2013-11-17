@@ -34,14 +34,13 @@
 
         #endregion
 
-        #region Constructors
+        #region Constructors & Destructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WinBertServiceProvider"/> class. 
-        /// Initializes a new instance of the WinBert class.
         /// </summary>
         /// <param name="dte">
-        /// The dte.
+        /// The IDE interface.
         /// </param>
         public WinBertServiceProvider(DTE2 dte)
         {
@@ -50,7 +49,6 @@
             this.dte = dte;
             this.solutionEvents = dte.Events.SolutionEvents;
             this.buildEvents = dte.Events.BuildEvents;
-
             this.InitializeEvents();
         }
 
@@ -67,12 +65,14 @@
 
         #region Private Methods
 
+        #region Configuration/State Loading
+
         /// <summary>
         /// Attempts to load a configuration file from the target path.
         /// </summary>
         /// <param name="path">The path to load.</param>
         /// <returns>A configuration object, or null on failure.</returns>
-        private static WinBertConfig LoadState(string path)
+        private WinBertConfig LoadState(string path)
         {
             if (File.Exists(path))
             {
@@ -84,8 +84,28 @@
                 {
                     var errorMessage = "Unable to deserialize the configuration file!" + Environment.NewLine;
                     errorMessage += "Exception: " + exc;
-                    Debug.WriteLine(errorMessage);
+                    this.ReportError(errorMessage);
                 }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Reads in a default configuration file stored inside the package DLL.
+        /// </summary>
+        /// <returns></returns>
+        private WinBertConfig GetDefaultConfig()
+        {
+            try
+            {
+                return Serializer.XmlDeserialize<WinBertConfig>(Resources.winbertconfig);
+            }
+            catch (Exception exc)
+            {
+                var errorMessage = "Unable to deserialize in-memory configuration file!" + Environment.NewLine;
+                errorMessage += "Exception: " + exc;
+                this.ReportError(errorMessage);
             }
 
             return null;
@@ -98,25 +118,19 @@
         {
             if (this.Config != null)
             {
-                string path = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
-
-                var config = new WinBertConfig();
-                var projects = this.GetWinBertProjects();
-
-                config.EmbeddedConfigurations = this.Config.EmbeddedConfigurations;
-                config.Projects = projects;
-                config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
-                config.DiffIgnoreList = this.Config.DiffIgnoreList ?? new DiffIgnoreTarget[0];
+                string pathToSave = Path.Combine(this.GetSolutionWorkingDirectory(), ConfigFilePath);
+                this.Config.MasterArchivePath = Path.Combine(this.GetSolutionWorkingDirectory(), ArchiveDir);
+                this.Config.Projects = this.GetWinBertProjects();
 
                 try
                 {
-                    Serializer.XmlSerialize(this.Config, path, new XmlWriterSettings() { Indent = true });
+                    Serializer.XmlSerialize(this.Config, pathToSave, new XmlWriterSettings() { Indent = true });
                 }
                 catch (Exception exception)
                 {
                     var errorMessage = "Unable to serialize the configuration file!" + Environment.NewLine;
                     errorMessage += "Exception: " + Environment.NewLine + exception;
-                    MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
+                    this.ReportError(errorMessage);
                 }
             }
         }
@@ -154,26 +168,39 @@
             return projects;
         }
 
-
         /// <summary>
-        /// Reads in a default configuration file stored inside the package DLL.
+        /// Loads up the configuration nodes into real data for the plugin.
         /// </summary>
-        /// <returns></returns>
-        private static WinBertConfig GetDefaultConfig()
+        private void LoadBuilds()
         {
-            try
+            // ick, double for loop
+            foreach (WinBertProject project in this.Config.Projects)
             {
-                return Serializer.XmlDeserialize<WinBertConfig>(Resources.winbertconfig);
-            }
-            catch (Exception exc)
-            {
-                var errorMessage = "Unable to deserialize in-memory configuration file!" + Environment.NewLine;
-                errorMessage += "Exception: " + exc;
-                Debug.WriteLine(errorMessage);
-            }
+                BuildVersionManager manager = new BuildVersionManager(
+                    archivePath: this.Config.MasterArchivePath,
+                    name: project.Name);
 
-            return null;
+                foreach (Build build in project.BuildsList)
+                {
+                    if (File.Exists(build.AssemblyPath))
+                    {
+                        manager.LoadBuild(build.SequenceNumber, build.AssemblyPath);
+                    }
+                    else
+                    {
+                        string errorMessage = string.Format(
+                            "Error loading file at path {0} into the build manager for project {1}", build.AssemblyPath, project.Name);
+                        this.ReportError(errorMessage);
+                    }
+                }
+
+                this.buildDictionary.Add(project.Name, manager);
+            }
         }
+
+        #endregion
+
+        #region Build Event Delegates
 
         /// <summary>
         /// Wires up all the required events.
@@ -291,11 +318,8 @@
                         }
                         else
                         {
-                            var errorMessage = string.Format(
-                                "Unable to add the build at path {0} to the archive for project {1}. The file doesn't exist.",
-                                buildPath, project);
-
-                            MessageBox.Show(errorMessage, "Error", MessageBoxButtons.OK);
+                            var errorMessage = string.Format("Unable to add the build at path {0} to the archive for project {1}. The file doesn't exist.", buildPath, project);
+                            this.ReportError(errorMessage);
                         }
                     }
                 }
@@ -320,12 +344,12 @@
                 {
                     var errorMessage = "Unable to load configuration at path " + path + " or create a new one. ";
                     errorMessage += "The state of your build archive will not be maintained! WinBert analysis will not be executed.";
-                    MessageBox.Show(errorMessage, "Fatal Error!", MessageBoxButtons.OK);
+                    this.ReportError(errorMessage);
                 }
                 else
                 {
                     this.Config = config;
-                    this.LoadConfiguration();
+                    this.LoadBuilds();
                 }
             }
         }
@@ -343,35 +367,9 @@
             this.buildDictionary.Clear();
         }
 
-        /// <summary>
-        /// Loads up the configuration nodes into real data for the plugin.
-        /// </summary>
-        private void LoadConfiguration()
-        {
-            // ick, double for loop
-            foreach (WinBertProject project in this.Config.Projects)
-            {
-                BuildVersionManager manager = new BuildVersionManager(
-                    archivePath: this.Config.MasterArchivePath,
-                    name: project.Name);
+        #endregion
 
-                foreach (Build build in project.BuildsList)
-                {
-                    if (File.Exists(build.AssemblyPath))
-                    {
-                        manager.LoadBuild(build.SequenceNumber, build.AssemblyPath);
-                    }
-                    else
-                    {
-                        string errorMessage = string.Format(
-                            "Error loading file at path {0} into the build manager for project {1}", build.AssemblyPath, project.Name);
-                        Debug.WriteLine(errorMessage);
-                    }
-                }
-
-                this.buildDictionary.Add(project.Name, manager);
-            }
-        }
+        #region Utilities
 
         /// <summary>
         /// Finds a VS project given a unique name. Can't really use LINQ here, the DTE project list is a
@@ -460,7 +458,7 @@
             {
                 string errorMessage = string.Format(
                     "Unable to extract project guids from file {0}! {1} stack => {2}", pathToConfigFile, exception.Message, exception.StackTrace);
-                Debug.WriteLine(errorMessage);
+                this.ReportError(errorMessage);
             }
 
             return null;
@@ -476,6 +474,20 @@
         {
             return Path.GetDirectoryName(this.dte.Solution.FullName);
         }
+
+        /// <summary>
+        /// Reports an error via the implemented medium.
+        /// </summary>
+        /// <param name="message">
+        /// The message to report.
+        /// </param>
+        private void ReportError(string message)
+        {
+            // Currently just show it.
+            MessageBox.Show(message);
+        }
+
+        #endregion
 
         #endregion
     }
