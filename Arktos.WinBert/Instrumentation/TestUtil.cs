@@ -5,6 +5,7 @@
     using System;
     using System.IO;
     using System.Xml;
+    using System.Text;
 
     /// <summary>
     /// The main class that's injected into every test assembly and target assembly that handles
@@ -152,14 +153,18 @@
             }
 
             // Deserialize dumper.
-            var value = Serializer.XmlSerialize(recorder.AnalysisLog, new XmlWriterSettings() { Indent = true });
-            if (string.IsNullOrWhiteSpace(value))
+            var xml = Serializer.XmlSerialize(recorder.AnalysisLog, new XmlWriterSettings() { Indent = true });
+            if (string.IsNullOrWhiteSpace(xml))
             {
                 throw new InvalidOperationException("Deserialized analysis log cannot be empty!");
             }
 
             // Write all text. If this blows due to a bad path, it should be caught.
-            FileSystem.WriteAllText(path, value);
+            using (var stream = FileSystem.OpenWrite(path))
+            using (var writer = new StreamWriter(stream, Encoding.Unicode))
+            {
+                writer.Write(xml);
+            }
         }
 
         #endregion

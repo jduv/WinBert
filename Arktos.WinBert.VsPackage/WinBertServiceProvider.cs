@@ -1,18 +1,16 @@
 ﻿namespace Arktos.WinBert.VsPackage
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Windows.Forms;
+    using System.Xml;
+    using Arktos.WinBert.Analysis;
     using Arktos.WinBert.RandoopIntegration;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using EnvDTE;
     using EnvDTE80;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using System.Windows.Forms;
-    using System.Xml;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
@@ -60,6 +58,11 @@
         /// Gets the configuration for this WinBert service provider.
         /// </summary>
         public WinBertConfig Config { get; private set; }
+
+        /// <summary>
+        /// Gets the analysis result.
+        /// </summary>
+        public AnalysisResult Analysis { get; private set; }
 
         #endregion
 
@@ -255,7 +258,7 @@
                     if (currentBuild != null && previousBuild != null)
                     {
                         var tester = new RandoopTestManager(this.Config);
-                        tester.Run(previousBuild, currentBuild);
+                        this.Analysis = tester.Run(previousBuild, currentBuild);
                     }
                 }
             }

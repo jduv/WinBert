@@ -146,8 +146,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnalysisViewToolWindow.cs" />
-    <Compile Include="AnalysisView.xaml.cs">
+    <Compile Include="View\AnalysisViewToolWindow.cs" />
+    <Compile Include="View\AnalysisView.xaml.cs">
       <DependentUpon>AnalysisView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Guids.cs" />
@@ -236,7 +236,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="AnalysisView.xaml">
+    <Page Include="View\AnalysisView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -26,14 +26,8 @@
         /// <param name="newType">
         /// The new type.
         /// </param>
-        public TypeDifferenceResult(string name)
+        public TypeDifferenceResult()
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("Name cannot be null or empty!");
-            }
-
-            this.Name = name;
             this.Methods = new List<string>();
             this.RemovedFields = new List<string>();
             this.AddedFields = new List<string>();
@@ -57,6 +51,9 @@
 
         /// <inheritdoc />
         public string Name { get; private set; }
+
+        /// <inheritdoc />
+        public string FullName { get; private set; }
 
         /// <inheritdoc />
         public IList<string> AddedFields { get; private set; }
@@ -87,7 +84,11 @@
                 throw new ArgumentNullException("type");
             }
 
-            return new TypeDifferenceResult(type.Name);
+            return new TypeDifferenceResult()
+            {
+                Name = type.Name,
+                FullName = type.FullName
+            };
         }
 
         #endregion

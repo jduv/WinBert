@@ -18,6 +18,11 @@
         string Name { get; }
 
         /// <summary>
+        /// Gets the fully qualified name of the type.
+        /// </summary>
+        string FullName { get;  }
+
+        /// <summary>
         ///   Gets a list of field names that were added to the new version of the class and didn't exist in the old
         ///   version.
         /// </summary>

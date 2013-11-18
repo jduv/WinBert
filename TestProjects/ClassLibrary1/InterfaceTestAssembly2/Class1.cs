@@ -12,7 +12,7 @@ namespace InterfaceTestAssembly2
 
         public int I1Bar()
         {
-            return 109;
+            return 1999;
         }
 
         public DateTime I1Baz()

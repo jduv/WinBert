@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.Design;
     using System.Runtime.InteropServices;
+    using Arktos.WinBert.VsPackage.View;
     using EnvDTE80;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
@@ -57,7 +58,7 @@
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        ///   where you can put all the initialization code that rely on services provided by VisualStudio.
+        /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
         protected override void Initialize()
         {            
@@ -65,12 +66,14 @@
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = this.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (null != mcs)
+            if (mcs != null)
             {
                 // Create the command for the tool window
                 CommandID toolwndCommandID = new CommandID(
                     GuidList.GuidWinBertVsPackageCmdSet, 
                     (int)PkgCmdIDList.CmdIdBertAnalysisWindow);
+                MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
+                mcs.AddCommand(menuToolWin);
             }
 
             // Grab the DTE2 instance and pass it to the WinBertServiceProvider
@@ -79,6 +82,33 @@
             {
                 this.WinBertServiceProvider = new WinBertServiceProvider(dte2);
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// This function is called when the user clicks the menu item that shows the 
+        /// tool window. See the Initialize method to see how the menu item is associated to 
+        /// this function using the OleMenuCommandService service and the MenuCommand class.
+        /// </summary>
+        private void ShowToolWindow(object sender, EventArgs e)
+        {
+            AnalysisViewToolWindow window = this.FindToolWindow(typeof(AnalysisViewToolWindow), 0, true) as AnalysisViewToolWindow;
+            if (window == null || window.Frame == null)
+            {
+                throw new NotSupportedException(Resources.CanNotCreateWindow);
+            }
+
+            if (this.WinBertServiceProvider == null)
+            {
+                throw new NotSupportedException(Resources.ExtensionNotLoaded);
+            }
+
+            window.AnalysisView.DataContext = this.WinBertServiceProvider.Analysis;
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         #endregion
