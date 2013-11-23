@@ -17,7 +17,8 @@
 
         #region Constructors & Destructors
 
-        public AnalysisViewToolWindow() : base(null)
+        public AnalysisViewToolWindow()
+            : base(null)
         {
             this.Caption = Resources.ToolWindowTitle;
             this.BitmapResourceID = 301;

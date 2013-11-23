@@ -106,7 +106,7 @@
                 throw new NotSupportedException(Resources.ExtensionNotLoaded);
             }
 
-            window.AnalysisView.DataContext = this.WinBertServiceProvider.Analysis;
+            window.AnalysisView.DataContext = this.WinBertServiceProvider.AnalysisVM;
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }

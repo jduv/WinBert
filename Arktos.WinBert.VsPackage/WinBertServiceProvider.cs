@@ -5,9 +5,9 @@
     using System.IO;
     using System.Windows.Forms;
     using System.Xml;
-    using Arktos.WinBert.Analysis;
     using Arktos.WinBert.RandoopIntegration;
     using Arktos.WinBert.Util;
+    using Arktos.WinBert.VsPackage.ViewModel;
     using Arktos.WinBert.Xml;
     using EnvDTE;
     using EnvDTE80;
@@ -62,7 +62,7 @@
         /// <summary>
         /// Gets the analysis result.
         /// </summary>
-        public AnalysisResult Analysis { get; private set; }
+        public AnalysisViewModel AnalysisVM { get; private set; }
 
         #endregion
 
@@ -258,7 +258,7 @@
                     if (currentBuild != null && previousBuild != null)
                     {
                         var tester = new RandoopTestManager(this.Config);
-                        this.Analysis = tester.Run(previousBuild, currentBuild);
+                        this.AnalysisVM.Analysis = tester.Run(previousBuild, currentBuild);
                     }
                 }
             }

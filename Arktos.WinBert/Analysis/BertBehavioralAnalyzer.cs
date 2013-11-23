@@ -2,10 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Testing;
+    using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
 
     /// <summary>
@@ -13,6 +13,26 @@
     /// </summary>
     public class BertBehavioralAnalyzer : IBehavioralAnalyzer
     {
+        #region Fields & Constants
+
+        private readonly IFileSystem fileSystem;
+
+        #endregion
+
+        #region Constructors & Destructors
+
+        public BertBehavioralAnalyzer()
+            : this(new FileSystem())
+        {
+        }
+
+        public BertBehavioralAnalyzer(IFileSystem fileSystem)
+        {
+            this.fileSystem = fileSystem;
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <inheritdoc />
@@ -66,9 +86,9 @@
         /// <returns>
         /// An analysis log instance.
         /// </returns>
-        private static WinBertAnalysisLog LoadAnalysisLog(string path)
+        private WinBertAnalysisLog LoadAnalysisLog(string path)
         {
-            var file = File.OpenRead(path);
+            var file = this.fileSystem.OpenRead(path);
             return Serializer.XmlDeserialize<WinBertAnalysisLog>(file);
         }
 
@@ -90,9 +110,10 @@
         /// </returns>
         private AnalysisResult Process(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
-            var changedTypeLookup = diff.TypeDifferences.ToDictionary(x => x.Name, y => new TypeLookup(y));
+            var typeDifferences = diff.TypeDifferences.ToDictionary(x => x.Name, y => new TypeDifferenceLookup(y));
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
             var currentLog = LoadAnalysisLog(currentResults.PathToAnalysisLog);
+
             return null;
         }
 
@@ -104,7 +125,7 @@
         /// Small utiltity type representing a Type along with it's set of method names that
         /// changed. Use this for fast lookup of type to method name relationships.
         /// </summary>
-        private class TypeLookup
+        private class TypeDifferenceLookup
         {
             #region Fields & Constants
 
@@ -114,7 +135,7 @@
 
             #region Constructors & Destructors
 
-            public TypeLookup(ITypeDifferenceResult typeDiff)
+            public TypeDifferenceLookup(ITypeDifferenceResult typeDiff)
             {
                 this.methodNames = new HashSet<string>();
                 foreach (var method in typeDiff.Methods)
