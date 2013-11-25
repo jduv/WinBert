@@ -28,6 +28,11 @@
 
         public BertBehavioralAnalyzer(IFileSystem fileSystem)
         {
+            if (fileSystem == null)
+            {
+                throw new ArgumentNullException("Filesystem cannot be null.");
+            }
+
             this.fileSystem = fileSystem;
         }
 

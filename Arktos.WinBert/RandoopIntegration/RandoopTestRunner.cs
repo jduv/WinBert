@@ -47,12 +47,12 @@
             var testAssembly = loader.LoadAssembly(LoadMethod.LoadFrom, tests.Location);
 
             // Grab the reflection wrapper.
-            var testUtilWrapper = new TestUtilReflectionWrapper(loader);
+            var testUtilReflectionWrapper = new TestUtilReflectionWrapper(loader);
 
             // If we have ignore targets, set up the appropriate test state recorder.
             if (this.ignoreTargets != null && this.ignoreTargets.Any())
             {
-                testUtilWrapper.InvokeStateRecorderPropertySet(this.BuildTestStateRecorder());
+                testUtilReflectionWrapper.InvokeStateRecorderPropertySet(this.BuildTestStateRecorder());
             }
 
             // Execute the tests.
@@ -66,7 +66,7 @@
             // Execute Save by finding the loaded winbert assembly and calling TestUtil.SaveResults()
             TestRunResult result;
             var analysisLogPath = CreateAnalysisFilePath(target, tests);
-            testUtilWrapper.InvokeSaveResults(analysisLogPath);
+            testUtilReflectionWrapper.InvokeSaveResults(analysisLogPath);
             result = TestRunResult.Successful(analysisLogPath);
 
             return result;

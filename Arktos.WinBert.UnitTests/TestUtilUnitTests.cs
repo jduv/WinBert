@@ -6,6 +6,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using System;
+    using System.IO;
 
     [TestClass]
     public class TestUtilUnitTests
@@ -151,19 +152,19 @@
         public void SaveResults_SavesSuccessfully()
         {
             var targetPath = @"./out.xml";
+            var fileStream = File.OpenWrite(targetPath);
 
             // Set up the state recorder
             this.stateRecorderMock.Verify(x => x.EndTest(), Times.AtMostOnce());
             this.stateRecorderMock.Setup(x => x.AnalysisLog).Returns(new WinBertAnalysisLog());
 
             // File system mock.
-            this.fileSystemMock.Setup(x => x.WriteAllText(It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string>(
-                (path, xml) =>
+            var memoryStream = new MemoryStream();
+            this.fileSystemMock.Setup(x => x.OpenWrite(It.IsAny<string>()))
+                .Returns(fileStream)
+                .Callback<string>(
+                (path) =>
                 {
-                    // Verify the deserialization at least looks OK in a basic sense.
-                    Assert.IsFalse(string.IsNullOrWhiteSpace(xml));
-
                     // Verify path. Not really needed, but just in case.
                     Assert.AreEqual(targetPath, path);
                 });
