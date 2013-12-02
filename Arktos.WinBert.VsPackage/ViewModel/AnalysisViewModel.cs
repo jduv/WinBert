@@ -1,8 +1,9 @@
 ﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using Arktos.WinBert.Analysis;
+    using GalaSoft.MvvmLight;
 
-    public class AnalysisViewModel
+    public class AnalysisViewModel : ViewModelBase
     {
         #region Properties
 
