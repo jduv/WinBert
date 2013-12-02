@@ -147,6 +147,7 @@
     <Compile Include="Analysis\AnalysisResult.cs" />
     <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
     <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
+    <Compile Include="Analysis\InconclusiveAnalysisResult.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />

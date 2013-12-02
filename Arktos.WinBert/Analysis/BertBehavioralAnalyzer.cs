@@ -1,12 +1,12 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Testing;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Performs a basic behavioral analysis on the results from an instrumented test run.
@@ -52,27 +52,28 @@
                     {
                         result = this.Process(diff, previousResults, currentResults);
                     }
-                    catch (Exception e)
+                    catch (Exception exception)
                     {
                         // Deal with exception
-                        result = null;
+                        result = AnalysisResult.FromException(exception);
                     }
                 }
                 else
                 {
-                    // Error with one of the results, report it.
-                    result = null;
+                    result = !previousResults.Success ?
+                        AnalysisResult.UnsuccessfulTestRun(previousResults) :
+                        AnalysisResult.UnsuccessfulTestRun(currentResults);
                 }
             }
             else if (!diff.IsDifferent)
             {
                 // No difference between runs.
-                result = null;
+                result = AnalysisResult.NoDifference();
             }
             else
             {
                 // Unknown what happened, report a fatal error.
-                result = null;
+                result = AnalysisResult.UnknownError();
             }
 
             return result;
@@ -119,7 +120,8 @@
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
             var currentLog = LoadAnalysisLog(currentResults.PathToAnalysisLog);
 
-            return null;
+            // TODO: Fix me.
+            return new InconclusiveAnalysisResult("Valid Analysis!");
         }
 
         #endregion

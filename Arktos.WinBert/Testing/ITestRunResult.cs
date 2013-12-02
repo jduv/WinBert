@@ -1,4 +1,5 @@
-﻿namespace Arktos.WinBert.Testing
+﻿using AppDomainToolkit;
+namespace Arktos.WinBert.Testing
 {
     /// <summary>
     /// Defines behavior for implementations represent test run results.
@@ -16,6 +17,11 @@
         /// The path to the analysis log.
         /// </summary>
         string PathToAnalysisLog { get; }
+
+        /// <summary>
+        /// Gets the target assembly under test.
+        /// </summary>
+        IAssemblyTarget Target { get; }
 
         #endregion
     }

@@ -14,14 +14,14 @@
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_NullArgument1()
+        public void Ctor_NullOldAssembly()
         {
             var target = new AssemblyDifferenceResult(null, Assembly.GetExecutingAssembly(), 0, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_NullArgument2()
+        public void Ctor_NullNewAssembly()
         {
             var target = new AssemblyDifferenceResult(Assembly.GetExecutingAssembly(), null, 0, null);
         }

@@ -1,5 +1,6 @@
 ﻿namespace Arktos.WinBert.Testing
 {
+    using AppDomainToolkit;
     using System;
     using System.IO;
 
@@ -29,6 +30,9 @@
         /// <inheritdoc />
         public string PathToAnalysisLog { get; private set; }
 
+        /// <inheritdoc />
+        public IAssemblyTarget Target { get; private set; }
+
         #endregion
 
         #region Public Methods
@@ -43,7 +47,7 @@
         /// <returns>
         /// A new TestRunResult instance.
         /// </returns>
-        public static TestRunResult Successful(string pathToAnalysisLog)
+        public static TestRunResult Successful(string pathToAnalysisLog, IAssemblyTarget target)
         {
             if (string.IsNullOrEmpty(pathToAnalysisLog))
             {
@@ -55,10 +59,16 @@
                 throw new ArgumentException("The target file doesn't exist! Path: " + pathToAnalysisLog);
             }
 
+            if (target == null)
+            {
+                throw new ArgumentException("Target cannot be null!");
+            }
+
             return new TestRunResult()
             {
                 Success = true,
-                PathToAnalysisLog = pathToAnalysisLog
+                PathToAnalysisLog = pathToAnalysisLog,
+                Target = target
             };
         }
 
@@ -69,12 +79,19 @@
         /// <returns>
         /// A new TestRunResult instance.
         /// </returns>
-        public static TestRunResult Failure()
+        public static TestRunResult Failure(IAssemblyTarget target)
         {
+
+            if (target == null)
+            {
+                throw new ArgumentException("Target cannot be null!");
+            }
+
             return new TestRunResult()
             {
                 Success = false,
-                PathToAnalysisLog = null
+                PathToAnalysisLog = null,
+                Target = target
             };
         }
 

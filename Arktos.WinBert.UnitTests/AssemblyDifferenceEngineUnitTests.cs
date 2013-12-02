@@ -32,7 +32,7 @@
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Ctor_NullArgument()
+        public void Ctor_NullIgnoreTargets()
         {
             var target = new AssemblyDifferenceEngine(null);
         }
