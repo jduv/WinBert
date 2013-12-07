@@ -9,9 +9,9 @@
     {
         #region Constructors & Destructors
 
-        public AnalysisVmBase()
+        public AnalysisVmBase(string projectName)
         {
-            this.ProjectName = "MyProject";
+            this.ProjectName = projectName;
         }
 
         #endregion

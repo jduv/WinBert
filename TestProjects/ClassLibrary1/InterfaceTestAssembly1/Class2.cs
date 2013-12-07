@@ -16,7 +16,7 @@ namespace InterfaceTestAssembly1
 
         public int Boo()
         {
-            var lowerBound = 10;
+            var lowerBound = 1;
             var rand = new Random();
             return rand.Next(lowerBound, 100) * 100;
         }

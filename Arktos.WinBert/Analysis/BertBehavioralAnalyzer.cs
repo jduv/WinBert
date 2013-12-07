@@ -43,39 +43,43 @@
         /// <inheritdoc />
         public AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
-            AnalysisResult result;
-            if (diff != null && previousResults != null && currentResults != null)
+            if (diff == null)
             {
-                if (previousResults.Success && currentResults.Success)
-                {
-                    try
-                    {
-                        result = this.Process(diff, previousResults, currentResults);
-                    }
-                    catch (Exception exception)
-                    {
-                        // Deal with exception
-                        result = AnalysisResult.FromException(exception);
-                    }
-                }
-                else
-                {
-                    result = !previousResults.Success ?
-                        AnalysisResult.UnsuccessfulTestRun(previousResults) :
-                        AnalysisResult.UnsuccessfulTestRun(currentResults);
-                }
+                throw new ArgumentNullException("diff");
             }
-            else if (!diff.IsDifferent)
+
+            if (previousResults == null)
+            {
+                throw new ArgumentNullException("previousResults");
+            }
+
+            if (currentResults == null)
+            {
+                throw new ArgumentNullException("currentResults");
+            }
+
+            AnalysisResult result;
+            if (!diff.IsDifferent)
             {
                 // No difference between runs.
                 result = AnalysisResult.NoDifference();
             }
+            else if (!(previousResults.Success && currentResults.Success))
+            {
+                result = AnalysisResult.UnsuccessfulTestRun(previousResults, currentResults);
+            }
             else
             {
-                // Unknown what happened, report a fatal error.
-                result = AnalysisResult.UnknownError();
+                try
+                {
+                    result = this.Process(diff, previousResults, currentResults);
+                }
+                catch (Exception exception)
+                {
+                    // Deal with exception
+                    result = AnalysisResult.FromException(exception);
+                }
             }
-
             return result;
         }
 

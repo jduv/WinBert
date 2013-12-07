@@ -19,7 +19,7 @@
         /// <returns>
         /// A VM capable of presenting the target view.
         /// </returns>
-        public static AnalysisVmBase Create(AnalysisResult result)
+        public static AnalysisVmBase Create(AnalysisResult result, string projectName)
         {
             if (result == null)
             {
@@ -29,11 +29,11 @@
             AnalysisVmBase vm;
             if (result is InconclusiveAnalysisResult)
             {
-                vm = new InconclusiveAnalysisVm(result as InconclusiveAnalysisResult);
+                vm = new InconclusiveAnalysisVm(result as InconclusiveAnalysisResult, projectName);
             }
             else
             {
-                vm = new AnalysisErrorInfoVm("Internal Error: No view model mapped to the target AnalysisResult implementation!");
+                vm = new AnalysisErrorInfoVm("Internal Error: No view model mapped to the target AnalysisResult implementation!", projectName);
             }
 
             return vm;

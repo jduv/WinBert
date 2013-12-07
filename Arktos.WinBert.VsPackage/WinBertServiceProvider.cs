@@ -264,7 +264,7 @@
 
                         if (results != null)
                         {
-                            this.AnalysisVm.AnalysisResults.Add(ViewModelFactory.Create(results));
+                            this.AnalysisVm.AnalysisResults.Add(ViewModelFactory.Create(results, manager.Name));
                         }
                     }
                 }

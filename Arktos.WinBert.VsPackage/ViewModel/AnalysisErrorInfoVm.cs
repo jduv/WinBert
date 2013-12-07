@@ -1,7 +1,6 @@
 ﻿
 namespace Arktos.WinBert.VsPackage.ViewModel
 {
-    using GalaSoft.MvvmLight;
     using System;
 
     /// <summary>
@@ -18,12 +17,14 @@ namespace Arktos.WinBert.VsPackage.ViewModel
 
         #region Constructors & Destructors
 
-        public AnalysisErrorInfoVm(string message)
+        public AnalysisErrorInfoVm(string message, string projectName)
+            : base(projectName)
         {
             this.ErrorInfo = message;
         }
 
-        public AnalysisErrorInfoVm(Exception exception)
+        public AnalysisErrorInfoVm(Exception exception, string projectName)
+            : base(projectName)
         {
             this.ErrorInfo = exception.Message;
             this.Exception = exception;

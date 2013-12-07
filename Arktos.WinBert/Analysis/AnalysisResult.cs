@@ -13,7 +13,10 @@
         private static readonly string NoDifferenceMessage = "Nothing interesting to report.";
         private static readonly string ExceptionMessage = "An exception occurred. Message: {0}";
         private static readonly string UnknownErrorMessage = "We're sorry, but an unknown error occurred.";
-        private static readonly string UnsuccessfulRunMessage = "A test run was unsuccessful! View logs for errors in the winbert root directory. Failed target location: {0}";
+        private static readonly string UnsuccessfulRunMessage = "A test run was unsuccessful! View logs for errors in the winbert root directory. Failed target location: " +
+            System.Environment.NewLine + System.Environment.NewLine + "{0}";
+        private static readonly string BothTestRunsBadMessage = "Both test runs were unsuccessful! View logs for errors in the winbert root directory. Failed target locations: " +
+            System.Environment.NewLine + System.Environment.NewLine + "{0}" + System.Environment.NewLine + "{1}";
 
         #endregion
 
@@ -22,19 +25,38 @@
         /// <summary>
         /// Creates an analysis result communicating that an unsuccessful test run occurred.
         /// </summary>
-        /// <param name="failedRun">
-        /// The run that failed. It will be double checked.
+        /// <param name="previousResults">
+        /// The previous run that may have failed.
         /// </param>
         /// <returns></returns>
-        public static AnalysisResult UnsuccessfulTestRun(ITestRunResult failedRun)
+        public static AnalysisResult UnsuccessfulTestRun(ITestRunResult previousResults, ITestRunResult currentResults)
         {
-            if (failedRun == null || failedRun.Success)
+            if (previousResults == null)
             {
-                throw new ArgumentException("Failed run cannot be null or successful!");
+                throw new ArgumentNullException("previousResults");
             }
 
-            var msg = string.Format(UnsuccessfulRunMessage, failedRun.Target.Location);
-            return new InconclusiveAnalysisResult(msg);
+            if (currentResults == null)
+            {
+                throw new ArgumentNullException("currentResults");
+            }
+
+            if (previousResults.Success && currentResults.Success)
+            {
+                throw new ArgumentException("Bad input: runs are successful! Unable to create the analysis result.");
+            }
+
+            string message;
+            if (!previousResults.Success && !currentResults.Success)
+            {
+                message = string.Format(BothTestRunsBadMessage, currentResults.Target.Location, previousResults.Target.Location);
+            }
+            else
+            {
+                message = string.Format(UnsuccessfulRunMessage, previousResults.Success ? currentResults.Target.Location : previousResults.Target.Location);
+            }
+
+            return new InconclusiveAnalysisResult(message);
         }
 
         /// <summary>
