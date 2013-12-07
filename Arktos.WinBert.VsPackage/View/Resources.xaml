@@ -1,4 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:Arktos.WinBert.VsPackage.ViewModel">
+    <DataTemplate DataType="{x:Type vm:InconclusiveAnalysisVm}">
+        <TextBlock>
+            Hello World
+        </TextBlock>
+    </DataTemplate>
     
+    <DataTemplate DataType="{x:Type vm:ErrorInfoVm}">
+        <TextBlock DataContext="{Binding Path=ErrorInfo}" />
+    </DataTemplate>
 </ResourceDictionary>

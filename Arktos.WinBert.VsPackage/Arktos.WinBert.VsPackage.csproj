@@ -158,7 +158,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModel\AnalysisViewModel.cs" />
+    <Compile Include="ViewModel\ErrorInfoVm.cs" />
+    <Compile Include="ViewModel\InconclusiveAnalysisVm.cs" />
+    <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="View\AnalysisViewToolWindow.cs" />
     <Compile Include="View\AnalysisView.xaml.cs">
       <DependentUpon>AnalysisView.xaml</DependentUpon>

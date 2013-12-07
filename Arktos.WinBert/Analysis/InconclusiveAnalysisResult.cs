@@ -1,6 +1,5 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
-
     /// <summary>
     /// Represents an inconclusive analysis result.
     /// </summary>

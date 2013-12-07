@@ -6,7 +6,7 @@
     /// <summary>
     /// Describes a run of the WinBert analysis engine.
     /// </summary>
-    public class AnalysisResult
+    public abstract class AnalysisResult
     {
         #region Fields & Constants
 

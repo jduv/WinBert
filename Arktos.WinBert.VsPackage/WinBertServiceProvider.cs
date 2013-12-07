@@ -1,16 +1,17 @@
 ﻿namespace Arktos.WinBert.VsPackage
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Windows.Forms;
-    using System.Xml;
     using Arktos.WinBert.RandoopIntegration;
     using Arktos.WinBert.Util;
     using Arktos.WinBert.VsPackage.ViewModel;
     using Arktos.WinBert.Xml;
     using EnvDTE;
     using EnvDTE80;
+    using GalaSoft.MvvmLight;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Windows.Forms;
+    using System.Xml;
 
     /// <summary>
     /// This class houses most of the logic for the Bert plug-in. This includes saving and loading solution
@@ -62,7 +63,7 @@
         /// <summary>
         /// Gets the analysis result.
         /// </summary>
-        public AnalysisViewModel AnalysisVM { get; private set; }
+        public ViewModelBase AnalysisVM { get; private set; }
 
         #endregion
 
@@ -258,7 +259,16 @@
                     if (currentBuild != null && previousBuild != null)
                     {
                         var tester = new RandoopTestManager(this.Config);
-                        this.AnalysisVM.Analysis = tester.Run(previousBuild, currentBuild);
+                        var results = tester.Run(previousBuild, currentBuild);
+
+                        if (results != null)
+                        {
+                            this.AnalysisVM = ViewModelFactory.Create(results);
+                        }
+                        else
+                        {
+                            this.AnalysisVM = null;
+                        }
                     }
                 }
             }
