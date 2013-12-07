@@ -1,7 +1,6 @@
 ﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using Arktos.WinBert.Analysis;
-    using GalaSoft.MvvmLight;
     using System;
 
     /// <summary>
@@ -20,21 +19,21 @@
         /// <returns>
         /// A VM capable of presenting the target view.
         /// </returns>
-        public static ViewModelBase Create(AnalysisResult result)
+        public static AnalysisVmBase Create(AnalysisResult result)
         {
             if (result == null)
             {
                 throw new ArgumentNullException("result");
             }
 
-            ViewModelBase vm;
+            AnalysisVmBase vm;
             if (result is InconclusiveAnalysisResult)
             {
                 vm = new InconclusiveAnalysisVm(result as InconclusiveAnalysisResult);
             }
             else
             {
-                vm = new ErrorInfoVm("Internal Error: No view model mapped to the target AnalysisResult implementation!");
+                vm = new AnalysisErrorInfoVm("Internal Error: No view model mapped to the target AnalysisResult implementation!");
             }
 
             return vm;

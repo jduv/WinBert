@@ -9,5 +9,16 @@
         <ResourceDictionary Source="Resources.xaml" />
     </UserControl.Resources>
     
-    <ContentControl DataContext="{Binding}" />
+    <TabControl ItemsSource="{Binding Path=AnalysisResults}">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding ProjectName}" />
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+        <TabControl.ContentTemplate>
+            <DataTemplate>
+                <ContentControl Content="{Binding}" />
+            </DataTemplate>
+        </TabControl.ContentTemplate>
+    </TabControl>
 </UserControl>

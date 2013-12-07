@@ -7,7 +7,7 @@
     /// A simple view model for displaying inconclusive analysis results as produced by the WinBert
     /// system.
     /// </summary>
-    public class InconclusiveAnalysisVm : ViewModelBase
+    public class InconclusiveAnalysisVm : AnalysisVmBase
     {
         #region Fields & Constants
 

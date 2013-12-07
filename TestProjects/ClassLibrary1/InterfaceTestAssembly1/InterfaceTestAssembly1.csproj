@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class2.cs" />
     <Compile Include="Interface3.cs" />
     <Compile Include="Interface2.cs" />
     <Compile Include="Interface1.cs" />

@@ -6,7 +6,6 @@
     using Arktos.WinBert.Xml;
     using EnvDTE;
     using EnvDTE80;
-    using GalaSoft.MvvmLight;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -44,6 +43,7 @@
         public WinBertServiceProvider(DTE2 dte)
         {
             this.buildDictionary = new Dictionary<string, BuildVersionManager>();
+            this.AnalysisVm = new AnalysisToolWindowVm();
 
             this.dte = dte;
             this.solutionEvents = dte.Events.SolutionEvents;
@@ -63,7 +63,7 @@
         /// <summary>
         /// Gets the analysis result.
         /// </summary>
-        public ViewModelBase AnalysisVM { get; private set; }
+        public AnalysisToolWindowVm AnalysisVm { get; private set; }
 
         #endregion
 
@@ -248,6 +248,7 @@
         {
             if (!this.buildFailed)
             {
+                this.AnalysisVm.Clear();
                 foreach (var manager in this.buildDictionary.Values)
                 {
                     // Grab a pointer to the most recent build
@@ -263,11 +264,7 @@
 
                         if (results != null)
                         {
-                            this.AnalysisVM = ViewModelFactory.Create(results);
-                        }
-                        else
-                        {
-                            this.AnalysisVM = null;
+                            this.AnalysisVm.AnalysisResults.Add(ViewModelFactory.Create(results));
                         }
                     }
                 }

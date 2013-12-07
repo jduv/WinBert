@@ -1,13 +1,13 @@
 ﻿namespace Arktos.WinBert.VsPackage
 {
-    using System;
-    using System.ComponentModel.Design;
-    using System.Runtime.InteropServices;
     using Arktos.WinBert.VsPackage.View;
     using EnvDTE80;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+    using System;
+    using System.ComponentModel.Design;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -36,20 +36,31 @@
         ///   initialization is the Initialize method.
         /// </summary>
         public WinBertVsPackage()
-        {            
+        {
         }
-        
+
         #endregion
 
         #region Properties
 
         /// <summary>
-        ///   Gets an instance of the WinBertServiceProvider for this package.
+        /// Gets an instance of the WinBertServiceProvider for this package.
         /// </summary>
         public WinBertServiceProvider WinBertServiceProvider
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets the tool window for the analysis engine. If one doesn't exist, it will create it. 
+        /// </summary>
+        public AnalysisViewToolWindow AnalysisWindow
+        {
+            get
+            {
+                return this.FindToolWindow(typeof(AnalysisViewToolWindow), 0, true) as AnalysisViewToolWindow;
+            }
         }
 
         #endregion
@@ -61,7 +72,7 @@
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
         protected override void Initialize()
-        {            
+        {
             base.Initialize();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
@@ -70,7 +81,7 @@
             {
                 // Create the command for the tool window
                 CommandID toolwndCommandID = new CommandID(
-                    GuidList.GuidWinBertVsPackageCmdSet, 
+                    GuidList.GuidWinBertVsPackageCmdSet,
                     (int)PkgCmdIDList.CmdIdBertAnalysisWindow);
                 MenuCommand menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
                 mcs.AddCommand(menuToolWin);
@@ -81,6 +92,13 @@
             if (dte2 != null)
             {
                 this.WinBertServiceProvider = new WinBertServiceProvider(dte2);
+            }
+
+            // Attempt to site the diata context for the analysis window.
+            var window = this.AnalysisWindow;
+            if (window != null)
+            {
+                window.AnalysisView.DataContext = this.WinBertServiceProvider.AnalysisVm;
             }
         }
 
@@ -95,7 +113,7 @@
         /// </summary>
         private void ShowToolWindow(object sender, EventArgs e)
         {
-            AnalysisViewToolWindow window = this.FindToolWindow(typeof(AnalysisViewToolWindow), 0, true) as AnalysisViewToolWindow;
+            var window = this.AnalysisWindow;
             if (window == null || window.Frame == null)
             {
                 throw new NotSupportedException(Resources.CanNotCreateWindow);
@@ -106,7 +124,6 @@
                 throw new NotSupportedException(Resources.ExtensionNotLoaded);
             }
 
-            window.AnalysisView.DataContext = this.WinBertServiceProvider.AnalysisVM;
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }

@@ -7,7 +7,7 @@ namespace Arktos.WinBert.VsPackage.ViewModel
     /// <summary>
     /// Handles displaying error information to the user.
     /// </summary>
-    public class ErrorInfoVm : ViewModelBase
+    public class AnalysisErrorInfoVm : AnalysisVmBase
     {
         #region Fields & Constants
 
@@ -18,12 +18,12 @@ namespace Arktos.WinBert.VsPackage.ViewModel
 
         #region Constructors & Destructors
 
-        public ErrorInfoVm(string message)
+        public AnalysisErrorInfoVm(string message)
         {
             this.ErrorInfo = message;
         }
 
-        public ErrorInfoVm(Exception exception)
+        public AnalysisErrorInfoVm(Exception exception)
         {
             this.ErrorInfo = exception.Message;
             this.Exception = exception;
