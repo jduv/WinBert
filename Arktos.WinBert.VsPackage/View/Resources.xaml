@@ -7,9 +7,8 @@
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type vm:SuccessfulAnalysisVm}">
-        <TextBlock>
-            Analysis Successful!
-        </TextBlock>
+        <DataGrid DataContext="{Binding Path=Differences}">
+        </DataGrid>
     </DataTemplate>
     
     <DataTemplate DataType="{x:Type vm:AnalysisErrorInfoVm}">

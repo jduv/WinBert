@@ -1,12 +1,7 @@
 ﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using GalaSoft.MvvmLight;
-    using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// This vm is responsible for holding the list of analysis results that will be rendered in the
@@ -14,6 +9,13 @@
     /// </summary>
     public class AnalysisToolWindowVm : ViewModelBase
     {
+        #region Fields & Constants
+
+        private int selectedIndex;
+        private ObservableCollection<ViewModelBase> analysisResults;
+
+        #endregion
+
         #region Constructors & Destructors
 
         public AnalysisToolWindowVm()
@@ -25,7 +27,21 @@
 
         #region Properties
 
-        public ObservableCollection<ViewModelBase> AnalysisResults { get; private set; }
+        /// <summary>
+        /// Gets or sets the list of analysis results view models to display.
+        /// </summary>
+        public ObservableCollection<ViewModelBase> AnalysisResults
+        {
+            get
+            {
+                return this.analysisResults;
+            }
+
+            private set
+            {
+                base.Set("AnalysisResults", ref analysisResults, value);
+            }
+        }
 
         #endregion
 

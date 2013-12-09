@@ -11,6 +11,7 @@
     </UserControl.Resources>
 
     <TabControl ItemsSource="{Binding Path=AnalysisResults}" 
+                SelectedIndex="3"
                 d:DataContext="{StaticResource ResourceKey=MockAnalysisVm}">
         <TabControl.ItemTemplate>
             <DataTemplate>

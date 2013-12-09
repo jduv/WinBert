@@ -1,7 +1,7 @@
-﻿
-namespace Arktos.WinBert.VsPackage.ViewModel
+﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using Arktos.WinBert.Analysis;
+    using System;
     using System.Collections.ObjectModel;
 
     /// <summary>
@@ -14,7 +14,11 @@ namespace Arktos.WinBert.VsPackage.ViewModel
         public SuccessfulAnalysisVm(SuccessfulAnalysisResult result, string projectName)
             : base(projectName)
         {
-            this.AnalysisResult = result;
+            if (result == null)
+            {
+                throw new ArgumentNullException("result");
+            }
+
             this.Differences = new ObservableCollection<BehavioralDifference>(result.Differences);
         }
 
@@ -26,11 +30,6 @@ namespace Arktos.WinBert.VsPackage.ViewModel
         /// Gets an observable collection of the differences presented by this vm.
         /// </summary>
         public ObservableCollection<BehavioralDifference> Differences { get; private set; }
-
-        /// <summary>
-        /// Gets the original AnalysisResult used to build this vm.
-        /// </summary>
-        public SuccessfulAnalysisResult AnalysisResult { get; private set; }
 
         #endregion
     }

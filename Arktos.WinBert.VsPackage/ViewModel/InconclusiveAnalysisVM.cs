@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using Arktos.WinBert.Analysis;
+    using System;
 
     /// <summary>
     /// A simple view model for displaying inconclusive analysis results as produced by the WinBert
@@ -8,18 +9,17 @@
     /// </summary>
     public class InconclusiveAnalysisVm : AnalysisVmBase
     {
-        #region Fields & Constants
-
-        private InconclusiveAnalysisResult result;
-
-        #endregion
-
         #region Constructors & Destructors
 
         public InconclusiveAnalysisVm(InconclusiveAnalysisResult result, string projectName)
             : base(projectName)
         {
-            this.result = result;
+            if (result == null)
+            {
+                throw new ArgumentNullException("result");
+            }
+
+            this.Message = result.Message;
         }
 
         #endregion
@@ -29,13 +29,7 @@
         /// <summary>
         /// Gets the result message.
         /// </summary>
-        public string Message
-        {
-            get
-            {
-                return this.result.Message;
-            }
-        }
+        public string Message { get; private set; }
 
         #endregion
     }
