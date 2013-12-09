@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-16"?>
+<?xml version="1.0"?>
 <WinBertAnalysisLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://arktos.org/WinBertAnalysisLogSchema.xsd">
   <TestExecutions>
     <TestExecution Id="0" Name="RandoopTest101">
