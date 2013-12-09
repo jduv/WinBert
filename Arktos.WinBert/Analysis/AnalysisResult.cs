@@ -10,13 +10,11 @@
     {
         #region Fields & Constants
 
-        private static readonly string NoDifferenceMessage = "Nothing interesting to report.";
-        private static readonly string ExceptionMessage = "An exception occurred. Message: {0}";
-        private static readonly string UnknownErrorMessage = "We're sorry, but an unknown error occurred.";
-        private static readonly string UnsuccessfulRunMessage = "A test run was unsuccessful! View logs for errors in the winbert root directory. Failed target location: " +
-            System.Environment.NewLine + System.Environment.NewLine + "{0}";
-        private static readonly string BothTestRunsBadMessage = "Both test runs were unsuccessful! View logs for errors in the winbert root directory. Failed target locations: " +
-            System.Environment.NewLine + System.Environment.NewLine + "{0}" + System.Environment.NewLine + "{1}";
+        public static readonly string NoDifferenceMessage = "Nothing interesting to report.";
+        public static readonly string ExceptionMessage = "An exception occurred. Message: ";
+        public static readonly string UnknownErrorMessage = "We're sorry, but an unknown error occurred.";
+        public static readonly string SingleRunUnsuccessfulMessage = "A test run was unsuccessful! View logs for errors in the winbert root directory. Failed target location: ";
+        public static readonly string BothRunsUnsuccessfulMessage = "Both test runs were unsuccessful! View logs for errors in the winbert root directory. Failed target locations: ";
 
         #endregion
 
@@ -43,17 +41,19 @@
 
             if (previousResults.Success && currentResults.Success)
             {
-                throw new ArgumentException("Bad input: runs are successful! Unable to create the analysis result.");
+                throw new ArgumentException("Bad input on unsuccessful test run factory method: both runs are successful!");
             }
 
             string message;
             if (!previousResults.Success && !currentResults.Success)
             {
-                message = string.Format(BothTestRunsBadMessage, currentResults.Target.Location, previousResults.Target.Location);
+                message = BothRunsUnsuccessfulMessage + System.Environment.NewLine + System.Environment.NewLine +
+                    currentResults.Target.Location + System.Environment.NewLine + previousResults.Target.Location;
             }
             else
             {
-                message = string.Format(UnsuccessfulRunMessage, previousResults.Success ? currentResults.Target.Location : previousResults.Target.Location);
+                message = SingleRunUnsuccessfulMessage + System.Environment.NewLine + System.Environment.NewLine +
+                        (previousResults.Success ? currentResults.Target.Location : previousResults.Target.Location);
             }
 
             return new InconclusiveAnalysisResult(message);
@@ -81,8 +81,13 @@
         /// </returns>
         public static AnalysisResult FromException(Exception exception)
         {
-            var msg = string.Format(ExceptionMessage, exception.Message);
-            return new InconclusiveAnalysisResult(msg);
+            if (exception == null)
+            {
+                throw new ArgumentNullException("exception");
+            }
+
+            var message = ExceptionMessage + exception.Message;
+            return new InconclusiveAnalysisResult(message);
         }
 
         /// <summary>
