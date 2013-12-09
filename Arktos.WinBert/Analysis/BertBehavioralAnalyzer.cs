@@ -87,6 +87,11 @@
 
         #region Private Methods
 
+        private static int CalculateDistance(TestExecution toCalculate, IDictionary<string, TypeDifferenceLookup> typeDifferenceLookup)
+        {
+            return 0;
+        }
+
         /// <summary>
         /// Loads the analysis log at the target path.
         /// </summary>
@@ -124,63 +129,19 @@
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
             var currentLog = LoadAnalysisLog(currentResults.PathToAnalysisLog);
 
-            // TODO: Fix me.
-            return new InconclusiveAnalysisResult("Valid Analysis!");
-        }
-
-        #endregion
-
-        #region Private Classes
-
-        /// <summary>
-        /// Small utiltity type representing a Type along with it's set of method names that
-        /// changed. Use this for fast lookup of type to method name relationships.
-        /// </summary>
-        private class TypeDifferenceLookup
-        {
-            #region Fields & Constants
-
-            private readonly HashSet<string> methodNames;
-
-            #endregion
-
-            #region Constructors & Destructors
-
-            public TypeDifferenceLookup(ITypeDifferenceResult typeDiff)
-            {
-                this.methodNames = new HashSet<string>();
-                foreach (var method in typeDiff.Methods)
+            // Join the two sets by test name.
+            var results = previousLog.TestExecutions.Join(
+                currentLog.TestExecutions,
+                previous => previous.Name,
+                current => current.Name,
+                (previous, current) =>
                 {
-                    this.methodNames.Add(method);
-                }
+                    return new BehavioralDifference();
+                }).OrderByDescending(x => x.Distance);
 
-                this.TypeName = typeDiff.FullName;
-            }
 
-            #endregion
-
-            #region Properties
-
-            /// <summary>
-            /// Gets the parent type's name.
-            /// </summary>
-            public string TypeName { get; private set; }
-
-            #endregion
-
-            #region Public Methods
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="methodSignature"></param>
-            /// <returns></returns>
-            public bool Contains(string methodSignature)
-            {
-                return this.methodNames.Contains(methodSignature);
-            }
-
-            #endregion
+            // TODO: Fix me.
+            return new SuccessfulAnalysisResult(results);
         }
 
         #endregion

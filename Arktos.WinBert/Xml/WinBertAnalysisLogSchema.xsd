@@ -54,7 +54,6 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="Instance" />
       <xs:enumeration value="Static" />
-      <xs:enumeration value="Ctor" />
     </xs:restriction>
   </xs:simpleType>
 

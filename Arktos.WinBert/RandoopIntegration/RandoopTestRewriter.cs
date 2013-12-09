@@ -1,16 +1,13 @@
 ﻿namespace Arktos.WinBert.RandoopIntegration
 {
+    using AppDomainToolkit;
+    using Arktos.WinBert.Extensions;
+    using Arktos.WinBert.Instrumentation;
     using Microsoft.Cci;
     using Microsoft.Cci.MutableCodeModel;
-    using Arktos.WinBert.Instrumentation;
-    using AppDomainToolkit;
     using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
     using System.Collections.Generic;
-    using Arktos.WinBert.Exceptions;
-    using Arktos.WinBert.Extensions;
+    using System.Linq;
 
     /// <summary>
     /// Class that rewrites a generated randoop test.

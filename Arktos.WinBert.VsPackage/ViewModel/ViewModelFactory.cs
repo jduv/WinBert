@@ -31,6 +31,10 @@
             {
                 vm = new InconclusiveAnalysisVm(result as InconclusiveAnalysisResult, projectName);
             }
+            else if (result is SuccessfulAnalysisResult)
+            {
+                vm = new SuccessfulAnalysisVm(result as SuccessfulAnalysisResult, projectName);
+            }
             else
             {
                 vm = new AnalysisErrorInfoVm("Internal Error: No view model mapped to the target AnalysisResult implementation!", projectName);

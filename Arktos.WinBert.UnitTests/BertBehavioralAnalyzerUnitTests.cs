@@ -8,6 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using System;
+    using System.IO;
 
     [TestClass]
     [DeploymentItem("test-analysis", "test-analysis")]
@@ -16,8 +17,8 @@
         #region Fields & Constants
 
         private static readonly string AnalysisDir = @"test-analysis\";
-        private static readonly string newAnalysisPath = AnalysisDir + "analysisNew.xml";
-        private static readonly string oldAnalysisPath = AnalysisDir + "analysisOld.xml";
+        private static readonly string NewAnalysisPath = AnalysisDir + "analysisNew.xml";
+        private static readonly string OldAnalysisPath = AnalysisDir + "analysisOld.xml";
 
         private Mock<IFileSystem> fileSystemMock;
         private Mock<IAssemblyTarget> targetMock;
@@ -34,6 +35,7 @@
         public void TestInit()
         {
             this.fileSystemMock = new Mock<IFileSystem>();
+            this.fileSystemMock.Setup(x => x.OpenRead(It.IsAny<string>())).Returns<string>(path => File.OpenRead(path));
             this.targetMock = new Mock<IAssemblyTarget>();
 
             this.differenceMock = new Mock<IAssemblyDifferenceResult>();
@@ -103,11 +105,21 @@
         }
 
         [TestMethod]
-        public void Analyze_UnuccessfulTestRunResult()
+        public void Analyze_SuccessfulTestRunResult()
         {
+            var previousResult = new Mock<ITestRunResult>();
+            previousResult.Setup(x => x.Success).Returns(true);
+            previousResult.Setup(x => x.PathToAnalysisLog).Returns(NewAnalysisPath);
+
+            var currentResult = new Mock<ITestRunResult>();
+            currentResult.Setup(x => x.Success).Returns(true);
+            currentResult.Setup(x => x.PathToAnalysisLog).Returns(OldAnalysisPath);
+
             var target = new BertBehavioralAnalyzer(this.fileSystemMock.Object);
-            var result = target.Analyze(this.differenceMock.Object, this.simpleUnsuccessfulTestResultMock.Object, this.simpleSuccessfulTestResultMock.Object);
-            // TODO: Write me.
+            var result = target.Analyze(this.differenceMock.Object, previousResult.Object, currentResult.Object);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(SuccessfulAnalysisResult));
         }
 
         #endregion
