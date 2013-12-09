@@ -8,7 +8,9 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
 
     [TestClass]
@@ -38,10 +40,10 @@
             this.fileSystemMock.Setup(x => x.OpenRead(It.IsAny<string>())).Returns<string>(path => File.OpenRead(path));
 
             this.differenceMock = new Mock<IAssemblyDifferenceResult>();
-            this.differenceMock.Setup(x => x.IsDifferent).Returns(true);
+            this.differenceMock.Setup(x => x.AreDifferences).Returns(true);
 
             this.noDifferenceMock = new Mock<IAssemblyDifferenceResult>();
-            this.noDifferenceMock.Setup(x => x.IsDifferent).Returns(false);
+            this.noDifferenceMock.Setup(x => x.AreDifferences).Returns(false);
 
             var simpleTargetMock = new Mock<IAssemblyTarget>();
             simpleTargetMock.Setup(x => x.Location).Returns(Assembly.GetExecutingAssembly().Location);
@@ -138,7 +140,7 @@
         public void Analyze_NoDifferences()
         {
             var noDiffMock = new Mock<IAssemblyDifferenceResult>();
-            noDiffMock.Setup(x => x.IsDifferent).Returns(false);
+            noDiffMock.Setup(x => x.AreDifferences).Returns(false);
 
             var target = new BertBehavioralAnalyzer(this.fileSystemMock.Object);
             var result = target.Analyze(
@@ -153,6 +155,18 @@
         [TestMethod]
         public void Analyze_SuccessfulRuns()
         {
+            // Mock out some type diff stuff. Correlates with sample analysis files.
+            var typeDiffMock = new Mock<ITypeDifferenceResult>();
+            typeDiffMock.Setup(x => x.AreDifferences).Returns(true);
+            typeDiffMock.Setup(x => x.FullName).Returns("InterfaceTestAssembly2.Class1");
+            typeDiffMock.Setup(x => x.Methods).Returns(new List<string>() { "InterfaceTestAssembly2.Class1.I1Bar" });
+            typeDiffMock.Setup(x => x.Name).Returns("Class1");
+
+            var diffMock = new Mock<IAssemblyDifferenceResult>();
+            diffMock.Setup(x => x.AreDifferences).Returns(true);
+            diffMock.Setup(x => x.ItemsCompared).Returns(1);
+            diffMock.Setup(x => x.TypeDifferences).Returns(new List<ITypeDifferenceResult>() { typeDiffMock.Object });
+
             var newAssemblyResult = new Mock<ITestRunResult>();
             newAssemblyResult.Setup(x => x.Success).Returns(true);
             newAssemblyResult.Setup(x => x.PathToAnalysisLog).Returns(NewAnalysisPath);
@@ -162,10 +176,25 @@
             oldAssemblyResult.Setup(x => x.PathToAnalysisLog).Returns(OldAnalysisPath);
 
             var target = new BertBehavioralAnalyzer(this.fileSystemMock.Object);
-            var result = target.Analyze(this.differenceMock.Object, oldAssemblyResult.Object, newAssemblyResult.Object);
+            var result = target.Analyze(diffMock.Object, oldAssemblyResult.Object, newAssemblyResult.Object);
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(SuccessfulAnalysisResult));
+
+            var typedResult = result as SuccessfulAnalysisResult;
+            Assert.IsTrue(typedResult.Differences.Count() > 0);
+
+            foreach (var diff in typedResult.Differences)
+            {
+                Assert.IsTrue(diff.AreDifferences);
+                Assert.IsNotNull(diff.TestName);
+                Assert.IsNotNull(diff.PreviousExecution);
+                Assert.IsNotNull(diff.CurrentExecution);
+                Assert.IsTrue(diff.MethodDifferences.Count() > 0);
+            }
+
+            // FIXME
+            Assert.Inconclusive();
         }
 
         #endregion

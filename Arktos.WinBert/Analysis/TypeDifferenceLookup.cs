@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
     using Arktos.WinBert.Differencing;
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -20,6 +21,11 @@
 
         public TypeDifferenceLookup(ITypeDifferenceResult typeDiff)
         {
+            if (typeDiff == null)
+            {
+                throw new ArgumentNullException("typeDiff");
+            }
+
             this.methodNames = new HashSet<string>();
             foreach (var method in typeDiff.Methods)
             {

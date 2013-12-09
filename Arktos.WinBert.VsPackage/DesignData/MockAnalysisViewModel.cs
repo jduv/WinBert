@@ -28,9 +28,6 @@
         {
             var diffs = new List<BehavioralDifference>()
             {
-               new BehavioralDifference(),
-               new BehavioralDifference(),
-               new BehavioralDifference()
             };
 
             return new SuccessfulAnalysisResult(diffs);

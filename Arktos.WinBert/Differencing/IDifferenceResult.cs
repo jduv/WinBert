@@ -10,7 +10,7 @@
         /// <summary>
         /// Gets a value indicating whether a difference exists.
         /// </summary>
-        bool IsDifferent { get; }
+        bool AreDifferences { get; }
 
         /// <summary>
         /// Gets the number of items compared.

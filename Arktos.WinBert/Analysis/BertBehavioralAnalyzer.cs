@@ -5,7 +5,6 @@
     using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -59,7 +58,7 @@
             }
 
             AnalysisResult result;
-            if (!diff.IsDifferent)
+            if (!diff.AreDifferences)
             {
                 // No difference between runs.
                 result = AnalysisResult.NoDifference();
@@ -86,11 +85,6 @@
         #endregion
 
         #region Private Methods
-
-        private static int CalculateDistance(TestExecution toCalculate, IDictionary<string, TypeDifferenceLookup> typeDifferenceLookup)
-        {
-            return 0;
-        }
 
         /// <summary>
         /// Loads the analysis log at the target path.
@@ -125,7 +119,7 @@
         /// </returns>
         private AnalysisResult Process(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
-            var typeDifferences = diff.TypeDifferences.ToDictionary(x => x.Name, y => new TypeDifferenceLookup(y));
+            var typeDifferences = diff.TypeDifferences.ToDictionary(x => x.FullName, y => new TypeDifferenceLookup(y));
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
             var currentLog = LoadAnalysisLog(currentResults.PathToAnalysisLog);
 
@@ -136,11 +130,9 @@
                 current => current.Name,
                 (previous, current) =>
                 {
-                    return new BehavioralDifference();
-                }).OrderByDescending(x => x.Distance);
+                    return new BehavioralDifference(previous, current, typeDifferences);
+                });
 
-
-            // TODO: Fix me.
             return new SuccessfulAnalysisResult(results);
         }
 

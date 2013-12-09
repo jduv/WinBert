@@ -145,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
+    <Compile Include="Analysis\MethodDifference.cs" />
+    <Compile Include="Analysis\ObjectDifference.cs" />
+    <Compile Include="Analysis\PrimitiveDifference.cs" />
     <Compile Include="Analysis\PropertyDifference.cs" />
     <Compile Include="Analysis\BehavioralDifference.cs" />
     <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="Analysis\ReturnValueDifference.cs" />
     <Compile Include="Analysis\SuccessfulAnalysisResult.cs" />
     <Compile Include="Analysis\TypeDifferenceLookup.cs" />
+    <Compile Include="Analysis\ValueDifference.cs" />
     <Compile Include="Differencing\AssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IAssemblyDifferenceResult.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />

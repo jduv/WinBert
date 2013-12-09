@@ -33,7 +33,7 @@
             var target = new AssemblyDifferenceResult(assembly, assembly, 0, null);
             Assert.AreEqual(0, target.ItemsCompared);
             Assert.IsNotNull(target.TypeDifferences);
-            Assert.IsFalse(target.IsDifferent);
+            Assert.IsFalse(target.AreDifferences);
             Assert.AreEqual(assembly.FullName, target.NewAssemblyTarget.FullName);
             Assert.AreSame(assembly.FullName, target.OldAssemblyTarget.FullName);
         }

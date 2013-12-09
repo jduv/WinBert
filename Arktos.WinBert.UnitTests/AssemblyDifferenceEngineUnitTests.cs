@@ -53,7 +53,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsTrue(actual.IsDifferent);
+            Assert.IsTrue(actual.AreDifferences);
             Assert.IsTrue(actual.TypeDifferences.Count() > 0);
         }
 
@@ -73,7 +73,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsFalse(actual.IsDifferent);
+            Assert.IsFalse(actual.AreDifferences);
             Assert.IsTrue(actual.TypeDifferences.Count() == 0);
         }
 
@@ -98,7 +98,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsFalse(actual.IsDifferent);
+            Assert.IsFalse(actual.AreDifferences);
         }
 
         [TestMethod]
@@ -122,7 +122,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsTrue(actual.IsDifferent);
+            Assert.IsTrue(actual.AreDifferences);
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsFalse(actual.IsDifferent);
+            Assert.IsFalse(actual.AreDifferences);
         }
 
         [TestMethod]
@@ -161,7 +161,7 @@
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
-            Assert.IsFalse(actual.IsDifferent);
+            Assert.IsFalse(actual.AreDifferences);
             Assert.AreEqual(0, actual.ItemsCompared);
             Assert.AreEqual(0, actual.TypeDifferences.Count());
         }

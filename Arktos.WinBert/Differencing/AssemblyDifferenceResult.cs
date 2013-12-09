@@ -53,7 +53,7 @@
         #region Properties
 
         /// <inheritdoc />
-        public bool IsDifferent
+        public bool AreDifferences
         {
             get
             {

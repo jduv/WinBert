@@ -123,7 +123,7 @@
         {
             AnalysisResult result = null;
             var diff = this.Diff(previous, current);
-            if (diff != null && diff.IsDifferent)
+            if (diff != null && diff.AreDifferences)
             {
                 result = this.ExecuteStack(diff);
             }

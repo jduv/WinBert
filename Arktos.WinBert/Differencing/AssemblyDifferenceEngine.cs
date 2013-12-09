@@ -81,7 +81,7 @@
                     var oldType = oldTypes[newType.Name];
                     var typeDiff = this.typeDiffer.Diff(oldType, newType);
 
-                    if (typeDiff.IsDifferent)
+                    if (typeDiff.AreDifferences)
                     {
                         typeDiffs.Add(typeDiff);
                     }
