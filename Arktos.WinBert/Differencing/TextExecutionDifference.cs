@@ -9,7 +9,7 @@
     /// test execution set that spawned it, the set of which methods inside each that will be used to create 
     /// method differences. These method differences are what we are mainly interested in for the Bert analysis.
     /// </summary>
-    public class TestExecutionDifference
+    public class TestExecutionDifference : IDifferenceResult
     {
         #region Constructors & Destructors
 

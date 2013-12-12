@@ -10,7 +10,8 @@
     /// truly represent a 'diff' between the two types, as we are only interested in the methods inside
     /// the two types that 1) have the same signature and 2) have a different body. This class should always 
     /// be marked serializable to avoid issues with app domain lifecycles. Never pass the raw types, 
-    /// however back and forth across application domains--you'll pollute the current app domain.
+    /// however back and forth across application domains--you'll pollute the current app domain. An instance of
+    /// this class should be immutable, hence the old school ctor design.
     /// </summary>
     [Serializable]
     public sealed class TypeDifference : ITypeDifference

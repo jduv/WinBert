@@ -23,7 +23,7 @@ namespace InterfaceTestAssembly2
         public string I1Boo()
         {
             I1Foo();
-            return "Boo";
+            return "Bo0op";
         }
 
         public void simpleTest(int value) {

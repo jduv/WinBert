@@ -13,19 +13,13 @@
     {
         #region Fields & Constants
 
-        private readonly IList<DiffIgnoreTarget> ignoreTargets;
+        private readonly IEnumerable<DiffIgnoreTarget> ignoreTargets;
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the BertTypeDifferenceEngine class.
-        /// </summary>
-        /// <param name="ignoreTargets">
-        /// A list of ignore targets.
-        /// </param>
-        public TypeDiffer(DiffIgnoreTarget[] ignoreTargets)
+        public TypeDiffer(IEnumerable<DiffIgnoreTarget> ignoreTargets)
         {
             if (ignoreTargets == null)
             {
@@ -110,7 +104,10 @@
                 var firstBodyBits = first.GetILAsByteArray();
                 var secondBodyBits = second.GetILAsByteArray();
 
-                if (firstBodyBits.Length != secondBodyBits.Length)
+                // Stack size, body bits length, and local signature metadata might be different.
+                if (firstBodyBits.Length != secondBodyBits.Length ||
+                    first.MaxStackSize != second.MaxStackSize ||
+                    first.LocalSignatureMetadataToken != second.LocalSignatureMetadataToken)
                 {
                     areDifferent = true;
                 }

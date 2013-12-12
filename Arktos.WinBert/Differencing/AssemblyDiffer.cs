@@ -16,28 +16,19 @@
     {
         #region Fields & Constants
 
-        private readonly IList<DiffIgnoreTarget> ignoreTargets = null;
+        private readonly IEnumerable<DiffIgnoreTarget> ignoreTargets = null;
         private readonly TypeDiffer typeDiffer = null;
 
         #endregion
 
         #region Constructors & Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the AssemblyDifferenceEngine class.
-        /// </summary>
         public AssemblyDiffer()
             : this(new DiffIgnoreTarget[0])
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the BertAssemblyDifferenceEngine class.
-        /// </summary>
-        /// <param name="ignoreTargets">
-        /// A list of ignore targets.
-        /// </param>
-        public AssemblyDiffer(DiffIgnoreTarget[] ignoreTargets)
+        public AssemblyDiffer(IEnumerable<DiffIgnoreTarget> ignoreTargets)
         {
             if (ignoreTargets == null)
             {
