@@ -6,14 +6,14 @@
     /// <summary>
     /// Defines the contract for a difference result for an assembly.
     /// </summary>
-    public interface IAssemblyDifferenceResult : IDifferenceResult
+    public interface IAssemblyDifference : IDifferenceResult
     {
         #region Properties
 
         /// <summary>
         ///   Gets a list of type differences for the assembly.
         /// </summary>
-        IEnumerable<ITypeDifferenceResult> TypeDifferences { get; }
+        IEnumerable<ITypeDifference> TypeDifferences { get; }
 
         /// <summary>
         /// Gets the new assembly target.

@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using Arktos.WinBert.Analysis;
+    using Arktos.WinBert.Differencing;
     using System;
     using System.Collections.ObjectModel;
 
@@ -19,7 +20,7 @@
                 throw new ArgumentNullException("result");
             }
 
-            this.Differences = new ObservableCollection<BehavioralDifference>(result.Differences);
+            this.Differences = new ObservableCollection<TestExecutionDifference>(result.Differences);
         }
 
         #endregion
@@ -29,7 +30,7 @@
         /// <summary>
         /// Gets an observable collection of the differences presented by this vm.
         /// </summary>
-        public ObservableCollection<BehavioralDifference> Differences { get; private set; }
+        public ObservableCollection<TestExecutionDifference> Differences { get; private set; }
 
         #endregion
     }

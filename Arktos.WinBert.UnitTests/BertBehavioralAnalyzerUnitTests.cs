@@ -26,8 +26,8 @@
         private Mock<IFileSystem> fileSystemMock;
         private Mock<ITestRunResult> simpleSuccessfulTestResultMock;
         private Mock<ITestRunResult> simpleUnsuccessfulTestResultMock;
-        private Mock<IAssemblyDifferenceResult> differenceMock;
-        private Mock<IAssemblyDifferenceResult> noDifferenceMock;
+        private Mock<IAssemblyDifference> differenceMock;
+        private Mock<IAssemblyDifference> noDifferenceMock;
 
         #endregion
 
@@ -39,10 +39,10 @@
             this.fileSystemMock = new Mock<IFileSystem>();
             this.fileSystemMock.Setup(x => x.OpenRead(It.IsAny<string>())).Returns<string>(path => File.OpenRead(path));
 
-            this.differenceMock = new Mock<IAssemblyDifferenceResult>();
+            this.differenceMock = new Mock<IAssemblyDifference>();
             this.differenceMock.Setup(x => x.AreDifferences).Returns(true);
 
-            this.noDifferenceMock = new Mock<IAssemblyDifferenceResult>();
+            this.noDifferenceMock = new Mock<IAssemblyDifference>();
             this.noDifferenceMock.Setup(x => x.AreDifferences).Returns(false);
 
             var simpleTargetMock = new Mock<IAssemblyTarget>();
@@ -139,7 +139,7 @@
         [TestMethod]
         public void Analyze_NoDifferences()
         {
-            var noDiffMock = new Mock<IAssemblyDifferenceResult>();
+            var noDiffMock = new Mock<IAssemblyDifference>();
             noDiffMock.Setup(x => x.AreDifferences).Returns(false);
 
             var target = new BertBehavioralAnalyzer(this.fileSystemMock.Object);
@@ -156,16 +156,15 @@
         public void Analyze_SuccessfulRuns()
         {
             // Mock out some type diff stuff. Correlates with sample analysis files.
-            var typeDiffMock = new Mock<ITypeDifferenceResult>();
+            var typeDiffMock = new Mock<ITypeDifference>();
             typeDiffMock.Setup(x => x.AreDifferences).Returns(true);
             typeDiffMock.Setup(x => x.FullName).Returns("InterfaceTestAssembly2.Class1");
             typeDiffMock.Setup(x => x.Methods).Returns(new List<string>() { "InterfaceTestAssembly2.Class1.I1Bar" });
             typeDiffMock.Setup(x => x.Name).Returns("Class1");
 
-            var diffMock = new Mock<IAssemblyDifferenceResult>();
+            var diffMock = new Mock<IAssemblyDifference>();
             diffMock.Setup(x => x.AreDifferences).Returns(true);
-            diffMock.Setup(x => x.ItemsCompared).Returns(1);
-            diffMock.Setup(x => x.TypeDifferences).Returns(new List<ITypeDifferenceResult>() { typeDiffMock.Object });
+            diffMock.Setup(x => x.TypeDifferences).Returns(new List<ITypeDifference>() { typeDiffMock.Object });
 
             var newAssemblyResult = new Mock<ITestRunResult>();
             newAssemblyResult.Setup(x => x.Success).Returns(true);

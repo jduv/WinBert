@@ -1,12 +1,12 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using System;
-    using System.Linq;
-    using System.IO;
-    using System.Reflection;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
 
     [TestClass]
     [DeploymentItem(@"test-assembly-files\", @"test-assembly-files\")]
@@ -34,7 +34,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public void Ctor_NullIgnoreTargets()
         {
-            var target = new AssemblyDifferenceEngine(null);
+            var target = new AssemblyDiffer(null);
         }
 
         #endregion
@@ -44,11 +44,11 @@
         [TestMethod]
         public void Diff_DifferentAssemblies_Difference()
         {
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine();
+            AssemblyDiffer target = new AssemblyDiffer();
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifference actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
@@ -64,11 +64,11 @@
             DiffIgnoreTarget target0 = new DiffIgnoreTarget(DiffIgnoreType.Type, "BankAccount.BankAccount");
             targets[0] = target0;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
+            AssemblyDiffer target = new AssemblyDiffer(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifference actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
@@ -89,11 +89,11 @@
             DiffIgnoreTarget target1 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
+            AssemblyDiffer target = new AssemblyDiffer(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifference actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
@@ -113,11 +113,11 @@
             DiffIgnoreTarget target1 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Deposit");
             targets[1] = target1;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
+            AssemblyDiffer target = new AssemblyDiffer(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifference actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
@@ -137,11 +137,11 @@
             DiffIgnoreTarget target1 = new DiffIgnoreTarget(DiffIgnoreType.Method, "Withdraw");
             targets[1] = target1;
 
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine(targets);
+            AssemblyDiffer target = new AssemblyDiffer(targets);
             Assembly oldObject = this.LoadAssembly(diffAssembly1Path);
             Assembly newObject = this.LoadAssembly(diffAssembly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifference actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
@@ -152,17 +152,16 @@
         [TestMethod]
         public void Diff_InterfacesOnly_Ignored()
         {
-            AssemblyDifferenceEngine target = new AssemblyDifferenceEngine();
+            AssemblyDiffer target = new AssemblyDiffer();
             Assembly oldObject = this.LoadAssembly(interfacesOnly1Path);
             Assembly newObject = this.LoadAssembly(interfacesOnly2Path);
 
-            IAssemblyDifferenceResult actual = target.Diff(oldObject, newObject);
+            IAssemblyDifference actual = target.Diff(oldObject, newObject);
 
             Assert.IsNotNull(actual);
             Assert.IsNotNull(actual.OldAssemblyTarget);
             Assert.IsNotNull(actual.NewAssemblyTarget);
             Assert.IsFalse(actual.AreDifferences);
-            Assert.AreEqual(0, actual.ItemsCompared);
             Assert.AreEqual(0, actual.TypeDifferences.Count());
         }
 

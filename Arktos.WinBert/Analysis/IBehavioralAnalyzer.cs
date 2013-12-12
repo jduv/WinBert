@@ -26,7 +26,7 @@
         /// <returns>
         /// An analysis result.
         /// </returns>
-        AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults);
+        AnalysisResult Analyze(IAssemblyDifference diff, ITestRunResult previousResults, ITestRunResult currentResults);
 
         #endregion
     }

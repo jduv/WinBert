@@ -40,7 +40,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
+        public AnalysisResult Analyze(IAssemblyDifference diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
             if (diff == null)
             {
@@ -117,7 +117,7 @@
         /// <returns>
         /// Returns an analysis result.
         /// </returns>
-        private AnalysisResult Process(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
+        private AnalysisResult Process(IAssemblyDifference diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
             var typeDifferences = diff.TypeDifferences.ToDictionary(x => x.FullName, y => new TypeDifferenceLookup(y));
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
@@ -130,7 +130,7 @@
                 current => current.Name,
                 (previous, current) =>
                 {
-                    return new BehavioralDifference(previous, current, typeDifferences);
+                    return new TestExecutionDifference(previous, current, typeDifferences);
                 });
 
             return new SuccessfulAnalysisResult(results);

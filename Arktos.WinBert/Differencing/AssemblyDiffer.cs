@@ -1,23 +1,23 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
+    using Arktos.WinBert.Xml;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Arktos.WinBert.Xml;
 
     /// <summary>
     /// This simple difference engine will take in paths to two assemblies and figure out the difference between them.
     /// This object is remotable into other application domains so as to prevent DLL hell. It *will* need to load both
     /// assemblies into the current application domain in order to properly perform the diff, so it's best to remote this.
     /// </summary>
-    public sealed class AssemblyDifferenceEngine : MarshalByRefObject,
-        IDifferenceEngine<Assembly, IAssemblyDifferenceResult>
+    public sealed class AssemblyDiffer : MarshalByRefObject,
+        IDifferenceEngine<Assembly, IAssemblyDifference>
     {
         #region Fields & Constants
 
         private readonly IList<DiffIgnoreTarget> ignoreTargets = null;
-        private readonly TypeDifferenceEngine typeDiffer = null;
+        private readonly TypeDiffer typeDiffer = null;
 
         #endregion
 
@@ -26,7 +26,7 @@
         /// <summary>
         /// Initializes a new instance of the AssemblyDifferenceEngine class.
         /// </summary>
-        public AssemblyDifferenceEngine()
+        public AssemblyDiffer()
             : this(new DiffIgnoreTarget[0])
         {
         }
@@ -37,14 +37,14 @@
         /// <param name="ignoreTargets">
         /// A list of ignore targets.
         /// </param>
-        public AssemblyDifferenceEngine(DiffIgnoreTarget[] ignoreTargets)
+        public AssemblyDiffer(DiffIgnoreTarget[] ignoreTargets)
         {
             if (ignoreTargets == null)
             {
                 throw new ArgumentNullException("ignoreTargets");
             }
 
-            this.typeDiffer = new TypeDifferenceEngine(ignoreTargets);
+            this.typeDiffer = new TypeDiffer(ignoreTargets);
             this.ignoreTargets = ignoreTargets.Where(x => x.Type == DiffIgnoreType.Type).ToList();
         }
 
@@ -53,7 +53,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public IAssemblyDifferenceResult Diff(Assembly oldObject, Assembly newObject)
+        public IAssemblyDifference Diff(Assembly oldObject, Assembly newObject)
         {
             if (oldObject == null)
             {
@@ -66,18 +66,16 @@
             }
 
             // Only enumerate public types.
-            int count = 0;
-            var typeDiffs = new List<ITypeDifferenceResult>();
-            var oldTypes = oldObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && 
+            var typeDiffs = new List<ITypeDifference>();
+            var oldTypes = oldObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) &&
                 !x.IsInterface && x.Attributes.HasFlag(TypeAttributes.Public)).ToDictionary(x => x.Name);
-            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) && 
+            var newTypes = newObject.GetTypes().Where(x => !this.ignoreTargets.Any(y => y.Name.Equals(x.FullName)) &&
                 !x.IsInterface && x.Attributes.HasFlag(TypeAttributes.Public)).ToList();
 
             foreach (var newType in newTypes)
             {
                 if (oldTypes.ContainsKey(newType.Name))
                 {
-                    count++;
                     var oldType = oldTypes[newType.Name];
                     var typeDiff = this.typeDiffer.Diff(oldType, newType);
 
@@ -88,7 +86,7 @@
                 }
             }
 
-            return new AssemblyDifferenceResult(oldObject, newObject, count, typeDiffs);
+            return new AssemblyDifference(oldObject, newObject, typeDiffs);
         }
 
         #endregion

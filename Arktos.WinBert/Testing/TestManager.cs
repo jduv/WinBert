@@ -144,7 +144,7 @@
         /// <returns>
         /// An AnalysisResult.
         /// </returns>
-        protected virtual AnalysisResult ExecuteStack(IAssemblyDifferenceResult diff)
+        protected virtual AnalysisResult ExecuteStack(IAssemblyDifference diff)
         {
             if (diff == null)
             {
@@ -190,7 +190,7 @@
         /// <returns>
         /// An analysis result.
         /// </returns>
-        protected virtual AnalysisResult Analyze(IAssemblyDifferenceResult diff, ITestRunResult previousResults, ITestRunResult currentResults)
+        protected virtual AnalysisResult Analyze(IAssemblyDifference diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
             if (diff == null)
             {
@@ -224,7 +224,7 @@
         /// <returns>
         /// The assembly difference result.
         /// </returns>
-        protected IAssemblyDifferenceResult Diff(Build previous, Build current)
+        protected IAssemblyDifference Diff(Build previous, Build current)
         {
             if (previous == null)
             {
@@ -257,7 +257,7 @@
                         var oldAssembly = loader.LoadAssembly(LoadMethod.LoadFile, previousTargetPath);
                         var newAssembly = loader.LoadAssembly(LoadMethod.LoadFile, currentTargetPath);
 
-                        var differ = new AssemblyDifferenceEngine(ignoreTargets);
+                        var differ = new AssemblyDiffer(ignoreTargets);
                         return differ.Diff(oldAssembly, newAssembly);
                     });
             }

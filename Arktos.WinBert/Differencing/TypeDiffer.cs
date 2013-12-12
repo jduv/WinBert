@@ -1,15 +1,15 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
+    using Arktos.WinBert.Xml;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Arktos.WinBert.Xml;
 
     /// <summary>
     /// This simple type differencing engine will take two types and figure out the difference between them.
     /// </summary>
-    public sealed class TypeDifferenceEngine : MarshalByRefObject, IDifferenceEngine<Type, ITypeDifferenceResult>
+    public sealed class TypeDiffer : MarshalByRefObject, IDifferenceEngine<Type, ITypeDifference>
     {
         #region Fields & Constants
 
@@ -25,7 +25,7 @@
         /// <param name="ignoreTargets">
         /// A list of ignore targets.
         /// </param>
-        public TypeDifferenceEngine(DiffIgnoreTarget[] ignoreTargets)
+        public TypeDiffer(DiffIgnoreTarget[] ignoreTargets)
         {
             if (ignoreTargets == null)
             {
@@ -51,9 +51,9 @@
         /// </param>
         /// <returns>
         /// An IDifferenceResult implementation that contains all the differences between the target types in
-        /// a hierarchical manner. <see cref="TypeDifferenceResult"/>
+        /// a hierarchical manner. <see cref="TypeDifference"/>
         /// </returns>
-        public ITypeDifferenceResult Diff(Type oldObject, Type newObject)
+        public ITypeDifference Diff(Type oldObject, Type newObject)
         {
             if (oldObject == null)
             {
@@ -64,11 +64,11 @@
                 throw new ArgumentNullException("newObject");
             }
 
-            var diffResult = TypeDifferenceResult.FromType(newObject);
             var oldTypeDict = oldObject.GetMethods().Where(x => x.DeclaringType.Name == oldObject.Name).ToDictionary(x => x.Name);
-            var newTypes = newObject.GetMethods().Where(x => x.DeclaringType.Name == newObject.Name && 
+            var newTypes = newObject.GetMethods().Where(x => x.DeclaringType.Name == newObject.Name &&
                 !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
 
+            var methods = new List<string>();
             foreach (var method in newTypes)
             {
                 if (oldTypeDict.ContainsKey(method.Name))
@@ -76,12 +76,12 @@
                     var toCompare = oldTypeDict[method.Name];
                     if (AreDifferent(method.GetMethodBody(), toCompare.GetMethodBody()))
                     {
-                        diffResult.Methods.Add(method.Name);
+                        methods.Add(method.Name);
                     }
                 }
             }
 
-            return diffResult;
+            return new TypeDifference(newObject, methods);
         }
 
         #endregion

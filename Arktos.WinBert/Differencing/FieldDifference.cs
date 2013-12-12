@@ -1,5 +1,4 @@
-﻿
-namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
     public class FieldDifference
     {

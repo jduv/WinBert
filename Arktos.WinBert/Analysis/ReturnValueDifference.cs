@@ -1,6 +1,6 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
-    public class ReturnValueDifference
+    public class ReturnValueDifference : ValueDifference
     {
         public Xml.MethodCallReturnValue OldReturnValue { get; private set; }
 

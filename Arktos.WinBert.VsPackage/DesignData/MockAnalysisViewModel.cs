@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.VsPackage.DesignData
 {
     using Arktos.WinBert.Analysis;
+    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.VsPackage.ViewModel;
     using System;
     using System.Collections.Generic;
@@ -24,9 +25,16 @@
 
         #region Private Methods
 
+        /// <summary>
+        /// Factory method that creates a successful analysis result for consumption of the UI design
+        /// time view.
+        /// </summary>
+        /// <returns>
+        /// A mock successful analysis result. Used for design time tweaks of the UI.
+        /// </returns>
         private static SuccessfulAnalysisResult CreateSuccessfulAnalysisResult()
         {
-            var diffs = new List<BehavioralDifference>()
+            var diffs = new List<TestExecutionDifference>()
             {
             };
 

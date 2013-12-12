@@ -1,13 +1,17 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
-    using Arktos.WinBert.Xml;
     using System;
 
-    public class MethodDifference
+    /// <summary>
+    /// Represents and enumerates the differences between two method calls from the XML namespace.
+    /// This instance will compute the difference between post-call states of the object upon which the
+    /// target method is invoked and report back a list of those differences.
+    /// </summary>
+    public class MethodCallDifference
     {
         #region Constructors & Destructors
 
-        public MethodDifference(MethodCall previousCall, MethodCall currentCall, TypeDifferenceLookup diffLookup)
+        public MethodCallDifference(Xml.MethodCall previousCall, Xml.MethodCall currentCall, TypeDifferenceLookup diffLookup)
         {
             if (previousCall == null)
             {
@@ -48,16 +52,37 @@
 
         #region Properties
 
+        /// <summary>
+        /// Gets the distance value of this method call to one that has changed in a dynamic call graph produced
+        /// by this method call.
+        /// </summary>
         public int? Distance { get; private set; }
 
+        /// <summary>
+        /// Gets the difference between the post-call objects in the old and new test executions.
+        /// </summary>
         public ObjectDifference ObjectDifference { get; private set; }
 
+        /// <summary>
+        /// Gets the difference between the return values. This could be a primitive difference or
+        /// an object difference depending on what's returned by the method call.
+        /// </summary>
         public ValueDifference ReturnValueDifference { get; private set; }
 
-        public MethodCall PreviousCall { get; private set; }
+        /// <summary>
+        /// Gets the previous method call.
+        /// </summary>
+        public Xml.MethodCall PreviousCall { get; private set; }
 
-        public MethodCall CurrentCall { get; private set; }
+        /// <summary>
+        /// Gets the current method call.
+        /// </summary>
+        public Xml.MethodCall CurrentCall { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether there are some discreet differences between the two method
+        /// calls.
+        /// </summary>
         public bool AreDifferences
         {
             get
@@ -70,7 +95,7 @@
 
         #region Private Methods
 
-        private static int? ComputeDistance(MethodCall execution, TypeDifferenceLookup lookup)
+        private static int? ComputeDistance(Xml.MethodCall execution, TypeDifferenceLookup lookup)
         {
             if (lookup.Contains(execution.Signature))
             {

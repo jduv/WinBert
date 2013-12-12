@@ -12,11 +12,6 @@
         /// </summary>
         bool AreDifferences { get; }
 
-        /// <summary>
-        /// Gets the number of items compared.
-        /// </summary>
-        int ItemsCompared { get; }
-
         #endregion
     }
 }

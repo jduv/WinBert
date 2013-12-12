@@ -1,10 +1,10 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Reflection;
     using AppDomainToolkit;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// This class represents a difference result between two assemblies. This class should always be marked as
@@ -12,7 +12,7 @@
     /// forth across application domains--you'll pollute the current app domain.
     /// </summary>
     [Serializable]
-    public sealed class AssemblyDifferenceResult : IAssemblyDifferenceResult
+    public sealed class AssemblyDifference : IAssemblyDifference
     {
         #region Constructors & Destructors
 
@@ -31,7 +31,7 @@
         /// <param name="typeDiffs">
         /// A list of type difference.
         /// </param>
-        public AssemblyDifferenceResult(Assembly oldAssembly, Assembly newAssembly, int itemsCompared, IList<ITypeDifferenceResult> typeDiffs)
+        public AssemblyDifference(Assembly oldAssembly, Assembly newAssembly, IList<ITypeDifference> typeDiffs)
         {
             if (oldAssembly == null)
             {
@@ -45,7 +45,7 @@
 
             this.OldAssemblyTarget = AssemblyTarget.FromAssembly(oldAssembly);
             this.NewAssemblyTarget = AssemblyTarget.FromAssembly(newAssembly);
-            this.TypeDifferences = typeDiffs ?? new List<ITypeDifferenceResult>();
+            this.TypeDifferences = typeDiffs ?? new List<ITypeDifference>();
         }
 
         #endregion
@@ -62,16 +62,13 @@
         }
 
         /// <inheritdoc />
-        public int ItemsCompared { get; private set; }
-
-        /// <inheritdoc />
         public IAssemblyTarget NewAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
         public IAssemblyTarget OldAssemblyTarget { get; private set; }
 
         /// <inheritdoc />
-        public IEnumerable<ITypeDifferenceResult> TypeDifferences { get; private set; }
+        public IEnumerable<ITypeDifference> TypeDifferences { get; private set; }
 
         #endregion
     }

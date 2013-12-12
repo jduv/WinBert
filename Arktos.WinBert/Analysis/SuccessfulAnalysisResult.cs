@@ -1,12 +1,16 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents a successful analysis result.
+    /// </summary>
     public class SuccessfulAnalysisResult : AnalysisResult
     {
         #region Constructors & Destructors
 
-        public SuccessfulAnalysisResult(IEnumerable<BehavioralDifference> differences)
+        public SuccessfulAnalysisResult(IEnumerable<TestExecutionDifference> differences)
         {
             this.Differences = differences;
         }
@@ -15,7 +19,10 @@
 
         #region Properties
 
-        public IEnumerable<BehavioralDifference> Differences { get; private set; }
+        /// <summary>
+        /// Gets the list of differences for view.
+        /// </summary>
+        public IEnumerable<TestExecutionDifference> Differences { get; private set; }
 
         #endregion
     }

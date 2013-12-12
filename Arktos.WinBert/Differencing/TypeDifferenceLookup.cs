@@ -1,6 +1,5 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
-    using Arktos.WinBert.Differencing;
     using System;
     using System.Collections.Generic;
 
@@ -19,7 +18,7 @@
 
         #region Constructors & Destructors
 
-        public TypeDifferenceLookup(ITypeDifferenceResult typeDiff)
+        public TypeDifferenceLookup(ITypeDifference typeDiff)
         {
             if (typeDiff == null)
             {

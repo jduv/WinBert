@@ -1,6 +1,5 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
-    using Arktos.WinBert.Util;
     using Arktos.WinBert.Xml;
     using System;
     using System.IO;
@@ -18,7 +17,6 @@
 
         private static readonly object lockObj = new object();
         private static ITestStateRecorder recorder;
-        private static IFileSystem fileSystem;
 
         #endregion
 
@@ -33,7 +31,6 @@
             // recorder. This won't include any ignore targets.
             var methodDumper = new MethodCallDumper();
             recorder = new TestStateRecorder(methodDumper);
-            fileSystem = new FileSystem();
         }
 
         #endregion
@@ -63,32 +60,6 @@
                     else
                     {
                         recorder = value;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the file system implementation. Primarly exists as a test seam.
-        /// </summary>
-        public static IFileSystem FileSystem
-        {
-            get
-            {
-                return fileSystem;
-            }
-
-            set
-            {
-                lock (lockObj)
-                {
-                    if (value == null)
-                    {
-                        throw new ArgumentNullException("FileSystem");
-                    }
-                    else
-                    {
-                        fileSystem = value;
                     }
                 }
             }
