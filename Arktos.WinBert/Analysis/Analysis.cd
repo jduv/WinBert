@@ -7,20 +7,6 @@
       <FileName>Analysis\AnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Arktos.WinBert.Analysis.PropertyDifference">
-    <Position X="3" Y="8.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAgAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Analysis\PropertyDifference.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Arktos.WinBert.Analysis.BehavioralDifference">
-    <Position X="0.5" Y="6.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAEACAAAAAAAAAAAAAAACAAAAAEQBAAAA=</HashCode>
-      <FileName>Analysis\BehavioralDifference.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Arktos.WinBert.Analysis.BertBehavioralAnalyzer" BaseTypeListCollapsed="true">
     <Position X="9.25" Y="0.5" Width="2.75" />
     <TypeIdentifier>
@@ -29,13 +15,6 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Arktos.WinBert.Analysis.FieldDifference">
-    <Position X="3" Y="6.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
-      <FileName>Analysis\FieldDifference.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Arktos.WinBert.Analysis.InconclusiveAnalysisResult">
     <Position X="4.75" Y="4" Width="2.25" />
     <TypeIdentifier>
@@ -43,46 +22,11 @@
       <FileName>Analysis\InconclusiveAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Arktos.WinBert.Analysis.ReturnValueDifference">
-    <Position X="8.75" Y="10.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
-      <FileName>Analysis\ReturnValueDifference.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Arktos.WinBert.Analysis.TypeDifferenceLookup">
-    <Position X="8.5" Y="4.5" Width="2" />
-    <TypeIdentifier>
-      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAQAAA=</HashCode>
-      <FileName>Analysis\TypeDifferenceLookup.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Arktos.WinBert.Analysis.SuccessfulAnalysisResult">
     <Position X="0.5" Y="4.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
       <FileName>Analysis\SuccessfulAnalysisResult.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Arktos.WinBert.Analysis.ValueDifference">
-    <Position X="6.5" Y="8.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Analysis\ValueDifference.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Arktos.WinBert.Analysis.ObjectDifference">
-    <Position X="4.5" Y="10.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Analysis\ObjectDifference.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Arktos.WinBert.Analysis.PrimitiveDifference">
-    <Position X="6.5" Y="10.5" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Analysis\PrimitiveDifference.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="Arktos.WinBert.Analysis.IBehavioralAnalyzer">

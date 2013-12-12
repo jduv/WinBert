@@ -1,8 +1,8 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
+    using Arktos.WinBert.Extensions;
     using System;
     using System.Collections.Generic;
-    using Arktos.WinBert.Extensions;
 
     /// <summary>
     /// Logs method calls of various types. In essence here we have factory methods for Xml.MethodCall
@@ -49,7 +49,7 @@
             {
                 Id = id,
                 Signature = signature,
-                Type = Xml.MethodCallType.Instance,
+                CallType = Xml.MethodCallType.Instance,
                 PostCallInstance = this.objectDumper.DumpObject(target),
                 DynamicCallGraph = new List<Xml.CallGraphNode>()
             };
@@ -73,7 +73,7 @@
             {
                 Id = id,
                 Signature = signature,
-                Type = Xml.MethodCallType.Instance,
+                CallType = Xml.MethodCallType.Instance,
                 PostCallInstance = this.objectDumper.DumpObject(target),
                 ReturnValue = new Xml.Value(),
                 DynamicCallGraph = new List<Xml.CallGraphNode>()

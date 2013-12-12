@@ -11,7 +11,6 @@
     {
         #region Fields & Constants
 
-        private int selectedIndex;
         private ObservableCollection<ViewModelBase> analysisResults;
 
         #endregion

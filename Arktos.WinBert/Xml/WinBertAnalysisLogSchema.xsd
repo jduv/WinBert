@@ -42,7 +42,7 @@
       <xs:element name="ReturnValue" type="ba:Value" minOccurs="0" />
     </xs:sequence>
     <xs:attribute name="Id" type="xs:unsignedInt" use="required"/>
-    <xs:attribute name="Type" type="ba:MethodCallType" use="required" />
+    <xs:attribute name="CallType" type="ba:MethodCallType" use="required" />
   </xs:complexType>
 
   <xs:simpleType name="MethodCallType">
@@ -121,7 +121,7 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
-    <xs:attribute name="Type" type="xs:string" use="required"/>
+    <xs:attribute name="FullName" type="xs:string" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="Primitive">
@@ -132,7 +132,7 @@
     </xs:annotation>
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="FullName" type="xs:string" use="required" />
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>

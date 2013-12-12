@@ -40,22 +40,53 @@
     [ExcludeFromCodeCoverageAttribute]
     public partial class Object
     {
-    }
+        #region Properties
 
-    /// <summary>
-    /// Partial implementation of a generated class.
-    /// </summary>
-    [ExcludeFromCodeCoverageAttribute]
-    public sealed partial class MethodCallTarget
-    {
-    }
+        /// <summary>
+        /// Gets a value indicating whether the current instance of this class is a Null sential type.
+        /// </summary>
+        public bool IsNullType
+        {
+            get
+            {
+                return this.GetType() == typeof(Null);
+            }
+        }
 
-    /// <summary>
-    /// Partial implementation of a generated class.
-    /// </summary>
-    [ExcludeFromCodeCoverageAttribute]
-    public sealed partial class MethodCallReturnValue
-    {
+        /// <summary>
+        /// Gets a value indicating whether the current instance of this class is a NotNull sentinal type.
+        /// </summary>
+        public bool IsNotNullType
+        {
+            get
+            {
+                return this.GetType() == typeof(NotNull);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current instance of this class is a This sentinal type.
+        /// </summary>
+        public bool IsThisType
+        {
+            get
+            {
+                return this.GetType() == typeof(This);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current instance of this class is a sentinal type.
+        /// </summary>
+        public bool IsSentinalType
+        {
+            get
+            {
+                return this.IsNotNullType || this.IsNullType | this.IsThisType;
+            }
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -64,6 +95,28 @@
     [ExcludeFromCodeCoverageAttribute]
     public sealed partial class Primitive
     {
+        #region Public Methods
+
+        /// <inheritdoc />
+        public bool Equals(Primitive other)
+        {
+            return object.ReferenceEquals(this, other) ||
+                (other != null && other.FullName.EndsWith(this.FullName) && other.Value.Equals(this.Value));
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            return obj is Primitive ? this.Equals(obj as Primitive) : false;
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return this.FullName.GetHashCode() * 37 + this.Value.GetHashCode();
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -88,6 +141,50 @@
     [ExcludeFromCodeCoverageAttribute]
     public sealed partial class Null
     {
+        #region Fields & Constants
+
+        private static readonly string NullValue = "null";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a string value representing null.
+        /// </summary>
+        public string Value
+        {
+            get
+            {
+                return NullValue;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// A Null value is equal to any other Null value, so we only check for type
+        /// equality.
+        /// </remarks>
+        public override bool Equals(object obj)
+        {
+            return obj is Null;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// This may look a little funny, but all Null types are equal, and thereby should hash
+        /// equally where possible.
+        /// </remarks>
+        public override int GetHashCode()
+        {
+            return this.GetType().GetHashCode();
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -96,6 +193,50 @@
     [ExcludeFromCodeCoverageAttribute]
     public sealed partial class NotNull
     {
+        #region Fields & Constants
+
+        private static readonly string NotNullValue = "not null";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a string value representing null.
+        /// </summary>
+        public string Value
+        {
+            get
+            {
+                return NotNullValue;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// A NotNull value is equal to any other NotNull value, so we only check for type
+        /// equality.
+        /// </remarks>
+        public override bool Equals(object obj)
+        {
+            return obj is NotNull;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// This may look a little funny, but all NotNull types are equal, and thereby should hash
+        /// equally where possible.
+        /// </remarks>
+        public override int GetHashCode()
+        {
+            return this.GetType().GetHashCode();
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -104,6 +245,50 @@
     [ExcludeFromCodeCoverageAttribute]
     public sealed partial class This
     {
+        #region Fields & Constants
+
+        private static readonly string ThisValue = "this";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a string value representing null.
+        /// </summary>
+        public string Value
+        {
+            get
+            {
+                return ThisValue;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// A This value is equal to any other This value, so we only check for type
+        /// equality.
+        /// </remarks>
+        public override bool Equals(object obj)
+        {
+            return obj is This;
+        }
+
+        /// <inheritdoc />
+        /// <remarks>
+        /// This may look a little funny, but all This types are equal, and thereby should hash
+        /// equally where possible.
+        /// </remarks>
+        public override int GetHashCode()
+        {
+            return this.GetType().GetHashCode();
+        }
+
+        #endregion
     }
 
     /// <summary>

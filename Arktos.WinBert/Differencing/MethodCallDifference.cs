@@ -1,17 +1,24 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Represents and enumerates the differences between two method calls from the XML namespace.
-    /// This instance will compute the difference between post-call states of the object upon which the
-    /// target method is invoked and report back a list of those differences.
+    /// This is a light-weight object used only for viewing differences. The actual computation is
+    /// in a differ class.
     /// </summary>
-    public class MethodCallDifference
+    public class MethodCallDifference : IDifferenceResult
     {
         #region Constructors & Destructors
 
-        public MethodCallDifference(Xml.MethodCall previousCall, Xml.MethodCall currentCall, ITypeDifference diffLookup)
+        public MethodCallDifference(
+            Xml.MethodCall previousCall,
+            Xml.MethodCall currentCall,
+            int? distance,
+            IEnumerable<IAnalysisLogDiff> postCallDiffs,
+            IEnumerable<IAnalysisLogDiff> returnValueDiffs = null)
         {
             if (previousCall == null)
             {
@@ -23,29 +30,21 @@
                 throw new ArgumentNullException("currentCall");
             }
 
-            if (!previousCall.Signature.Equals(currentCall.Signature, StringComparison.OrdinalIgnoreCase))
+            if (distance < 0)
             {
-                string message = string.Format(
-                    "Method signatures do not match! Unable to perform diff! Previous: {0}, Current: {1}",
-                    previousCall.Signature,
-                    currentCall.Signature);
-                throw new ArgumentException(message);
+                throw new ArgumentException("Distance must be positive!");
             }
 
-            if (diffLookup == null)
+            if (postCallDiffs == null)
             {
-                throw new ArgumentNullException("diffLookup");
+                throw new ArgumentNullException("postCallDiff");
             }
 
-            // Ensure we have been passed a valid lookup.
-            if (!diffLookup.FullName.Equals(currentCall.PostCallInstance.Type, StringComparison.OrdinalIgnoreCase))
-            {
-                throw new ArgumentException("Error: Type lookup doesn't support post call instance type for the target method!");
-            }
-
-            this.Distance = ComputeDistance(currentCall, diffLookup);
-            this.ObjectDifference = ComputePostCallObjectDifference(previousCall.PostCallInstance, currentCall.PostCallInstance);
-            this.ReturnValueDifference = ComputeReturnValueDifference(previousCall.ReturnValue, currentCall.ReturnValue);
+            this.PreviousCall = previousCall;
+            this.CurrentCall = currentCall;
+            this.Distance = distance;
+            this.PostCallObjectDifferences = postCallDiffs;
+            this.ReturnValueDifferences = returnValueDiffs;
         }
 
         #endregion
@@ -61,13 +60,13 @@
         /// <summary>
         /// Gets the difference between the post-call objects in the old and new test executions.
         /// </summary>
-        public ObjectDifference ObjectDifference { get; private set; }
+        public IEnumerable<IAnalysisLogDiff> PostCallObjectDifferences { get; private set; }
 
         /// <summary>
         /// Gets the difference between the return values. This could be a primitive difference or
         /// an object difference depending on what's returned by the method call.
         /// </summary>
-        public ValueDifference ReturnValueDifference { get; private set; }
+        public IEnumerable<IAnalysisLogDiff> ReturnValueDifferences { get; private set; }
 
         /// <summary>
         /// Gets the previous method call.
@@ -87,58 +86,8 @@
         {
             get
             {
-                return this.ObjectDifference != null || this.ReturnValueDifference != null;
+                return this.PostCallObjectDifferences.Any() || (this.ReturnValueDifferences != null && this.ReturnValueDifferences.Any());
             }
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private static int? ComputeDistance(Xml.MethodCall execution, ITypeDifference lookup)
-        {
-            if (lookup.Contains(execution.Signature))
-            {
-                return 0;
-            }
-            else
-            {
-                int index;
-                bool found = false;
-                for (index = 0; index < execution.DynamicCallGraph.Count; index++)
-                {
-                    if (lookup.Contains(execution.DynamicCallGraph[index].Signature))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-
-                return found ? index : (int?)null;
-            }
-        }
-
-        private static ObjectDifference ComputePostCallObjectDifference(Xml.Object previousObject, Xml.Object currentObject)
-        {
-            // FIXME
-            return null;
-        }
-
-
-        private static ValueDifference ComputeReturnValueDifference(Xml.Value previousValue, Xml.Value currentValue)
-        {
-            ValueDifference returnValueDiff;
-            if (previousValue == null && currentValue == null)
-            {
-                returnValueDiff = null;
-            }
-            else
-            {
-                // FIXME
-                returnValueDiff = null;
-            }
-
-            return returnValueDiff;
         }
 
         #endregion

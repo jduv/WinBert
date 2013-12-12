@@ -121,16 +121,17 @@
         {
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
             var currentLog = LoadAnalysisLog(currentResults.PathToAnalysisLog);
+            var testDiffer = new TestExecutionDiffer(diff);
 
-            // Join the two sets by test name.
+            // Join the two sets by test name, only grab executions that are different.
             var results = previousLog.TestExecutions.Join(
                 currentLog.TestExecutions,
                 previous => previous.Name,
                 current => current.Name,
                 (previous, current) =>
                 {
-                    return new TestExecutionDifference(previous, current, diff);
-                });
+                    return testDiffer.Diff(previous, current);
+                }).Where(t => t.AreDifferences);
 
             return new SuccessfulAnalysisResult(results);
         }

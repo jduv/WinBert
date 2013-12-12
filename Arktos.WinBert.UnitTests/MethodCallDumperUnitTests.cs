@@ -7,8 +7,8 @@
     [TestClass]
     public class MethodCallDumperUnitTests
     {
-        #region Test Methods 
-        
+        #region Test Methods
+
         #region DumpVoidInstanceMethod
 
         [TestMethod]
@@ -53,7 +53,7 @@
             Assert.IsNotNull(actual);
             Assert.AreEqual("Test", actual.Signature);
             Assert.AreEqual(1U, actual.Id);
-            Assert.AreEqual(Xml.MethodCallType.Instance,actual.Type);
+            Assert.AreEqual(Xml.MethodCallType.Instance, actual.CallType);
 
             // Verify call graph
             Assert.IsNotNull(actual.DynamicCallGraph);
@@ -64,7 +64,7 @@
 
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
-            Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(refType.GetType().FullName, targetInstance.FullName);
             Assert.AreEqual(0, targetInstance.Fields.Count);
             Assert.AreEqual(3, targetInstance.AutoProperties.Count);
         }
@@ -79,7 +79,7 @@
             Assert.IsNotNull(actual);
             Assert.AreEqual("Discombobulate", actual.Signature);
             Assert.AreEqual(1U, actual.Id);
-            Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
+            Assert.AreEqual(Xml.MethodCallType.Instance, actual.CallType);
 
             // Verify call graph
             Assert.IsNotNull(actual.DynamicCallGraph);
@@ -90,9 +90,9 @@
 
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
-            Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(valueType.GetType().FullName, targetInstance.FullName);
 
-            Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(valueType.GetType().FullName, targetInstance.FullName);
             Assert.AreEqual(2, targetInstance.Fields.Count);
             Assert.AreEqual(0, targetInstance.AutoProperties.Count);
         }
@@ -131,12 +131,12 @@
             var refType = new { X = 1, Y = 2, Z = 3 };
             var returnValue = 1;
             var target = new MethodCallDumper();
-            var actual = target.DumpInstanceMethod(1, refType, returnValue,  "Test");
+            var actual = target.DumpInstanceMethod(1, refType, returnValue, "Test");
 
             Assert.IsNotNull(actual);
             Assert.AreEqual("Test", actual.Signature);
             Assert.AreEqual(1U, actual.Id);
-            Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
+            Assert.AreEqual(Xml.MethodCallType.Instance, actual.CallType);
 
             // Verify call graph
             Assert.IsNotNull(actual.DynamicCallGraph);
@@ -146,14 +146,14 @@
 
             var result = actual.ReturnValue.Item as Xml.Primitive;
             Assert.IsNotNull(result);
-            Assert.AreEqual(returnValue.GetType().FullName, result.Type);
+            Assert.AreEqual(returnValue.GetType().FullName, result.FullName);
             Assert.AreEqual(returnValue.ToString(), result.Value);
 
             Assert.IsNotNull(actual.PostCallInstance);
 
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
-            Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(refType.GetType().FullName, targetInstance.FullName);
             Assert.AreEqual(0, targetInstance.Fields.Count);
             Assert.AreEqual(3, targetInstance.AutoProperties.Count);
         }
@@ -169,7 +169,7 @@
             Assert.IsNotNull(actual);
             Assert.AreEqual("Test", actual.Signature);
             Assert.AreEqual(1U, actual.Id);
-            Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
+            Assert.AreEqual(Xml.MethodCallType.Instance, actual.CallType);
 
             // Verify call graph
             Assert.IsNotNull(actual.DynamicCallGraph);
@@ -179,13 +179,13 @@
 
             var result = actual.ReturnValue.Item as Xml.Object;
             Assert.IsNotNull(result);
-            Assert.AreEqual(returnValue.GetType().FullName, result.Type);
+            Assert.AreEqual(returnValue.GetType().FullName, result.FullName);
 
             Assert.IsNotNull(actual.PostCallInstance);
 
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
-            Assert.AreEqual(refType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(refType.GetType().FullName, targetInstance.FullName);
             Assert.AreEqual(0, targetInstance.Fields.Count);
             Assert.AreEqual(3, targetInstance.AutoProperties.Count);
         }
@@ -200,7 +200,7 @@
             Assert.IsNotNull(actual);
             Assert.AreEqual("Discombobulate", actual.Signature);
             Assert.AreEqual(1U, actual.Id);
-            Assert.AreEqual(Xml.MethodCallType.Instance, actual.Type);
+            Assert.AreEqual(Xml.MethodCallType.Instance, actual.CallType);
 
             // Verify call graph
             Assert.IsNotNull(actual.DynamicCallGraph);
@@ -211,9 +211,9 @@
 
             var targetInstance = actual.PostCallInstance as Xml.Object;
             Assert.IsNotNull(targetInstance);
-            Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(valueType.GetType().FullName, targetInstance.FullName);
 
-            Assert.AreEqual(valueType.GetType().FullName, targetInstance.Type);
+            Assert.AreEqual(valueType.GetType().FullName, targetInstance.FullName);
             Assert.AreEqual(2, targetInstance.Fields.Count);
             Assert.AreEqual(0, targetInstance.AutoProperties.Count);
         }
@@ -272,7 +272,7 @@
             public int Sum()
             {
                 return this.X + this.Y;
-  
+
             }
         }
 

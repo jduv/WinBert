@@ -1,11 +1,11 @@
 ﻿namespace Arktos.WinBert.Instrumentation
 {
-    using System.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
     using Arktos.WinBert.Extensions;
     using Arktos.WinBert.Xml;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Logs objects of various types, converting them to a simple XML representation.
@@ -66,7 +66,7 @@
                         var fieldsAndProps = DumpFieldsAndProperties(target, maxDepth);
                         obj = new Xml.Object()
                         {
-                            Type = target.GetType().FullName,
+                            FullName = target.GetType().FullName,
                             Fields = fieldsAndProps.Fields,
                             AutoProperties = fieldsAndProps.Properties
                         };
@@ -95,7 +95,7 @@
             {
                 primitive = new Xml.Primitive()
                 {
-                    Type = target.GetType().FullName,
+                    FullName = target.GetType().FullName,
                     Value = target.ToString()
                 };
             }

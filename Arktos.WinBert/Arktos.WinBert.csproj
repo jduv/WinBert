@@ -139,24 +139,28 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
+    <Compile Include="Differencing\AnalysisLogDiff.cs" />
+    <Compile Include="Differencing\AnalysisLogObjectDiffer.cs" />
+    <Compile Include="Differencing\IAnalysisLogDiff.cs" />
+    <Compile Include="Differencing\IAnalysisLogObjectDiffer.cs" />
+    <Compile Include="Differencing\IMemberPath.cs" />
+    <Compile Include="Differencing\MemberPath.cs" />
+    <Compile Include="Differencing\MethodCallDiffer.cs" />
     <Compile Include="Differencing\MethodCallDifference.cs" />
-    <Compile Include="Differencing\ObjectDifference.cs" />
-    <Compile Include="Differencing\PrimitiveDifference.cs" />
-    <Compile Include="Differencing\PropertyDifference.cs" />
+    <Compile Include="Differencing\MemberPathStack.cs" />
+    <Compile Include="Differencing\TestExecutionDiffer.cs" />
     <Compile Include="Differencing\TextExecutionDifference.cs" />
     <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
-    <Compile Include="Differencing\FieldDifference.cs" />
     <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
     <Compile Include="Analysis\InconclusiveAnalysisResult.cs" />
-    <Compile Include="Analysis\ReturnValueDifference.cs" />
     <Compile Include="Analysis\SuccessfulAnalysisResult.cs" />
-    <Compile Include="Differencing\ValueDifference.cs" />
     <Compile Include="Differencing\AssemblyDifference.cs" />
     <Compile Include="Differencing\IAssemblyDifference.cs" />
     <Compile Include="Differencing\IDifferenceResult.cs" />
@@ -270,6 +274,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Analysis\Analysis.cd" />
+    <None Include="Differencing\Differencing.cd" />
     <None Include="packages.config" />
     <None Include="Xml\Xml.cd" />
     <None Include="Xml\RandoopPluginConfigSchema.xsd">

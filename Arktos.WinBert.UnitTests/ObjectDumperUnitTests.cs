@@ -4,11 +4,8 @@
     using Arktos.WinBert.Xml;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Xml;
-    using System.Runtime.CompilerServices;
 
     [TestClass]
     public class ObjectDumperUnitTests
@@ -63,7 +60,7 @@
             var now = DateTime.Now;
             var target = new ObjectDumper();
             var actual = target.DumpObject(now);
-            Assert.AreEqual(now.GetType().FullName, actual.Type);
+            Assert.AreEqual(now.GetType().FullName, actual.FullName);
         }
 
         [TestMethod]
@@ -73,7 +70,7 @@
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump);
 
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
             Assert.AreEqual(2, actual.Fields.Count);
             Assert.AreEqual(0, actual.AutoProperties.Count);
 
@@ -84,11 +81,11 @@
             Assert.IsNotNull(yFieldValue);
 
             Assert.AreEqual("x", actual.Fields[0].Name);
-            Assert.AreEqual(toDump.X.GetType().FullName, xFieldValue.Type);
+            Assert.AreEqual(toDump.X.GetType().FullName, xFieldValue.FullName);
             Assert.AreEqual(toDump.X.ToString(), xFieldValue.Value);
 
             Assert.AreEqual("y", actual.Fields[1].Name);
-            Assert.AreEqual(toDump.Y.GetType().FullName, yFieldValue.Type);
+            Assert.AreEqual(toDump.Y.GetType().FullName, yFieldValue.FullName);
             Assert.AreEqual(toDump.Y.ToString(), yFieldValue.Value);
         }
 
@@ -98,7 +95,7 @@
             var toDump = new AllPrimitiveFields();
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.AutoProperties);
             Assert.AreEqual(12, actual.Fields.Count);
@@ -112,7 +109,7 @@
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump);
 
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.AutoProperties);
             Assert.AreEqual(0, actual.Fields.Count);
@@ -126,7 +123,7 @@
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump);
 
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.AutoProperties);
             Assert.AreEqual(6, actual.Fields.Count);
@@ -139,7 +136,7 @@
             var toDump = new { x = 1, y = new { a = 2, b = 3, c = 4 }, z = (string)null };
             var target = new ObjectDumper();
             var actual = target.DumpObject(toDump, 1);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
             Assert.IsNotNull(actual.Fields);
             Assert.IsNotNull(actual.AutoProperties);
 
@@ -172,7 +169,7 @@
             var actual = target.DumpObject(toDump);
 
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(1, actual.Fields.Count);
             Assert.AreEqual(0, actual.AutoProperties.Count);
@@ -190,7 +187,7 @@
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(6, actual.Fields.Count);
             Assert.AreEqual(6, actual.AutoProperties.Count);
@@ -210,7 +207,7 @@
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(6, actual.Fields.Count);
             Assert.AreEqual(6, actual.AutoProperties.Count);
@@ -230,7 +227,7 @@
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(6, actual.Fields.Count);
             Assert.AreEqual(6, actual.AutoProperties.Count);
@@ -250,7 +247,7 @@
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(4, actual.Fields.Count);
             Assert.AreEqual(5, actual.AutoProperties.Count);
@@ -283,7 +280,7 @@
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(4, actual.Fields.Count);
             Assert.AreEqual(4, actual.AutoProperties.Count);
@@ -303,7 +300,7 @@
 
             var actual = target.DumpObject(toDump);
             Assert.IsNotNull(actual);
-            Assert.AreEqual(toDump.GetType().FullName, actual.Type);
+            Assert.AreEqual(toDump.GetType().FullName, actual.FullName);
 
             Assert.AreEqual(0, actual.Fields.Count);
             Assert.AreEqual(1, actual.AutoProperties.Count);
@@ -337,79 +334,79 @@
             // Integer
             int intValue = (int)5;
             Xml.Primitive actual = target.DumpPrimitive(intValue);
-            Assert.AreEqual(typeof(int).FullName, actual.Type);
+            Assert.AreEqual(typeof(int).FullName, actual.FullName);
             Assert.AreEqual(intValue.ToString(), actual.Value);
 
             // Unsigned int
             uint uintValue = 5;
             actual = target.DumpPrimitive(uintValue);
-            Assert.AreEqual(typeof(uint).FullName, actual.Type);
+            Assert.AreEqual(typeof(uint).FullName, actual.FullName);
             Assert.AreEqual(uintValue.ToString(), actual.Value);
 
             // Short
             short shortValue = 5;
             actual = target.DumpPrimitive(shortValue);
-            Assert.AreEqual(typeof(short).FullName, actual.Type);
+            Assert.AreEqual(typeof(short).FullName, actual.FullName);
             Assert.AreEqual(shortValue.ToString(), actual.Value);
 
             // Unsigned short
             ushort ushortValue = 5;
             actual = target.DumpPrimitive(ushortValue);
-            Assert.AreEqual(typeof(ushort).FullName, actual.Type);
+            Assert.AreEqual(typeof(ushort).FullName, actual.FullName);
             Assert.AreEqual(ushortValue.ToString(), actual.Value);
 
             // Long
             long longValue = 5;
             actual = target.DumpPrimitive(longValue);
-            Assert.AreEqual(typeof(long).FullName, actual.Type);
+            Assert.AreEqual(typeof(long).FullName, actual.FullName);
             Assert.AreEqual(longValue.ToString(), actual.Value);
 
             // Unsigned long
             ulong ulongValue = 5;
             actual = target.DumpPrimitive(ulongValue);
-            Assert.AreEqual(typeof(ulong).FullName, actual.Type);
+            Assert.AreEqual(typeof(ulong).FullName, actual.FullName);
             Assert.AreEqual(ulongValue.ToString(), actual.Value);
 
             // Double
             double doubleValue = 5.75;
             actual = target.DumpPrimitive(doubleValue);
-            Assert.AreEqual(typeof(double).FullName, actual.Type);
+            Assert.AreEqual(typeof(double).FullName, actual.FullName);
             Assert.AreEqual(doubleValue.ToString(), actual.Value);
 
             // Decimal
             decimal decimalValue = 5.75M;
             actual = target.DumpPrimitive(decimalValue);
-            Assert.AreEqual(typeof(decimal).FullName, actual.Type);
+            Assert.AreEqual(typeof(decimal).FullName, actual.FullName);
             Assert.AreEqual(decimalValue.ToString(), actual.Value);
 
             // Float
             float floatValue = 5.75F;
             actual = target.DumpPrimitive(floatValue);
-            Assert.AreEqual(typeof(float).FullName, actual.Type);
+            Assert.AreEqual(typeof(float).FullName, actual.FullName);
             Assert.AreEqual(floatValue.ToString(), actual.Value);
 
             // Bool
             bool boolValue = false;
             actual = target.DumpPrimitive(boolValue);
-            Assert.AreEqual(typeof(bool).FullName, actual.Type);
+            Assert.AreEqual(typeof(bool).FullName, actual.FullName);
             Assert.AreEqual(boolValue.ToString(), actual.Value);
 
             // Byte
             byte byteValue = 0xff;
             actual = target.DumpPrimitive(byteValue);
-            Assert.AreEqual(typeof(byte).FullName, actual.Type);
+            Assert.AreEqual(typeof(byte).FullName, actual.FullName);
             Assert.AreEqual(byteValue.ToString(), actual.Value);
 
             // Signed byte
             sbyte sbyteValue = 0x79;
             actual = target.DumpPrimitive(sbyteValue);
-            Assert.AreEqual(typeof(sbyte).FullName, actual.Type);
+            Assert.AreEqual(typeof(sbyte).FullName, actual.FullName);
             Assert.AreEqual(sbyteValue.ToString(), actual.Value);
 
             // String
             string stringValue = "Hello World";
             actual = target.DumpPrimitive(stringValue);
-            Assert.AreEqual(typeof(string).FullName, actual.Type);
+            Assert.AreEqual(typeof(string).FullName, actual.FullName);
             Assert.AreEqual(stringValue.ToString(), actual.Value);
         }
 

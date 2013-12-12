@@ -5,9 +5,7 @@
     using System.Linq;
 
     /// <summary>
-    /// Represents a behavioral difference between a set of method executions. The root of this class is the
-    /// test execution set that spawned it, the set of which methods inside each that will be used to create 
-    /// method differences. These method differences are what we are mainly interested in for the Bert analysis.
+    /// Represents a behavioral difference between a set of test executions.
     /// </summary>
     public class TestExecutionDifference : IDifferenceResult
     {
@@ -16,36 +14,23 @@
         public TestExecutionDifference(
             Xml.TestExecution previousExecution,
             Xml.TestExecution currentExecution,
-            IAssemblyDifference assemblyDiff)
+            IEnumerable<MethodCallDifference> methodDiffs)
         {
             if (previousExecution == null)
             {
-                throw new ArgumentNullException("previousExecution");
+                throw new ArgumentNullException("oldObject");
             }
 
             if (currentExecution == null)
             {
-                throw new ArgumentNullException("currentExecution");
+                throw new ArgumentNullException("newObject");
             }
 
-            if (!previousExecution.Name.Equals(currentExecution.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                string message = string.Format(
-                    "Test execution names do not match! Unable to perform diff! Previous: {0}, Current: {1}",
-                    previousExecution.Name,
-                    currentExecution.Name);
-                throw new ArgumentException(message);
-            }
-
-            if (assemblyDiff == null)
-            {
-                throw new ArgumentNullException("assemblyDiff");
-            }
-
-            this.TestName = currentExecution.Name;
             this.PreviousExecution = previousExecution;
             this.CurrentExecution = currentExecution;
-            this.MethodDifferences = ComputeMethodDifferences(previousExecution.MethodCalls, currentExecution.MethodCalls, assemblyDiff);
+            this.MethodDifferences = methodDiffs ?? Enumerable.Empty<MethodCallDifference>();
+            this.AreDifferences = this.MethodDifferences.Any(x => x.AreDifferences);
+            this.TotalDistance = this.MethodDifferences.Sum(x => x.Distance);
         }
 
         #endregion
@@ -53,9 +38,16 @@
         #region Properties
 
         /// <summary>
-        /// Gets the name of the test.
+        /// Gets the name of the test. This is the same as grabbing the name off the current test
+        /// execution.
         /// </summary>
-        public string TestName { get; private set; }
+        public string TestName
+        {
+            get
+            {
+                return this.CurrentExecution.Name;
+            }
+        }
 
         /// <summary>
         /// Gets a list of method differences, representing changes inside the state of an object upon which
@@ -77,49 +69,14 @@
         /// Gets a value indicating whether there any differences in the set of all methods 
         /// analyzed in this instance.
         /// </summary>
-        public Boolean AreDifferences
-        {
-            get
-            {
-                return this.MethodDifferences.Any(x => x.AreDifferences);
-            }
-        }
-
-        #endregion
-
-        #region Private Methods
+        public Boolean AreDifferences { get; private set; }
 
         /// <summary>
-        /// Computes the method difference between the two sets of method calls.
+        /// Gets the total distance by summing the distances of each contained method difference. Allows
+        /// for sorting test execution differences by maximum distance.
         /// </summary>
-        /// <param name="previousCalls">
-        /// The previous set of method calls.
-        /// </param>
-        /// <param name="currentCalls">
-        /// The current set of method calls.
-        /// </param>
-        /// <param name="diffLookups">
-        /// A dictionary of type difference lookups.
-        /// </param>
-        /// <returns>
-        /// A list of method differences.
-        /// </returns>
-        public static IEnumerable<MethodCallDifference> ComputeMethodDifferences(
-            IEnumerable<Xml.MethodCall> previousCalls,
-            IEnumerable<Xml.MethodCall> currentCalls,
-            IAssemblyDifference assemblyDiff)
-        {
-            // Join on Id, then create a new method difference from the correlated method executions.
-            return previousCalls.Join(
-                currentCalls,
-                previous => previous.Id,
-                current => current.Id,
-                (previous, current) =>
-                {
-                    var lookup = assemblyDiff[current.PostCallInstance.Type];
-                    return new MethodCallDifference(previous, current, lookup);
-                });
-        }
+        public int? TotalDistance { get; private set; }
+
         #endregion
     }
 }

@@ -35,7 +35,7 @@
                             ReturnValue = new Xml.Value(),
                             Signature = sig,
                             PostCallInstance = new Xml.NotNull(),
-                            Type = Xml.MethodCallType.Instance,
+                            CallType = Xml.MethodCallType.Instance,
                             DynamicCallGraph = new List<Xml.CallGraphNode>()
                         };
                     });
@@ -50,7 +50,7 @@
                             Id = id,
                             Signature = sig,
                             PostCallInstance = new Xml.NotNull(),
-                            Type = Xml.MethodCallType.Instance,
+                            CallType = Xml.MethodCallType.Instance,
                             DynamicCallGraph = new List<Xml.CallGraphNode>()
                         };
                     });
