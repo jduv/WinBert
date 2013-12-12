@@ -11,7 +11,7 @@
     {
         #region Constructors & Destructors
 
-        public MethodCallDifference(Xml.MethodCall previousCall, Xml.MethodCall currentCall, TypeDifferenceLookup diffLookup)
+        public MethodCallDifference(Xml.MethodCall previousCall, Xml.MethodCall currentCall, ITypeDifference diffLookup)
         {
             if (previousCall == null)
             {
@@ -38,7 +38,7 @@
             }
 
             // Ensure we have been passed a valid lookup.
-            if (!diffLookup.TypeName.Equals(currentCall.PostCallInstance.Type, StringComparison.OrdinalIgnoreCase))
+            if (!diffLookup.FullName.Equals(currentCall.PostCallInstance.Type, StringComparison.OrdinalIgnoreCase))
             {
                 throw new ArgumentException("Error: Type lookup doesn't support post call instance type for the target method!");
             }
@@ -95,7 +95,7 @@
 
         #region Private Methods
 
-        private static int? ComputeDistance(Xml.MethodCall execution, TypeDifferenceLookup lookup)
+        private static int? ComputeDistance(Xml.MethodCall execution, ITypeDifference lookup)
         {
             if (lookup.Contains(execution.Signature))
             {

@@ -16,7 +16,7 @@
         public TestExecutionDifference(
             Xml.TestExecution previousExecution,
             Xml.TestExecution currentExecution,
-            IDictionary<string, TypeDifferenceLookup> diffLookups)
+            IAssemblyDifference assemblyDiff)
         {
             if (previousExecution == null)
             {
@@ -37,15 +37,15 @@
                 throw new ArgumentException(message);
             }
 
-            if (diffLookups == null)
+            if (assemblyDiff == null)
             {
-                throw new ArgumentNullException("diffLookupDictionary");
+                throw new ArgumentNullException("assemblyDiff");
             }
 
             this.TestName = currentExecution.Name;
             this.PreviousExecution = previousExecution;
             this.CurrentExecution = currentExecution;
-            this.MethodDifferences = ComputeMethodDifferences(previousExecution.MethodCalls, currentExecution.MethodCalls, diffLookups);
+            this.MethodDifferences = ComputeMethodDifferences(previousExecution.MethodCalls, currentExecution.MethodCalls, assemblyDiff);
         }
 
         #endregion
@@ -107,7 +107,7 @@
         public static IEnumerable<MethodCallDifference> ComputeMethodDifferences(
             IEnumerable<Xml.MethodCall> previousCalls,
             IEnumerable<Xml.MethodCall> currentCalls,
-            IDictionary<string, TypeDifferenceLookup> diffLookups)
+            IAssemblyDifference assemblyDiff)
         {
             // Join on Id, then create a new method difference from the correlated method executions.
             return previousCalls.Join(
@@ -116,7 +116,7 @@
                 current => current.Id,
                 (previous, current) =>
                 {
-                    var lookup = diffLookups[current.PostCallInstance.Type];
+                    var lookup = assemblyDiff[current.PostCallInstance.Type];
                     return new MethodCallDifference(previous, current, lookup);
                 });
         }

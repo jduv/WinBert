@@ -17,7 +17,7 @@
     {
         #region Fields & Constants
 
-        private readonly IEnumerable<string> methods;
+        private readonly HashSet<string> methods;
         private readonly IEnumerable<string> removedFields;
         private readonly IEnumerable<string> addedFields;
 
@@ -38,9 +38,9 @@
 
             this.Name = type.Name;
             this.FullName = type.FullName;
-            this.methods = methods == null ? Enumerable.Empty<string>() : methods;
-            this.removedFields = removedFields == null ? Enumerable.Empty<string>() : removedFields;
-            this.addedFields = addedFields == null ? Enumerable.Empty<string>() : addedFields;
+            this.methods = methods == null ? new HashSet<string>() : new HashSet<string>(methods);
+            this.removedFields = removedFields ?? Enumerable.Empty<string>();
+            this.addedFields = addedFields ?? Enumerable.Empty<string>();
         }
 
         #endregion
@@ -87,6 +87,16 @@
             {
                 return this.removedFields;
             }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
+        public bool Contains(string methodSignature)
+        {
+            return this.methods.Contains(methodSignature);
         }
 
         #endregion

@@ -156,7 +156,6 @@
     <Compile Include="Analysis\InconclusiveAnalysisResult.cs" />
     <Compile Include="Analysis\ReturnValueDifference.cs" />
     <Compile Include="Analysis\SuccessfulAnalysisResult.cs" />
-    <Compile Include="Differencing\TypeDifferenceLookup.cs" />
     <Compile Include="Differencing\ValueDifference.cs" />
     <Compile Include="Differencing\AssemblyDifference.cs" />
     <Compile Include="Differencing\IAssemblyDifference.cs" />

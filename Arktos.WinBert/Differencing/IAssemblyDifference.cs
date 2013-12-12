@@ -1,7 +1,7 @@
 ﻿namespace Arktos.WinBert.Differencing
 {
-    using System.Collections.Generic;
     using AppDomainToolkit;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Defines the contract for a difference result for an assembly.
@@ -24,6 +24,17 @@
         /// Gets the old assembly target.
         /// </summary>
         IAssemblyTarget OldAssemblyTarget { get; }
+
+        /// <summary>
+        /// Gets a type difference for the target type given a fully qualified name.
+        /// </summary>
+        /// <param name="fullName">
+        /// The fully qualified name of the type to grab a difference for.
+        /// </param>
+        /// <returns>
+        /// A type difference implementation, or null if not found.
+        /// </returns>
+        ITypeDifference this[string fullName] { get; }
 
         #endregion
     }

@@ -14,6 +14,12 @@
     [Serializable]
     public sealed class AssemblyDifference : IAssemblyDifference
     {
+        #region Fields & Constructors
+
+        public IDictionary<string, ITypeDifference> typeDiffLookup;
+
+        #endregion
+
         #region Constructors & Destructors
 
         /// <summary>
@@ -45,7 +51,8 @@
 
             this.OldAssemblyTarget = AssemblyTarget.FromAssembly(oldAssembly);
             this.NewAssemblyTarget = AssemblyTarget.FromAssembly(newAssembly);
-            this.TypeDifferences = typeDiffs ?? new List<ITypeDifference>();
+            this.TypeDifferences = typeDiffs ?? Enumerable.Empty<ITypeDifference>();
+            this.typeDiffLookup = this.TypeDifferences.ToDictionary(x => x.FullName);
         }
 
         #endregion
@@ -69,6 +76,15 @@
 
         /// <inheritdoc />
         public IEnumerable<ITypeDifference> TypeDifferences { get; private set; }
+
+        /// <inheritdoc />
+        public ITypeDifference this[string fullName]
+        {
+            get
+            {
+                return this.typeDiffLookup[fullName];
+            }
+        }
 
         #endregion
     }

@@ -119,7 +119,6 @@
         /// </returns>
         private AnalysisResult Process(IAssemblyDifference diff, ITestRunResult previousResults, ITestRunResult currentResults)
         {
-            var typeDifferences = diff.TypeDifferences.ToDictionary(x => x.FullName, y => new TypeDifferenceLookup(y));
             var previousLog = LoadAnalysisLog(previousResults.PathToAnalysisLog);
             var currentLog = LoadAnalysisLog(currentResults.PathToAnalysisLog);
 
@@ -130,7 +129,7 @@
                 current => current.Name,
                 (previous, current) =>
                 {
-                    return new TestExecutionDifference(previous, current, typeDifferences);
+                    return new TestExecutionDifference(previous, current, diff);
                 });
 
             return new SuccessfulAnalysisResult(results);

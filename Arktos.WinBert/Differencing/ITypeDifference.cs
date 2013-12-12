@@ -36,5 +36,21 @@
         IEnumerable<string> RemovedFields { get; }
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Does this type difference contain a method with the target signature flagged as changed?
+        /// </summary>
+        /// <param name="methodName">
+        /// The signature to test.
+        /// </param>
+        /// <returns>
+        /// True if this difference contains a method signature in it's change set that matches the target
+        /// method signture, false otherwise.
+        /// </returns>
+        bool Contains(string methodName);
+
+        #endregion
     }
 }
