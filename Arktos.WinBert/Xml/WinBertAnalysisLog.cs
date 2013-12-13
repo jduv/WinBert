@@ -1,5 +1,6 @@
 ﻿namespace Arktos.WinBert.Xml
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -24,6 +25,103 @@
     [ExcludeFromCodeCoverageAttribute]
     public sealed partial class Value
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether the wrapped item is null. Utility property.
+        /// </summary>
+        public bool IsNull
+        {
+            get
+            {
+                return this.Item == null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the wrapped item as an Xml.Object instance. This could return null. Utility property.
+        /// </summary>
+        public Xml.Object AsObject
+        {
+            get
+            {
+                return this.Item as Xml.Object;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the wrapped item is an Xml.Object instance. Utility property.
+        /// </summary>
+        public bool IsObject
+        {
+            get
+            {
+                return this.AsObject != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the wrapped item as an Xml.Primitive instance. This could return null. Utility property.
+        /// </summary>
+        public Xml.Primitive AsPrimitive
+        {
+            get
+            {
+                return this.Item as Xml.Primitive;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the wrapped item is an Xml.Primitive instance. Utility property.
+        /// </summary>
+        public bool IsPrimtive
+        {
+            get
+            {
+                return this.AsPrimitive != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the underlying type of the wrapped item. If the wrapped item is null, this will return null.
+        /// </summary>
+        public Type UnderlyingType
+        {
+            get
+            {
+                return this.IsNull ? null : this.Item.GetType();
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Checks to determing if this value is comparable to the target one. 
+        /// </summary>
+        /// <param name="that">
+        /// The target Xml.Value to compare against.
+        /// </param>
+        /// <returns>
+        /// True if both values are comparable to one another, false otherwise.
+        /// </returns>
+        public bool IsComparableTo(Value that)
+        {
+            bool comparable = true;
+            if (that == null || this.Item == null || that.Item == null)
+            {
+                comparable = false;
+            }
+            else
+            {
+                comparable = object.ReferenceEquals(this, that) || this.Item.GetType() == that.Item.GetType();
+            }
+
+            return comparable;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -97,11 +195,26 @@
     {
         #region Public Methods
 
-        /// <inheritdoc />
-        public bool Equals(Primitive other)
+        /// <summary>
+        /// Returns a value indicating whether this primitive and the target argument can be
+        /// compared. This should only return true if the underlying data types are equal.
+        /// </summary>
+        /// <param name="that">
+        /// The object to compare with.
+        /// </param>
+        /// <returns>
+        /// True if both underlying data types are equal by full name comparison. Case sensitive.
+        /// </returns>
+        public bool IsComparableTo(Primitive that)
         {
-            return object.ReferenceEquals(this, other) ||
-                (other != null && other.FullName.EndsWith(this.FullName) && other.Value.Equals(this.Value));
+            return this.FullName.Equals(that.FullName);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(Primitive that)
+        {
+            return object.ReferenceEquals(this, that) ||
+                (that != null && this.IsComparableTo(that) && that.Value.Equals(this.Value));
         }
 
         /// <inheritdoc />
