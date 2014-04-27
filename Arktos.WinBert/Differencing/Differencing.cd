@@ -65,35 +65,49 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Arktos.WinBert.Differencing.AnalysisLogObjectDiffer">
-    <Position X="6.25" Y="13" Width="2" />
+    <Position X="10.5" Y="13.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <HashCode>AAQAAAQAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\AnalysisLogObjectDiffer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Arktos.WinBert.Differencing.MemberPath">
-    <Position X="3.5" Y="15.25" Width="1.5" />
+    <Position X="10.25" Y="17.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAIIAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAIIAAAIAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\MemberPath.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Arktos.WinBert.Differencing.MemberPathStack">
-    <Position X="5.5" Y="15.25" Width="1.75" />
+    <Position X="10.25" Y="15.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\MemberPathStack.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Arktos.WinBert.Differencing.AnalysisLogDiff">
-    <Position X="3.5" Y="12.75" Width="1.5" />
+    <Position X="4" Y="13" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAIAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAQAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\AnalysisLogDiff.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.ReturnValueAnalysisLogDiff">
+    <Position X="5.75" Y="17.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Differencing\ReturnValueAnalysisLogDiff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.PathedAnalysisLogDiff">
+    <Position X="1.25" Y="17.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Differencing\PathedAnalysisLogDiff.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="Arktos.WinBert.Differencing.IAssemblyDifference">
     <Position X="12.5" Y="7.75" Width="1.75" />
@@ -124,21 +138,21 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.IAnalysisLogDiff">
-    <Position X="1.5" Y="12.75" Width="1.5" />
+    <Position X="0.75" Y="13.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAIAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAQAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\IAnalysisLogDiff.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.IAnalysisLogObjectDiffer">
-    <Position X="0.5" Y="4.25" Width="3.5" />
+    <Position X="0.5" Y="4.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <HashCode>AAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\IAnalysisLogObjectDiffer.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.IMemberPath">
-    <Position X="1.5" Y="15.25" Width="1.5" />
+    <Position X="12.25" Y="15.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIIAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\IMemberPath.cs</FileName>

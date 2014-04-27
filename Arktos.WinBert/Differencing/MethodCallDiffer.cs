@@ -76,7 +76,7 @@
                 newObject,
                 this.ComputeDistance(newObject),
                 this.objectDiffer.DiffObjects(oldObject.PostCallInstance, newObject.PostCallInstance),
-                this.objectDiffer.DiffValues(oldObject.ReturnValue, newObject.ReturnValue));
+                this.objectDiffer.DiffReturnValues(oldObject.ReturnValue, newObject.ReturnValue));
         }
 
         #endregion

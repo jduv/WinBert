@@ -7,7 +7,20 @@
     /// </summary>
     public class MemberPath : IMemberPath
     {
+        #region Fields & Constants
+
+        public static readonly IMemberPath Empty = new MemberPath();
+
+        #endregion
+
         #region Constructors & Destructors
+
+        private MemberPath()
+        {
+            this.Path = string.Empty;
+            this.Name = string.Empty;
+            this.FullName = string.Empty;
+        }
 
         public MemberPath(string path, string name, string fullName)
         {

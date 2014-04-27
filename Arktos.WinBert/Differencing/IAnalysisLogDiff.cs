@@ -12,11 +12,6 @@
         #region Properties
 
         /// <summary>
-        /// Gets the path to the difference in the object graph.
-        /// </summary>
-        IMemberPath Path { get; }
-
-        /// <summary>
         /// Gets the old value.
         /// </summary>
         string OldValue { get; }
@@ -25,6 +20,11 @@
         /// Gets the new value.
         /// </summary>
         string NewValue { get; }
+
+        /// <summary>
+        /// Gets the full name of the type for both values.
+        /// </summary>
+        string TypeFullName { get; }
 
         #endregion
     }

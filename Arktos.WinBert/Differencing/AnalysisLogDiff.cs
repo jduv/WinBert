@@ -3,20 +3,15 @@
     using System;
 
     /// <summary>
-    /// Implementation of a simple analysis log diff. Conveys some simple information about a difference between
-    /// two objects in the object graph built by the Winbert analysis engine.
+    /// Abstract class for basic analysis log difference functionality. More specific instances should be built to
+    /// handle the nuances of each situation.
     /// </summary>
-    public class AnalysisLogDiff : IAnalysisLogDiff
+    public abstract class AnalysisLogDiff : IAnalysisLogDiff
     {
         #region Constructors & Destructors
 
-        public AnalysisLogDiff(IMemberPath memberPath, string oldValue, string newValue)
+        public AnalysisLogDiff(string oldValue, string newValue, string typeFullName)
         {
-            if (memberPath == null)
-            {
-                throw new ArgumentNullException("memberPath");
-            }
-
             if (oldValue == null)
             {
                 throw new ArgumentNullException("oldValue");
@@ -26,9 +21,6 @@
             {
                 throw new ArgumentNullException("newValue");
             }
-            this.Path = memberPath;
-            this.OldValue = oldValue;
-            this.NewValue = newValue;
         }
 
         #endregion
@@ -36,13 +28,13 @@
         #region Properties
 
         /// <inheritdoc />
-        public IMemberPath Path { get; private set; }
-
-        /// <inheritdoc />
         public string OldValue { get; private set; }
 
         /// <inheritdoc />
         public string NewValue { get; private set; }
+
+        /// <inheritdoc />
+        public string TypeFullName { get; private set; }
 
         #endregion
     }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Implementation that performs differences between analysis log elements. There is an important underlying assumption
@@ -12,73 +13,67 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public IEnumerable<IAnalysisLogDiff> DiffValues(Xml.Value oldValue, Xml.Value newValue)
+        public IEnumerable<IAnalysisLogDiff> DiffReturnValues(Xml.Value oldValue, Xml.Value newValue)
         {
-            // Neither root may be null.
-            if (oldValue == null)
+            // If both values are not null...
+            IEnumerable<IAnalysisLogDiff> list;
+            if (oldValue != null && newValue != null)
             {
-                throw new ArgumentNullException("oldObject");
-            }
+                if (!newValue.IsComparableTo(oldValue))
+                {
+                    var msg = string.Format(
+                        "Items are incompatible for comparison! oldObject.Item.Type => {0}, newObject.Item.Type => {1}",
+                        oldValue.UnderlyingType,
+                        newValue.UnderlyingType);
+                    throw new ArgumentException(msg);
+                }
 
-            if (newValue == null)
-            {
-                throw new ArgumentNullException("newObject");
+                if (newValue.IsPrimtive && oldValue.IsPrimtive && !newValue.AsPrimitive.Equals(oldValue.AsPrimitive))
+                {
+                    list = new IAnalysisLogDiff[] 
+                    { 
+                        new ReturnValueAnalysisLogDiff(oldValue.AsPrimitive.Value, newValue.AsPrimitive.Value, newValue.AsPrimitive.FullName) 
+                    };
+                }
+                else if (newValue.IsObject && oldValue.IsObject)
+                {
+                    list = this.DiffObjects(oldValue.AsObject, newValue.AsObject);
+                }
+                else
+                {
+                    // No diff.
+                    list = Enumerable.Empty<IAnalysisLogDiff>();
+                }
             }
-
-            // Ensure that both items are comparable.
-            if (newValue.IsPrimtive && oldValue.IsPrimtive)
+            else if (oldValue == null && newValue == null)
             {
-                return DiffPrimitives(oldValue.AsPrimitive, newValue.AsPrimitive);
-            }
-            else if (newValue.IsObject && oldValue.IsObject)
-            {
-                return this.DiffObjects(oldValue.AsObject, newValue.AsObject);
+                // No diff.
+                list = Enumerable.Empty<IAnalysisLogDiff>();
             }
             else
             {
+                // Either the old or new value is null. Not sure what happened here--should be impossible.
                 var msg = string.Format(
-                    "Items are incompatible for comparison! oldObject.Item.Type => {0}, newObject.Item.Type => {1}",
-                    oldValue.UnderlyingType,
-                    newValue.UnderlyingType);
+                    "The {0} return value was null! This indicates an analysis log file corruption. Terminating analysis!",
+                    oldValue == null ? "old" : "current");
                 throw new ArgumentException(msg);
             }
-        }
 
-        /// <inheritdoc />
-        public IEnumerable<IAnalysisLogDiff> DiffPrimitives(Xml.Primitive oldPrimitive, Xml.Primitive newPrimitive)
-        {
-            if (oldPrimitive == null)
-            {
-                throw new ArgumentNullException("oldObject");
-            }
-
-            if (newPrimitive == null)
-            {
-                throw new ArgumentNullException("newObject");
-            }
-
-            if (oldPrimitive.IsComparableTo(newPrimitive))
-            {
-                // Return a new diff here.
-                yield break;
-            }
-
-            yield break;
+            return list;
         }
 
         /// <inheritdoc />
         public IEnumerable<IAnalysisLogDiff> DiffObjects(Xml.Object oldObject, Xml.Object newObject)
         {
-            if (oldObject == null)
-            {
-                throw new ArgumentNullException("oldObject");
-            }
+            yield break;
+        }
 
-            if (newObject == null)
-            {
-                throw new ArgumentNullException("newObject");
-            }
+        #endregion
 
+        #region Private Methods
+
+        private IEnumerable<IAnalysisLogDiff> DiffObjectsWithPathStack(Xml.Object oldObject, Xml.Object newObject, MemberPathStack pathStack)
+        {
             yield break;
         }
 

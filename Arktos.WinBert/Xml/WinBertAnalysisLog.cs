@@ -207,7 +207,7 @@
         /// </returns>
         public bool IsComparableTo(Primitive that)
         {
-            return this.FullName.Equals(that.FullName);
+            return this.FullName != null && this.FullName.Equals(that.FullName);
         }
 
         /// <inheritdoc />

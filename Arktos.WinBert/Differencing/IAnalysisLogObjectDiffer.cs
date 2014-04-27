@@ -35,23 +35,7 @@
         /// <returns>
         /// A stream of log diffs. This stream will be empty if no differences can be found.
         /// </returns>
-        IEnumerable<IAnalysisLogDiff> DiffValues(Xml.Value oldValue, Xml.Value newValue);
-
-        /// <summary>
-        /// Performs a difference between the two target primitives.
-        /// </summary>
-        /// <param name="oldPrimitive">
-        /// The old primitive.
-        /// </param>
-        /// <param name="newPrimitive">
-        /// The new primitive.
-        /// </param>
-        /// <returns>
-        /// A stream of log diffs. In order to remain consistent across the other methods we picked an IEnumerable even
-        /// though this method every only returns a set with one element. This enables simpler cascades of sequences 
-        /// when computing differences in deep object graphs. The set will be empty if no diffs exist.
-        /// </returns>
-        IEnumerable<IAnalysisLogDiff> DiffPrimitives(Xml.Primitive oldPrimitive, Xml.Primitive newPrimitive);
+        IEnumerable<IAnalysisLogDiff> DiffReturnValues(Xml.Value oldValue, Xml.Value newValue);
 
         #endregion
     }

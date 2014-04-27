@@ -147,6 +147,7 @@
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
     <Compile Include="Differencing\AnalysisLogDiff.cs" />
+    <Compile Include="Differencing\PathedAnalysisLogDiff.cs" />
     <Compile Include="Differencing\AnalysisLogObjectDiffer.cs" />
     <Compile Include="Differencing\IAnalysisLogDiff.cs" />
     <Compile Include="Differencing\IAnalysisLogObjectDiffer.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Differencing\MethodCallDiffer.cs" />
     <Compile Include="Differencing\MethodCallDifference.cs" />
     <Compile Include="Differencing\MemberPathStack.cs" />
+    <Compile Include="Differencing\ReturnValueAnalysisLogDiff.cs" />
     <Compile Include="Differencing\TestExecutionDiffer.cs" />
     <Compile Include="Differencing\TextExecutionDifference.cs" />
     <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
