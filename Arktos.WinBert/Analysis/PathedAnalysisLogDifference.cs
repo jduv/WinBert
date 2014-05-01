@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
     using System;
 
@@ -6,11 +6,11 @@
     /// Implementation of a simple analysis log diff. Conveys some simple information about a difference between
     /// two objects in the object graph built by the Winbert analysis engine.
     /// </summary>
-    public class PathedAnalysisLogDiff : AnalysisLogDiff
+    public class PathedAnalysisLogDifference : AnalysisLogDifference
     {
         #region Constructors & Destructors
 
-        public PathedAnalysisLogDiff(IMemberPath memberPath, string oldValue, string newValue, string typeFullName)
+        public PathedAnalysisLogDifference(string memberPath, string oldValue, string newValue, string typeFullName)
             : base(oldValue, newValue, typeFullName)
         {
             if (memberPath == null)
@@ -25,8 +25,10 @@
 
         #region Properties
 
-        /// <inheritdoc />
-        public IMemberPath Path { get; private set; }
+        /// <summary>
+        /// Gets the path to the difference with respect to the object it's contained within.
+        /// </summary>
+        public string Path { get; private set; }
 
         #endregion
     }

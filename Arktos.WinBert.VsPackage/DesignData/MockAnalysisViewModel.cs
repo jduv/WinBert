@@ -1,10 +1,8 @@
 ﻿namespace Arktos.WinBert.VsPackage.DesignData
 {
     using Arktos.WinBert.Analysis;
-    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.VsPackage.ViewModel;
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Mock view model for displaying design time data. Enables testing without running the solution.
@@ -34,11 +32,7 @@
         /// </returns>
         private static SuccessfulAnalysisResult CreateSuccessfulAnalysisResult()
         {
-            var diffs = new List<TestExecutionDifference>()
-            {
-            };
-
-            return new SuccessfulAnalysisResult(diffs);
+            return null;
         }
 
         #endregion

@@ -1,5 +1,6 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using System;
 
     /// <summary>
@@ -10,20 +11,20 @@
         #region Fields & Constants
 
         private readonly ITypeDifference typeDiff;
-        private readonly IAnalysisLogObjectDiffer objectDiffer;
+        private readonly ObjectDiffer objectDiffer;
 
         #endregion
 
         #region Constructors & Destructors
 
         public MethodCallDiffer(ITypeDifference typeDiff)
-            : this(typeDiff, new AnalysisLogObjectDiffer())
+            : this(typeDiff, new ObjectDiffer())
         {
         }
 
         public MethodCallDiffer(
             ITypeDifference typeDiff,
-            IAnalysisLogObjectDiffer objectDiffer)
+            ObjectDiffer objectDiffer)
         {
             if (typeDiff == null)
             {

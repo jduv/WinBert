@@ -1,5 +1,6 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -28,8 +29,8 @@
 
             this.PreviousExecution = previousExecution;
             this.CurrentExecution = currentExecution;
-            this.MethodDifferences = methodDiffs ?? Enumerable.Empty<MethodCallDifference>();
-            this.AreDifferences = this.MethodDifferences.Any(x => x.AreDifferences);
+            this.MethodDifferences = this.FilterMethodDifferences(methodDiffs);
+            this.AreDifferences = this.MethodDifferences.Any();
             this.TotalDistance = this.MethodDifferences.Sum(x => x.Distance);
         }
 
@@ -76,6 +77,25 @@
         /// for sorting test execution differences by maximum distance.
         /// </summary>
         public int? TotalDistance { get; private set; }
+
+        #endregion
+
+        #region Private Methods
+
+        private IEnumerable<MethodCallDifference> FilterMethodDifferences(IEnumerable<MethodCallDifference> toFilter)
+        {
+            IEnumerable<MethodCallDifference> filtered;
+            if (toFilter == null)
+            {
+                filtered = Enumerable.Empty<MethodCallDifference>();
+            }
+            else
+            {
+                filtered = toFilter.Where(x => x.AreDifferences);
+            }
+
+            return filtered;
+        }
 
         #endregion
     }

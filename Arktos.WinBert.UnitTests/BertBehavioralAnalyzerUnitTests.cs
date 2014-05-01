@@ -22,6 +22,8 @@
         private static readonly string AnalysisDir = @"test-analysis\";
         private static readonly string NewReturnValueAnalysisPath = AnalysisDir + "analysisNew_ReturnValues.xml";
         private static readonly string OldReturnValueAnalysisPath = AnalysisDir + "analysisOld_ReturnValues.xml";
+        private static readonly string NewSentinalAnalysisPath = AnalysisDir + "analysisNew_SentinalValues.xml";
+        private static readonly string OldSentinalAnalysisPath = AnalysisDir + "analysisOld_SentinalValues.xml";
 
         private Mock<IFileSystem> fileSystemMock;
         private Mock<ITestRunResult> simpleSuccessfulTestResultMock;
@@ -189,17 +191,81 @@
             var typedResult = result as SuccessfulAnalysisResult;
             Assert.IsTrue(typedResult.Differences.Count() > 0);
 
-            foreach (var diff in typedResult.Differences)
+            foreach (var testDiff in typedResult.Differences)
             {
-                Assert.IsTrue(diff.AreDifferences);
-                Assert.IsNotNull(diff.TestName);
-                Assert.IsNotNull(diff.PreviousExecution);
-                Assert.IsNotNull(diff.CurrentExecution);
-                Assert.IsTrue(diff.MethodDifferences.Count() > 0);
-            }
+                Assert.IsTrue(testDiff.AreDifferences);
+                Assert.IsNotNull(testDiff.TestName);
+                Assert.IsNotNull(testDiff.PreviousExecution);
+                Assert.IsNotNull(testDiff.CurrentExecution);
+                Assert.IsTrue(testDiff.MethodDifferences.Count() > 0);
 
-            // FIXME
-            Assert.Inconclusive();
+                foreach (var methodDiff in testDiff.MethodDifferences)
+                {
+                    Assert.IsTrue(methodDiff.AreDifferences);
+                    Assert.IsNotNull(methodDiff.CurrentCall);
+                    Assert.IsNotNull(methodDiff.PreviousCall);
+                    Assert.IsNotNull(methodDiff.ReturnValueDifference);
+                    Assert.IsNotNull(methodDiff.PostCallObjectDifferences);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Analyze_SuccessfulRun_SentinalValuesDifferent()
+        {
+            string typeName = "Class1";
+            string typeFullName = "TestAssembly.Class1";
+            var methodName = "TestAssembly.Class1.TestMe";
+
+            // Mock out some type diff stuff. Correlates with sample analysis files.
+            var typeDiffMock = new Mock<ITypeDifference>();
+            typeDiffMock.Setup(x => x.AreDifferences).Returns(true);
+            typeDiffMock.Setup(x => x.FullName).Returns(typeFullName);
+            typeDiffMock.Setup(x => x.Methods).Returns(new List<string>() { methodName });
+            typeDiffMock.Setup(x => x.Name).Returns(typeName);
+            typeDiffMock.Setup(x => x.Contains(It.Is<string>(s => s.Equals(methodName)))).Returns(true);
+
+            var diffMock = new Mock<IAssemblyDifference>();
+            diffMock.Setup(x => x.AreDifferences).Returns(true);
+            diffMock.Setup(x => x.TypeDifferences).Returns(new List<ITypeDifference>() { typeDiffMock.Object });
+            diffMock.Setup(x => x[It.Is<string>(s => s.Equals(typeFullName))]).Returns(typeDiffMock.Object);
+
+            var newAssemblyResult = new Mock<ITestRunResult>();
+            newAssemblyResult.Setup(x => x.Success).Returns(true);
+            newAssemblyResult.Setup(x => x.PathToAnalysisLog).Returns(NewSentinalAnalysisPath);
+
+            var oldAssemblyResult = new Mock<ITestRunResult>();
+            oldAssemblyResult.Setup(x => x.Success).Returns(true);
+            oldAssemblyResult.Setup(x => x.PathToAnalysisLog).Returns(OldSentinalAnalysisPath);
+
+            var target = new BertBehavioralAnalyzer(this.fileSystemMock.Object);
+            var result = target.Analyze(diffMock.Object, oldAssemblyResult.Object, newAssemblyResult.Object);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(SuccessfulAnalysisResult));
+
+            var typedResult = result as SuccessfulAnalysisResult;
+            Assert.IsTrue(typedResult.Differences.Count() > 0);
+
+            foreach (var testDiff in typedResult.Differences)
+            {
+                Assert.IsTrue(testDiff.AreDifferences);
+                Assert.IsNotNull(testDiff.TestName);
+                Assert.IsNotNull(testDiff.PreviousExecution);
+                Assert.IsNotNull(testDiff.CurrentExecution);
+                Assert.IsTrue(testDiff.MethodDifferences.Count() > 0);
+                Assert.AreEqual(1, testDiff.MethodDifferences.Count());
+
+                var methodDiff = testDiff.MethodDifferences.ToList()[0];
+                Assert.IsTrue(methodDiff.AreDifferences);
+                Assert.IsNotNull(methodDiff.CurrentCall);
+                Assert.IsNotNull(methodDiff.PreviousCall);
+                Assert.IsNotNull(methodDiff.ReturnValueDifference);
+                Assert.IsNotNull(methodDiff.PostCallObjectDifferences);
+
+                Assert.IsTrue(methodDiff.PostCallObjectDifferences.AreDifferences);
+                Assert.AreEqual(3, methodDiff.PostCallObjectDifferences.FieldSentinalDiffs.Count());
+            }
         }
 
         #endregion

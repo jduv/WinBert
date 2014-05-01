@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
     using System;
     using System.Collections.Generic;
@@ -36,7 +36,7 @@
             get
             {
                 // Process in reverse order.
-                return string.Join(".", this.Reverse().ToArray());
+                return string.Join(".", this.Reverse().ToArray()).ToLower();
             }
         }
 

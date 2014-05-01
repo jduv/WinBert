@@ -30,7 +30,7 @@
         /// <summary>
         /// Gets a value indicating whether the wrapped item is null. Utility property.
         /// </summary>
-        public bool IsNull
+        public bool IsItemNull
         {
             get
             {
@@ -89,36 +89,8 @@
         {
             get
             {
-                return this.IsNull ? null : this.Item.GetType();
+                return this.IsItemNull ? null : this.Item.GetType();
             }
-        }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Checks to determing if this value is comparable to the target one. 
-        /// </summary>
-        /// <param name="that">
-        /// The target Xml.Value to compare against.
-        /// </param>
-        /// <returns>
-        /// True if both values are comparable to one another, false otherwise.
-        /// </returns>
-        public bool IsComparableTo(Value that)
-        {
-            bool comparable = true;
-            if (that == null || this.Item == null || that.Item == null)
-            {
-                comparable = false;
-            }
-            else
-            {
-                comparable = object.ReferenceEquals(this, that) || this.Item.GetType() == that.Item.GetType();
-            }
-
-            return comparable;
         }
 
         #endregion
@@ -260,41 +232,12 @@
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets a string value representing null.
-        /// </summary>
-        public string Value
-        {
-            get
-            {
-                return NullValue;
-            }
-        }
-
-        #endregion
-
         #region Public Methods
 
-        /// <inheritdoc />
-        /// <remarks>
-        /// A Null value is equal to any other Null value, so we only check for type
-        /// equality.
-        /// </remarks>
-        public override bool Equals(object obj)
+        ///<inheritdoc />
+        public override string ToString()
         {
-            return obj is Null;
-        }
-
-        /// <inheritdoc />
-        /// <remarks>
-        /// This may look a little funny, but all Null types are equal, and thereby should hash
-        /// equally where possible.
-        /// </remarks>
-        public override int GetHashCode()
-        {
-            return this.GetType().GetHashCode();
+            return NullValue;
         }
 
         #endregion
@@ -312,41 +255,12 @@
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets a string value representing null.
-        /// </summary>
-        public string Value
-        {
-            get
-            {
-                return NotNullValue;
-            }
-        }
-
-        #endregion
-
         #region Public Methods
 
-        /// <inheritdoc />
-        /// <remarks>
-        /// A NotNull value is equal to any other NotNull value, so we only check for type
-        /// equality.
-        /// </remarks>
-        public override bool Equals(object obj)
+        ///<inheritdoc />
+        public override string ToString()
         {
-            return obj is NotNull;
-        }
-
-        /// <inheritdoc />
-        /// <remarks>
-        /// This may look a little funny, but all NotNull types are equal, and thereby should hash
-        /// equally where possible.
-        /// </remarks>
-        public override int GetHashCode()
-        {
-            return this.GetType().GetHashCode();
+            return NotNullValue;
         }
 
         #endregion
@@ -364,41 +278,12 @@
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Gets a string value representing null.
-        /// </summary>
-        public string Value
-        {
-            get
-            {
-                return ThisValue;
-            }
-        }
-
-        #endregion
-
         #region Public Methods
 
-        /// <inheritdoc />
-        /// <remarks>
-        /// A This value is equal to any other This value, so we only check for type
-        /// equality.
-        /// </remarks>
-        public override bool Equals(object obj)
+        ///<inheritdoc />
+        public override string ToString()
         {
-            return obj is This;
-        }
-
-        /// <inheritdoc />
-        /// <remarks>
-        /// This may look a little funny, but all This types are equal, and thereby should hash
-        /// equally where possible.
-        /// </remarks>
-        public override int GetHashCode()
-        {
-            return this.GetType().GetHashCode();
+            return ThisValue;
         }
 
         #endregion

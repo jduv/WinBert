@@ -1,6 +1,6 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using Arktos.WinBert.Differencing;
+    using Arktos.WinBert.Analysis;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
 
@@ -32,7 +32,7 @@
         [TestMethod]
         public void CurrentPathProp_ReturnsValidPath()
         {
-            var expected = "RootType.path.to.field.or.property";
+            var expected = "roottype.path.to.field.or.property";
             var target = new MemberPathStack("RootType");
             target.Push("path");
             target.Push("to");

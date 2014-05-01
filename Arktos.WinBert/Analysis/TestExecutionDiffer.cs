@@ -1,5 +1,6 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using System;
     using System.Collections.Generic;
     using System.Linq;

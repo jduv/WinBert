@@ -1,0 +1,100 @@
+﻿<?xml version="1.0"?>
+<WinBertAnalysisLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://arktos.org/WinBertAnalysisLogSchema.xsd">
+  <TestExecutions>
+    <TestExecution Id="0" Name="RandoopTest101">
+      <MethodCalls>
+        <MethodCall Id="0" CallType="Instance">
+          <Signature>TestMe</Signature>
+          <DynamicCallGraph>
+            <CallGraphNode SequenceNumber="0">
+              <Signature>TestAssembly.Class1.TestMe</Signature>
+            </CallGraphNode>
+          </DynamicCallGraph>
+          <PostCallInstance FullName="TestAssembly.Class1">
+            <Fields>
+              <Field>
+                <Name>thisField</Name>
+                <Value>
+                  <Object FullName="TestAssembly.Class1" xsi:type="This">
+                    <Fields />
+                    <AutoProperties />
+                  </Object>
+                </Value>
+              </Field>
+              <Field>
+                <Name>nullField</Name>
+                <Value>
+                  <Object FullName="TestAssembly.Class1" xsi:type="Null">
+                    <Fields />
+                    <AutoProperties />
+                  </Object>
+                </Value>
+              </Field>
+              <Field>
+                <Name>notNullField</Name>
+                <Value>
+                  <Object FullName="TestAssembly.Class1" xsi:type="NotNull">
+                    <Fields />
+                    <AutoProperties />
+                  </Object>
+                </Value>
+              </Field>
+              <Field>
+                <Name>noChangeField</Name>
+                <Value>
+                  <Object FullName="TestAssembly.Class1" xsi:type="This">
+                    <Fields />
+                    <AutoProperties />
+                  </Object>
+                </Value>
+              </Field>
+            </Fields>
+            <AutoProperties />
+          </PostCallInstance>
+        </MethodCall>
+        <MethodCall Id="1" CallType="Instance">
+          <Signature>TestAssembly.Class1.callTakeTwo</Signature>
+          <DynamicCallGraph>
+            <CallGraphNode SequenceNumber="0">
+              <Signature>TestAssembly.Class1.callTakeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="1">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="2">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="3">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="4">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="5">
+              <Signature>TestAssembly.Class1..ctor</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="6">
+              <Signature>TestAssembly.Class1..ctor</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="7">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="8">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="9">
+              <Signature>TestAssembly.Class1..ctor</Signature>
+            </CallGraphNode>
+            <CallGraphNode SequenceNumber="10">
+              <Signature>TestAssembly.Class1.takeTwo</Signature>
+            </CallGraphNode>
+          </DynamicCallGraph>
+          <PostCallInstance FullName="TestAssembly.Class1">
+            <Fields />
+            <AutoProperties />
+          </PostCallInstance>
+        </MethodCall>
+      </MethodCalls>
+    </TestExecution>
+  </TestExecutions>
+</WinBertAnalysisLog>

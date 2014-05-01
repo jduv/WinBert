@@ -1,8 +1,7 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Represents and enumerates the differences between two method calls from the XML namespace.
@@ -17,8 +16,8 @@
             Xml.MethodCall previousCall,
             Xml.MethodCall currentCall,
             int? distance,
-            IEnumerable<IAnalysisLogDiff> postCallDiffs,
-            IEnumerable<IAnalysisLogDiff> returnValueDiffs = null)
+            ObjectDifference postCallDiff,
+            ReturnValueDifference returnValueDiff)
         {
             if (previousCall == null)
             {
@@ -35,16 +34,22 @@
                 throw new ArgumentException("Distance must be positive!");
             }
 
-            if (postCallDiffs == null)
+            if (postCallDiff == null)
             {
                 throw new ArgumentNullException("postCallDiff");
+            }
+
+            if (returnValueDiff == null)
+            {
+                throw new ArgumentNullException("returnValueDiff");
             }
 
             this.PreviousCall = previousCall;
             this.CurrentCall = currentCall;
             this.Distance = distance;
-            this.PostCallObjectDifferences = postCallDiffs;
-            this.ReturnValueDifferences = returnValueDiffs;
+            this.PostCallObjectDifferences = postCallDiff;
+            this.ReturnValueDifference = returnValueDiff;
+            this.AreDifferences = this.PostCallObjectDifferences.AreDifferences || this.ReturnValueDifference.AreDifferences;
         }
 
         #endregion
@@ -58,15 +63,15 @@
         public int? Distance { get; private set; }
 
         /// <summary>
-        /// Gets the difference between the post-call objects in the old and new test executions.
+        /// Gets the differences between the post-call objects in the old and new test executions.
         /// </summary>
-        public IEnumerable<IAnalysisLogDiff> PostCallObjectDifferences { get; private set; }
+        public ObjectDifference PostCallObjectDifferences { get; private set; }
 
         /// <summary>
         /// Gets the difference between the return values. This could be a primitive difference or
         /// an object difference depending on what's returned by the method call.
         /// </summary>
-        public IEnumerable<IAnalysisLogDiff> ReturnValueDifferences { get; private set; }
+        public ReturnValueDifference ReturnValueDifference { get; private set; }
 
         /// <summary>
         /// Gets the previous method call.
@@ -82,13 +87,7 @@
         /// Gets a value indicating whether there are some discreet differences between the two method
         /// calls.
         /// </summary>
-        public bool AreDifferences
-        {
-            get
-            {
-                return this.PostCallObjectDifferences.Any() || (this.ReturnValueDifferences != null && this.ReturnValueDifferences.Any());
-            }
-        }
+        public bool AreDifferences { get; private set; }
 
         #endregion
     }

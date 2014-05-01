@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.Differencing
+﻿namespace Arktos.WinBert.Analysis
 {
     using System;
 
@@ -6,11 +6,11 @@
     /// Abstract class for basic analysis log difference functionality. More specific instances should be built to
     /// handle the nuances of each situation.
     /// </summary>
-    public abstract class AnalysisLogDiff : IAnalysisLogDiff
+    public class AnalysisLogDifference
     {
         #region Constructors & Destructors
 
-        public AnalysisLogDiff(string oldValue, string newValue, string typeFullName)
+        public AnalysisLogDifference(string oldValue, string newValue, string typeFullName)
         {
             if (oldValue == null)
             {
@@ -21,6 +21,10 @@
             {
                 throw new ArgumentNullException("newValue");
             }
+
+            this.OldValue = oldValue;
+            this.NewValue = newValue;
+            this.TypeFullName = typeFullName;
         }
 
         #endregion
