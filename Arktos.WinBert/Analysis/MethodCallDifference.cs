@@ -50,11 +50,17 @@
             this.PostCallObjectDifferences = postCallDiff;
             this.ReturnValueDifference = returnValueDiff;
             this.AreDifferences = this.PostCallObjectDifferences.AreDifferences || this.ReturnValueDifference.AreDifferences;
+            this.Signature = currentCall.Signature;
         }
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the method call's signature.
+        /// </summary>
+        public string Signature { get; private set; }
 
         /// <summary>
         /// Gets the distance value of this method call to one that has changed in a dynamic call graph produced

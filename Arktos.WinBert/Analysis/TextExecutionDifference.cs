@@ -32,6 +32,7 @@
             this.MethodDifferences = this.FilterMethodDifferences(methodDiffs);
             this.AreDifferences = this.MethodDifferences.Any();
             this.TotalDistance = this.MethodDifferences.Sum(x => x.Distance);
+            this.TestName = currentExecution.Name;
         }
 
         #endregion
@@ -42,13 +43,7 @@
         /// Gets the name of the test. This is the same as grabbing the name off the current test
         /// execution.
         /// </summary>
-        public string TestName
-        {
-            get
-            {
-                return this.CurrentExecution.Name;
-            }
-        }
+        public string TestName { get; private set; }
 
         /// <summary>
         /// Gets a list of method differences, representing changes inside the state of an object upon which

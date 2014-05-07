@@ -158,10 +158,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BooleanConverter.cs" />
+    <Compile Include="Converters\EmptyListVisibilityConverter.cs" />
     <Compile Include="DesignData\MockAnalysisViewModel.cs" />
     <Compile Include="ViewModel\AnalysisToolWindowVm.cs" />
     <Compile Include="ViewModel\AnalysisVmBase.cs" />
     <Compile Include="ViewModel\AnalysisErrorInfoVm.cs" />
+    <Compile Include="ViewModel\BehavioralDifferenceVm.cs" />
     <Compile Include="ViewModel\InconclusiveAnalysisVm.cs" />
     <Compile Include="ViewModel\SuccessfulAnalysisVm.cs" />
     <Compile Include="ViewModel\ViewModelFactory.cs" />

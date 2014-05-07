@@ -6,6 +6,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using System;
+    using System.Linq;
 
     [TestClass]
     public class AnalysisResultUnitTests
@@ -98,10 +99,10 @@
             Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
 
             var typedResult = result as InconclusiveAnalysisResult;
-            Assert.IsNotNull(typedResult.Message);
-            Assert.IsTrue(typedResult.Message.Contains(AnalysisResult.SingleRunUnsuccessfulMessage));
-            Assert.IsTrue(typedResult.Message.Contains(this.targetOneMock.Object.Location));
-            Assert.IsFalse(typedResult.Message.Contains(this.targetTwoMock.Object.Location));
+            Assert.IsNotNull(typedResult.Reason);
+            Assert.IsTrue(typedResult.Reason.Contains(AnalysisResult.SingleRunUnsuccessfulMessage));
+            Assert.IsTrue(typedResult.Reason.Contains(this.targetOneMock.Object.Location));
+            Assert.IsFalse(typedResult.Reason.Contains(this.targetTwoMock.Object.Location));
         }
 
         [TestMethod]
@@ -123,10 +124,10 @@
             Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
 
             var typedResult = result as InconclusiveAnalysisResult;
-            Assert.IsNotNull(typedResult.Message);
-            Assert.IsTrue(typedResult.Message.Contains(AnalysisResult.SingleRunUnsuccessfulMessage));
-            Assert.IsTrue(typedResult.Message.Contains(this.targetOneMock.Object.Location));
-            Assert.IsFalse(typedResult.Message.Contains(this.targetTwoMock.Object.Location));
+            Assert.IsNotNull(typedResult.Reason);
+            Assert.IsTrue(typedResult.Reason.Contains(AnalysisResult.SingleRunUnsuccessfulMessage));
+            Assert.IsTrue(typedResult.Reason.Contains(this.targetOneMock.Object.Location));
+            Assert.IsFalse(typedResult.Reason.Contains(this.targetTwoMock.Object.Location));
         }
 
         [TestMethod]
@@ -148,10 +149,10 @@
             Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
 
             var typedResult = result as InconclusiveAnalysisResult;
-            Assert.IsNotNull(typedResult.Message);
-            Assert.IsTrue(typedResult.Message.Contains(AnalysisResult.BothRunsUnsuccessfulMessage));
-            Assert.IsTrue(typedResult.Message.Contains(this.targetOneMock.Object.Location));
-            Assert.IsTrue(typedResult.Message.Contains(this.targetTwoMock.Object.Location));
+            Assert.IsNotNull(typedResult.Reason);
+            Assert.IsTrue(typedResult.Reason.Contains(AnalysisResult.BothRunsUnsuccessfulMessage));
+            Assert.IsTrue(typedResult.Reason.Contains(this.targetOneMock.Object.Location));
+            Assert.IsTrue(typedResult.Reason.Contains(this.targetTwoMock.Object.Location));
         }
 
         #endregion
@@ -164,11 +165,11 @@
             var result = AnalysisResult.NoDifference();
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
+            Assert.IsInstanceOfType(result, typeof(SuccessfulAnalysisResult));
 
-            var typedResult = result as InconclusiveAnalysisResult;
-            Assert.IsNotNull(typedResult.Message);
-            Assert.AreEqual(typedResult.Message, AnalysisResult.NoDifferenceMessage, true);
+            var typedResult = result as SuccessfulAnalysisResult;
+            Assert.IsTrue(typedResult.Success);
+            Assert.IsFalse(typedResult.Differences.Any());
         }
 
         #endregion
@@ -184,8 +185,8 @@
             Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
 
             var typedResult = result as InconclusiveAnalysisResult;
-            Assert.IsNotNull(typedResult.Message);
-            Assert.AreEqual(typedResult.Message, AnalysisResult.UnknownErrorMessage, true);
+            Assert.IsNotNull(typedResult.Reason);
+            Assert.AreEqual(typedResult.Reason, AnalysisResult.UnknownErrorMessage, true);
         }
 
         #endregion
@@ -210,9 +211,9 @@
             Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
 
             var typedResult = result as InconclusiveAnalysisResult;
-            Assert.IsNotNull(typedResult.Message);
-            Assert.IsTrue(typedResult.Message.Contains(AnalysisResult.ExceptionMessage));
-            Assert.IsTrue(typedResult.Message.Contains(message));
+            Assert.IsNotNull(typedResult.Reason);
+            Assert.IsTrue(typedResult.Reason.Contains(AnalysisResult.ExceptionMessage));
+            Assert.IsTrue(typedResult.Reason.Contains(message));
         }
 
         #endregion

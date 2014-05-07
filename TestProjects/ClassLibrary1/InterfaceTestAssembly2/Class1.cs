@@ -5,14 +5,16 @@ namespace InterfaceTestAssembly2
 {
     public class Class1 : InterfaceTestAssembly1.Interface1
     {
+        private int value = 0;
+
         public void I1Foo()
         {
-            bippity();
+            this.value = I1Bar();
         }
 
         public int I1Bar()
         {
-            return 19999;
+            return 15895567;
         }
 
         public DateTime I1Baz()

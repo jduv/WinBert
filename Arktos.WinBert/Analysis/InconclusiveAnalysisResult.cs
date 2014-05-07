@@ -1,21 +1,17 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿
+namespace Arktos.WinBert.Analysis
 {
     /// <summary>
-    /// Represents an inconclusive analysis result.
+    /// Represents an inconclusive analysis pass.
     /// </summary>
     public class InconclusiveAnalysisResult : AnalysisResult
     {
-        #region Fields & Constants
-
-        private readonly string message;
-
-        #endregion
-
-        #region Fields & Constants
+        #region Constructors & Destructors
 
         public InconclusiveAnalysisResult(string message)
+            : base(false)
         {
-            this.message = message;
+            this.Reason = message;
         }
 
         #endregion
@@ -23,15 +19,9 @@
         #region Properties
 
         /// <summary>
-        /// Gets the message to display to the user.
+        /// Gets a message to the user.
         /// </summary>
-        public string Message
-        {
-            get
-            {
-                return this.message;
-            }
-        }
+        public string Reason { get; private set; }
 
         #endregion
     }

@@ -151,7 +151,7 @@
                 this.simpleUnsuccessfulTestResultMock.Object);
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(InconclusiveAnalysisResult));
+            Assert.IsInstanceOfType(result, typeof(SuccessfulAnalysisResult));
         }
 
         [TestMethod]

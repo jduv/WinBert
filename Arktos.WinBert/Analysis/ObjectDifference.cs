@@ -18,13 +18,13 @@
             IEnumerable<ObjectDifference> propertyObjectDiffs,
             IEnumerable<PathedAnalysisLogDifference> propertySentinalDiffs)
         {
-            this.PrimitiveFieldDiffs = primitiveFieldDiffs;
-            this.PrimitivePropertyDiffs = primitiveFieldDiffs;
+            this.FieldPrimitiveDiffs = primitiveFieldDiffs;
+            this.PropertyPrimitiveDiffs = primitiveFieldDiffs;
             this.FieldObjectDiffs = fieldObjectDiffs.Where(x => x.AreDifferences);
             this.PropertyObjectDiffs = propertyObjectDiffs.Where(x => x.AreDifferences);
             this.FieldSentinalDiffs = fieldSentinalDiffs;
             this.PropertySentinalDiffs = propertySentinalDiffs;
-            this.AreDifferences = this.PrimitiveFieldDiffs.Any() || this.PrimitivePropertyDiffs.Any() || this.FieldObjectDiffs.Any() ||
+            this.AreDifferences = this.FieldPrimitiveDiffs.Any() || this.PropertyPrimitiveDiffs.Any() || this.FieldObjectDiffs.Any() ||
                 this.PropertyObjectDiffs.Any() || this.FieldSentinalDiffs.Any() || this.PropertySentinalDiffs.Any();
         }
 
@@ -35,12 +35,12 @@
         /// <summary>
         /// Gets a list of field differences.
         /// </summary>
-        public IEnumerable<PathedAnalysisLogDifference> PrimitiveFieldDiffs { get; private set; }
+        public IEnumerable<PathedAnalysisLogDifference> FieldPrimitiveDiffs { get; private set; }
 
         /// <summary>
         /// Gets a list of property differences.
         /// </summary>
-        public IEnumerable<PathedAnalysisLogDifference> PrimitivePropertyDiffs { get; private set; }
+        public IEnumerable<PathedAnalysisLogDifference> PropertyPrimitiveDiffs { get; private set; }
 
         /// <summary>
         /// Gets a list of child object field differences.
@@ -66,6 +66,22 @@
         /// Gets a value indicating whether there are differences.
         /// </summary>
         public bool AreDifferences { get; private set; }
+
+        /// <summary>
+        /// Gets a stream of all differences including walking the tree of internal object differences.
+        /// </summary>
+        public IEnumerable<PathedAnalysisLogDifference> DiffStream
+        {
+            get
+            {
+                IEnumerable<PathedAnalysisLogDifference> stream = new List<PathedAnalysisLogDifference>();
+                return stream.Concat(this.FieldPrimitiveDiffs)
+                    .Concat(this.FieldObjectDiffs.SelectMany(x => x.DiffStream))
+                    .Concat(this.PropertyPrimitiveDiffs)
+                    .Concat(this.PropertyObjectDiffs.SelectMany(x => x.DiffStream))
+                    .Concat(this.FieldSentinalDiffs).Concat(this.PropertySentinalDiffs);
+            }
+        }
 
         #endregion
     }

@@ -19,7 +19,7 @@
                 throw new ArgumentNullException("result");
             }
 
-            this.Message = result.Message;
+            this.Message = result.Reason;
         }
 
         #endregion

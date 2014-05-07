@@ -57,7 +57,7 @@
                 throw new ArgumentException(message);
             }
 
-            var methodDiffs = this.ComputeMethodDifferences(oldObject.MethodCalls, newObject.MethodCalls);
+            var methodDiffs = this.ComputeMethodDifferences(oldObject.MethodCalls, newObject.MethodCalls).Where(m => m.Distance != null);
             return new TestExecutionDifference(oldObject, newObject, methodDiffs);
         }
 

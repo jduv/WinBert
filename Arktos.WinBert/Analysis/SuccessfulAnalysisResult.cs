@@ -1,6 +1,6 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
-    using Arktos.WinBert.Differencing;
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -11,7 +11,12 @@
         #region Constructors & Destructors
 
         public SuccessfulAnalysisResult(IEnumerable<TestExecutionDifference> differences)
+            : base(true)
         {
+            if (differences == null)
+            {
+                throw new ArgumentException("Differences cannot be null.");
+            }
             this.Differences = differences;
         }
 

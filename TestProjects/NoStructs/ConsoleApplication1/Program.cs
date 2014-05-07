@@ -8,7 +8,7 @@ namespace ConsoleApplication1
 {
     public class Program
     {
-        private int twiddle = 0;
+        private int twiddle = 345;
         private Class1 instance = new Class1("default");
 
         public void Test1()
@@ -18,13 +18,13 @@ namespace ConsoleApplication1
 
         public void Test2(Class1 toProcess)
         {
-            toProcess.Number = 2;
+            toProcess.Number = 15466;
             this.instance = toProcess;
         }
 
         public void Test3(Class1 toProcess)
         {
-            toProcess.Number = 3;
+            toProcess.Number = 8679;
             this.instance = toProcess;
         }
 

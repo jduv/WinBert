@@ -1,14 +1,15 @@
 ﻿namespace Arktos.WinBert.Testing
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AppDomainToolkit;
     using Arktos.WinBert.Analysis;
     using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Xml;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This base class contains some basic implementations that TestManager derived classes will find useful along with
@@ -121,11 +122,20 @@
         /// </remarks>
         public AnalysisResult Run(Build previous, Build current)
         {
+            var buildInfo = string.Format("[sequence => {0}, path => {1}] [sequence => {2}, path => {3}]",
+                previous.SequenceNumber, previous.AssemblyPath, current.SequenceNumber, current.AssemblyPath);
+            Debug.WriteLine("WinBert --> Starting differencing pass for assemblies: " + buildInfo);
+
             AnalysisResult result = null;
             var diff = this.Diff(previous, current);
             if (diff != null && diff.AreDifferences)
             {
+                Debug.WriteLine("WinBert --> Differences detected, executing WinBert stack.");
                 result = this.ExecuteStack(diff);
+            }
+            else
+            {
+                Debug.WriteLine("WinBert --> No differences detected between builds. Carry on. Builds: " + buildInfo);
             }
 
             return result;
@@ -154,22 +164,32 @@
             // Invoke two versions of the stack simultaneously
             ITestRunResult oldAssemblyResults = null, newAssemblyResults = null;
             var typeNames = diff.TypeDifferences.Select(x => x.Name);
+            Debug.WriteLine("WinBert --> Generating tests.");
             var tests = this.GenerateTests(diff.NewAssemblyTarget, typeNames);
+            Debug.WriteLine("WinBert --> Done. Assembly written to location: [" + tests.Location + "]");
+            Debug.WriteLine("WinBert --> Beginning instrumentation run.");
             var instrumented = this.InstrumentTests(TestTarget.Create(diff.OldAssemblyTarget, diff.NewAssemblyTarget, tests));
+            Debug.WriteLine("WinBert --> Instrumentation complete. Tests written to assembly at location: [" + instrumented.TestAssembly.Location + "]");
+            Debug.WriteLine("WinBert --> Invoking tests on previous and current assemblies.");
 
             // Execute tests in parallel.
             Parallel.Invoke(
                 () =>
                 {
                     newAssemblyResults = this.RunTests(instrumented.TargetNewAssembly, instrumented.TestAssembly);
+                    LogTestResults(newAssemblyResults);
                 },
                 () =>
                 {
                     oldAssemblyResults = this.RunTests(instrumented.TargetOldAssembly, instrumented.TestAssembly);
+                    LogTestResults(oldAssemblyResults);
                 });
 
             // Perform analysis and we're done.
-            return this.Analyze(diff, oldAssemblyResults, newAssemblyResults);
+            Debug.WriteLine("WinBert --> Performing analysis pass.");
+            var result = this.Analyze(diff, oldAssemblyResults, newAssemblyResults);
+            LogAnalysisResult(result);
+            return result;
         }
 
         /// <summary>
@@ -260,6 +280,47 @@
                         var differ = new AssemblyDiffer(ignoreTargets);
                         return differ.Diff(oldAssembly, newAssembly);
                     });
+            }
+        }
+
+        /// <summary>
+        /// Logs information about the test run.
+        /// </summary>
+        /// <param name="result">
+        /// The test result to log.
+        /// </param>
+        private static void LogTestResults(ITestRunResult result)
+        {
+            Debug.WriteLine("WinBert --> Test results are ready for assembly [" + result.Target.Location + "]");
+
+            var msg = "WinBert --> Success? [" + result.Success + "] ";
+            if (result.Success)
+            {
+                msg += "Path to analysis log: [" + result.PathToAnalysisLog + "]";
+            }
+            Debug.WriteLine(msg);
+        }
+
+        /// <summary>
+        /// Logs the target analysis result.
+        /// </summary>
+        /// <param name="result">
+        /// The analysis result to log.
+        /// </param>
+        private static void LogAnalysisResult(AnalysisResult result)
+        {
+            Debug.WriteLine("WinBert --> Analysis complete. Success? [" + result.Success + "]. ");
+
+            var successfulResult = result as SuccessfulAnalysisResult;
+            if (successfulResult != null)
+            {
+                Debug.WriteLine("WinBert -> Differences? [" + successfulResult.Differences.Any() + "]");
+            }
+
+            var inconclusiveResult = result as InconclusiveAnalysisResult;
+            if (inconclusiveResult != null)
+            {
+                Debug.WriteLine("WinBert -> Message: [" + inconclusiveResult.Reason + "]");
             }
         }
 

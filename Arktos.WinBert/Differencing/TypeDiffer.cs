@@ -58,19 +58,19 @@
                 throw new ArgumentNullException("newObject");
             }
 
-            var oldTypeDict = oldObject.GetMethods().Where(x => x.DeclaringType.Name == oldObject.Name).ToDictionary(x => x.Name);
+            var oldTypeDict = oldObject.GetMethods().Where(x => x.DeclaringType.Name == oldObject.Name).ToDictionary(x => x.DeclaringType.FullName + "." + x.Name);
             var newTypes = newObject.GetMethods().Where(x => x.DeclaringType.Name == newObject.Name &&
                 !this.ignoreTargets.Any(y => y.Name.Equals(x.Name)));
 
             var methods = new List<string>();
-            foreach (var method in newTypes)
+            foreach (var method in newTypes.Select(x => new { FullSig = x.DeclaringType + "." + x.Name, MethodInfo = x }))
             {
-                if (oldTypeDict.ContainsKey(method.Name))
+                if (oldTypeDict.ContainsKey(method.FullSig))
                 {
-                    var toCompare = oldTypeDict[method.Name];
-                    if (AreDifferent(method.GetMethodBody(), toCompare.GetMethodBody()))
+                    var toCompare = oldTypeDict[method.FullSig];
+                    if (AreDifferent(method.MethodInfo.GetMethodBody(), toCompare.GetMethodBody()))
                     {
-                        methods.Add(method.Name);
+                        methods.Add(method.FullSig);
                     }
                 }
             }

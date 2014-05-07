@@ -1,27 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-    <Identifier Id="8640a686-935a-492c-a73f-a12329c3c3f2">
-        <Name>WinBert</Name>
-        <Author>Arktos</Author>
-        <Version>1.0</Version>
-        <Description xml:space="preserve">Bert implementation for VS2010</Description>
-        <Locale>1033</Locale>
-        <InstalledByMsi>false</InstalledByMsi>
-        <SupportedProducts>
-            <VisualStudio Version="10.0">
-                <Edition>Ultimate</Edition>
-                <Edition>Premium</Edition>
-                <Edition>Pro</Edition>
-            </VisualStudio>
-        </SupportedProducts>
-        <SupportedFrameworkRuntimeEdition MinVersion="4.0" MaxVersion="4.0" />
-    </Identifier>
-    <References>
-        <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
-            <Name>Visual Studio MPF</Name>
-        </Reference>
-    </References>
-    <Content>
-        <VsPackage>|%CurrentProject%;PkgdefProjectOutputGroup|</VsPackage>
-    </Content>
-</Vsix>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="d37821d8-767e-4240-82c9-a11a8d9d9160" Version="1.0" Language="en-US" Publisher="jduv" />
+    <DisplayName>Arktos.WinBert.VsPackage</DisplayName>
+    <Description>WinBert plugin</Description>
+  </Metadata>
+  <Installation InstalledByMsi="false">
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,12.0]" />
+    <InstallationTarget Version="[12.0,13.0)" Id="Microsoft.VisualStudio.Ultimate" />
+    <InstallationTarget Version="[12.0,13.0)" Id="Microsoft.VisualStudio.Pro" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.12.0" DisplayName="Visual Studio MPF 12.0" d:Source="Installed" Version="[12.0]" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>
