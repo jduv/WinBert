@@ -1,11 +1,11 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
 
     /// <summary>
     /// Represents a difference between a return value. This can be a tricky object, as it has either an Object difference or
     /// a primitive difference wrapped inside.
     /// </summary>
-    public class ReturnValueDifference
+    public class ReturnValueDifference : IDifferenceResult
     {
         #region Fields & Constants
 

@@ -146,17 +146,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\AnalysisResult.cs" />
-    <Compile Include="Analysis\AnalysisLogDifference.cs" />
+    <Compile Include="Differencing\AnalysisLogDifference.cs" />
     <Compile Include="Analysis\InconclusiveAnalysisResult.cs" />
-    <Compile Include="Analysis\ObjectDifference.cs" />
-    <Compile Include="Analysis\PathedAnalysisLogDifference.cs" />
-    <Compile Include="Analysis\ObjectDiffer.cs" />
-    <Compile Include="Analysis\MethodCallDiffer.cs" />
-    <Compile Include="Analysis\MethodCallDifference.cs" />
-    <Compile Include="Analysis\MemberPathStack.cs" />
-    <Compile Include="Analysis\ReturnValueDifference.cs" />
-    <Compile Include="Analysis\TestExecutionDiffer.cs" />
-    <Compile Include="Analysis\TextExecutionDifference.cs" />
+    <Compile Include="Differencing\IMethodCallDifference.cs" />
+    <Compile Include="Differencing\IObjectDifference.cs" />
+    <Compile Include="Differencing\ITestExecutionDifference.cs" />
+    <Compile Include="Differencing\ObjectDifference.cs" />
+    <Compile Include="Differencing\PathedAnalysisLogDifference.cs" />
+    <Compile Include="Differencing\ObjectDiffer.cs" />
+    <Compile Include="Differencing\MethodCallDiffer.cs" />
+    <Compile Include="Differencing\MethodCallDifference.cs" />
+    <Compile Include="Differencing\MemberPathStack.cs" />
+    <Compile Include="Differencing\ReturnValueDifference.cs" />
+    <Compile Include="Differencing\TestExecutionDiffer.cs" />
+    <Compile Include="Differencing\TextExecutionDifference.cs" />
     <Compile Include="Analysis\BertBehavioralAnalyzer.cs" />
     <Compile Include="Analysis\IBehavioralAnalyzer.cs" />
     <Compile Include="Analysis\SuccessfulAnalysisResult.cs" />

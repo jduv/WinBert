@@ -8,12 +8,12 @@
     /// <summary>
     /// Handles computing differences between test executions.
     /// </summary>
-    class TestExecutionDiffer : IDifferenceEngine<Xml.TestExecution, TestExecutionDifference>
+    class TestExecutionDiffer : IDifferenceEngine<Xml.TestExecution, ITestExecutionDifference>
     {
         #region Fields & Constants
 
         private readonly IAssemblyDifference assemblyDiff;
-        private readonly IDictionary<string, IDifferenceEngine<Xml.MethodCall, MethodCallDifference>> methodDifferLookup;
+        private readonly IDictionary<string, IDifferenceEngine<Xml.MethodCall, IMethodCallDifference>> methodDifferLookup;
 
         #endregion
 
@@ -27,7 +27,7 @@
             }
 
             this.assemblyDiff = assemblyDiff;
-            this.methodDifferLookup = new Dictionary<string, IDifferenceEngine<Xml.MethodCall, MethodCallDifference>>();
+            this.methodDifferLookup = new Dictionary<string, IDifferenceEngine<Xml.MethodCall, IMethodCallDifference>>();
         }
 
         #endregion
@@ -35,7 +35,7 @@
         #region Public methods
 
         /// <inheritdoc />
-        public TestExecutionDifference Diff(Xml.TestExecution oldObject, Xml.TestExecution newObject)
+        public ITestExecutionDifference Diff(Xml.TestExecution oldObject, Xml.TestExecution newObject)
         {
             if (oldObject == null)
             {
@@ -80,7 +80,7 @@
         /// <returns>
         /// A list of method call differences.
         /// </returns>
-        public IEnumerable<MethodCallDifference> ComputeMethodDifferences(
+        public IEnumerable<IMethodCallDifference> ComputeMethodDifferences(
             IEnumerable<Xml.MethodCall> previousCalls,
             IEnumerable<Xml.MethodCall> currentCalls)
         {
@@ -114,7 +114,7 @@
         /// A method call differ capable of handling method calls corresponding to the type information contained inside
         /// the passed type difference.
         /// </returns>
-        private IDifferenceEngine<Xml.MethodCall, MethodCallDifference> GetOrCreateMethodCallDiffer(ITypeDifference typeDiff)
+        private IDifferenceEngine<Xml.MethodCall, IMethodCallDifference> GetOrCreateMethodCallDiffer(ITypeDifference typeDiff)
         {
             // Ensure that the type diff is not null
             if (typeDiff == null)
@@ -122,7 +122,7 @@
                 throw new ArgumentNullException("typeDiff");
             }
 
-            IDifferenceEngine<Xml.MethodCall, MethodCallDifference> differ;
+            IDifferenceEngine<Xml.MethodCall, IMethodCallDifference> differ;
             if (this.methodDifferLookup.ContainsKey(typeDiff.FullName))
             {
                 differ = this.methodDifferLookup[typeDiff.FullName];

@@ -1,5 +1,6 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using System;
     using System.Collections.Generic;
 
@@ -10,7 +11,7 @@
     {
         #region Constructors & Destructors
 
-        public SuccessfulAnalysisResult(IEnumerable<TestExecutionDifference> differences)
+        public SuccessfulAnalysisResult(IEnumerable<ITestExecutionDifference> differences)
             : base(true)
         {
             if (differences == null)
@@ -27,7 +28,7 @@
         /// <summary>
         /// Gets the list of differences for view.
         /// </summary>
-        public IEnumerable<TestExecutionDifference> Differences { get; private set; }
+        public IEnumerable<ITestExecutionDifference> Differences { get; private set; }
 
         #endregion
     }

@@ -1,12 +1,11 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
-    using Arktos.WinBert.Differencing;
     using System;
 
     /// <summary>
     /// Computes diffs on method calls.
     /// </summary>
-    class MethodCallDiffer : IDifferenceEngine<Xml.MethodCall, MethodCallDifference>
+    class MethodCallDiffer : IDifferenceEngine<Xml.MethodCall, IMethodCallDifference>
     {
         #region Fields & Constants
 
@@ -45,7 +44,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public MethodCallDifference Diff(Xml.MethodCall oldObject, Xml.MethodCall newObject)
+        public IMethodCallDifference Diff(Xml.MethodCall oldObject, Xml.MethodCall newObject)
         {
             if (oldObject == null)
             {

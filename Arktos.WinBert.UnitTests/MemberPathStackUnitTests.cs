@@ -1,6 +1,6 @@
 ﻿namespace Arktos.WinBert.UnitTests
 {
-    using Arktos.WinBert.Analysis;
+    using Arktos.WinBert.Differencing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
 

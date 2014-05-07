@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.VsPackage.ViewModel
 {
     using Arktos.WinBert.Analysis;
+    using Arktos.WinBert.Differencing;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -44,7 +45,7 @@
             return new ObservableCollection<BehavioralDifferenceVm>(vms);
         }
 
-        private IEnumerable<BehavioralDifferenceVm> ProcessMethodCall(string testName, MethodCallDifference methodDiff)
+        private IEnumerable<BehavioralDifferenceVm> ProcessMethodCall(string testName, IMethodCallDifference methodDiff)
         {
             if (methodDiff.PostCallObjectDifferences.AreDifferences)
             {

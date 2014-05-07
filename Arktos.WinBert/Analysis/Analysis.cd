@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Arktos.WinBert.Analysis.AnalysisResult">
-    <Position X="2.5" Y="0.5" Width="2.5" />
+    <Position X="1.75" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>DAAAAAAgIAAAAAAAQAAAAAAJAAAAAAAAAAACACAAAAA=</HashCode>
+      <HashCode>DAAAAAAgIAAAAAAAQAAAAAAJAgAAAAAAAAIAACAAAAA=</HashCode>
       <FileName>Analysis\AnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Arktos.WinBert.Analysis.BertBehavioralAnalyzer" BaseTypeListCollapsed="true">
-    <Position X="9.25" Y="0.5" Width="2.75" />
+  <Class Name="Arktos.WinBert.Analysis.BertBehavioralAnalyzer">
+    <Position X="5.25" Y="0.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAIAgAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Analysis\BertBehavioralAnalyzer.cs</FileName>
@@ -16,21 +16,21 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Arktos.WinBert.Analysis.InconclusiveAnalysisResult">
-    <Position X="4.75" Y="4" Width="2.25" />
+    <Position X="0.5" Y="4.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Analysis\InconclusiveAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Arktos.WinBert.Analysis.SuccessfulAnalysisResult">
-    <Position X="0.5" Y="4.25" Width="2" />
+    <Position X="3.5" Y="4.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
       <FileName>Analysis\SuccessfulAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="Arktos.WinBert.Analysis.IBehavioralAnalyzer">
-    <Position X="7.25" Y="0.5" Width="1.75" />
+    <Position X="5.25" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Analysis\IBehavioralAnalyzer.cs</FileName>

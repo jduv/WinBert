@@ -1,6 +1,7 @@
 ﻿namespace Arktos.WinBert.VsPackage.DesignData
 {
     using Arktos.WinBert.Analysis;
+    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.VsPackage.ViewModel;
     using System;
     using System.Collections.Generic;

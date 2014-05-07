@@ -1,4 +1,4 @@
-﻿using Arktos.WinBert.Analysis;
+﻿using Arktos.WinBert.Differencing;
 
 namespace Arktos.WinBert.VsPackage.ViewModel
 {

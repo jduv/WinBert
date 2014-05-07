@@ -1,6 +1,5 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
-    using Arktos.WinBert.Differencing;
     using System;
 
     /// <summary>
@@ -8,7 +7,7 @@
     /// This is a light-weight object used only for viewing differences. The actual computation is
     /// in a differ class.
     /// </summary>
-    public class MethodCallDifference : IDifferenceResult
+    public class MethodCallDifference : IMethodCallDifference
     {
         #region Constructors & Destructors
 
@@ -57,42 +56,25 @@
 
         #region Properties
 
-        /// <summary>
-        /// Gets the method call's signature.
-        /// </summary>
+        /// <inheritdoc />
         public string Signature { get; private set; }
 
-        /// <summary>
-        /// Gets the distance value of this method call to one that has changed in a dynamic call graph produced
-        /// by this method call.
-        /// </summary>
+        /// <inheritdoc />
         public int? Distance { get; private set; }
 
-        /// <summary>
-        /// Gets the differences between the post-call objects in the old and new test executions.
-        /// </summary>
+        /// <inheritdoc />
         public ObjectDifference PostCallObjectDifferences { get; private set; }
 
-        /// <summary>
-        /// Gets the difference between the return values. This could be a primitive difference or
-        /// an object difference depending on what's returned by the method call.
-        /// </summary>
+        /// <inheritdoc />
         public ReturnValueDifference ReturnValueDifference { get; private set; }
 
-        /// <summary>
-        /// Gets the previous method call.
-        /// </summary>
+        /// <inheritdoc />
         public Xml.MethodCall PreviousCall { get; private set; }
 
-        /// <summary>
-        /// Gets the current method call.
-        /// </summary>
+        /// <inheritdoc />
         public Xml.MethodCall CurrentCall { get; private set; }
 
-        /// <summary>
-        /// Gets a value indicating whether there are some discreet differences between the two method
-        /// calls.
-        /// </summary>
+        /// <inheritdoc />
         public bool AreDifferences { get; private set; }
 
         #endregion

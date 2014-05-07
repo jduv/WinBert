@@ -1,55 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Arktos.WinBert.Differencing.AssemblyDifference">
-    <Position X="6.75" Y="1" Width="1.75" />
+  <Class Name="Arktos.WinBert.Differencing.AssemblyDifference" BaseTypeListCollapsed="true">
+    <Position X="3" Y="6" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAACCCAAAAAAEAAAQAAAAAAAEAAAAAA=</HashCode>
       <FileName>Differencing\AssemblyDifference.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Arktos.WinBert.Differencing.AssemblyDiffer">
-    <Position X="3.25" Y="1" Width="2.25" />
+  <Class Name="Arktos.WinBert.Differencing.AssemblyDiffer" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="5.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgAAAAAgAAAA=</HashCode>
       <FileName>Differencing\AssemblyDiffer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Arktos.WinBert.Differencing.MethodCallDiffer" BaseTypeListCollapsed="true">
-    <Position X="2.25" Y="9.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAABAAAAAAAAAABAAAAAAAAACAAAAAAAAAgAAAA=</HashCode>
-      <FileName>Differencing\MethodCallDiffer.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Arktos.WinBert.Differencing.MethodCallDifference">
-    <Position X="6.5" Y="10" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAgAAAAAAAQQABAAAAAEAAAAAA=</HashCode>
-      <FileName>Differencing\MethodCallDifference.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Arktos.WinBert.Differencing.TestExecutionDiffer" BaseTypeListCollapsed="true">
-    <Position X="2" Y="6.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAEABAABAAAAAAAAAAAAAAAAEAAAgAAAA=</HashCode>
-      <FileName>Differencing\TestExecutionDiffer.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Arktos.WinBert.Differencing.TestExecutionDifference" BaseTypeListCollapsed="true">
-    <Position X="6.5" Y="6.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAEAAAAAAAAAAAAACAAAAAEQBAAAA=</HashCode>
-      <FileName>Differencing\TextExecutionDifference.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="Arktos.WinBert.Differencing.TypeDiffer" BaseTypeListCollapsed="true">
-    <Position X="9.25" Y="1" Width="1.5" />
+    <Position X="5.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAgAAAAAgAAAA=</HashCode>
       <FileName>Differencing\TypeDiffer.cs</FileName>
@@ -57,105 +25,136 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Arktos.WinBert.Differencing.TypeDifference" BaseTypeListCollapsed="true">
-    <Position X="12.25" Y="1" Width="1.5" />
+    <Position X="7" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACIAAAAgAAAQEAAAABAAAAAAAUAAQAEA=</HashCode>
       <FileName>Differencing\TypeDifference.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Arktos.WinBert.Differencing.AnalysisLogObjectDiffer">
-    <Position X="10.5" Y="13.25" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAQAAAQAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\AnalysisLogObjectDiffer.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Arktos.WinBert.Differencing.MemberPath">
-    <Position X="10.25" Y="17.5" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAIIAAAIAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\MemberPath.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="Arktos.WinBert.Differencing.MemberPathStack">
-    <Position X="10.25" Y="15.25" Width="1.75" />
+    <Position X="3.25" Y="17.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\MemberPathStack.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Arktos.WinBert.Differencing.AnalysisLogDiff">
-    <Position X="4" Y="13" Width="1.5" />
+  <Class Name="Arktos.WinBert.Differencing.AnalysisLogDifference">
+    <Position X="8.25" Y="14.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAQAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\AnalysisLogDiff.cs</FileName>
+      <FileName>Differencing\AnalysisLogDifference.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.MethodCallDiffer" BaseTypeListCollapsed="true">
+    <Position X="6" Y="10.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAABAAAAAAAAACAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Differencing\MethodCallDiffer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Arktos.WinBert.Differencing.ReturnValueAnalysisLogDiff">
-    <Position X="5.75" Y="17.25" Width="2.25" />
+  <Class Name="Arktos.WinBert.Differencing.MethodCallDifference" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="10.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\ReturnValueAnalysisLogDiff.cs</FileName>
+      <HashCode>AAAAAgABAAAAAAAAAAAAAAAAAAAQQABAAAAAEAAAAAE=</HashCode>
+      <FileName>Differencing\MethodCallDifference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.ObjectDiffer">
+    <Position X="0.5" Y="14.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAQABEAAAAAABAAAAQAAAACEACAAAAAAEQABAAA=</HashCode>
+      <FileName>Differencing\ObjectDiffer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Arktos.WinBert.Differencing.PathedAnalysisLogDiff">
-    <Position X="1.25" Y="17.25" Width="2" />
+  <Class Name="Arktos.WinBert.Differencing.PrimitiveAndObjectDiffsList">
+    <Position X="0.5" Y="18.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAACAAAAAAgAAEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Differencing\ObjectDiffer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.ObjectDifference" BaseTypeListCollapsed="true">
+    <Position X="2.75" Y="14.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IIAAAAAAAAAAAIAAEAAAAEAAAAAAAAAEAAAAEAAAAAA=</HashCode>
+      <FileName>Differencing\ObjectDifference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.PathedAnalysisLogDifference">
+    <Position X="8.25" Y="17.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\PathedAnalysisLogDiff.cs</FileName>
+      <FileName>Differencing\PathedAnalysisLogDifference.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Arktos.WinBert.Differencing.ReturnValueDifference">
+    <Position X="5.5" Y="14.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAIAAAAAAAAAAgAAAAIAAAAAAJCAAAAEAAIAAA=</HashCode>
+      <FileName>Differencing\ReturnValueDifference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Analysis.TestExecutionDiffer" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="10.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEABAABAAAAAAAAAAAAAAAAEAAAgAAAA=</HashCode>
+      <FileName>Differencing\TestExecutionDiffer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Arktos.WinBert.Differencing.TestExecutionDifference" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAACAEAAAAAAAAAAAAACAAAAAEQBAAAA=</HashCode>
+      <FileName>Differencing\TextExecutionDifference.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
   <Interface Name="Arktos.WinBert.Differencing.IAssemblyDifference">
-    <Position X="12.5" Y="7.75" Width="1.75" />
+    <Position X="0.5" Y="2.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAACCAAAAAAAEAAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>Differencing\IAssemblyDifference.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.IDifferenceEngine&lt;T, TResult&gt;">
-    <Position X="0.5" Y="2" Width="2.25" />
+    <Position X="4" Y="1" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
       <FileName>Differencing\IDifferenceEngine.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.IDifferenceResult">
-    <Position X="11.25" Y="5.75" Width="1.5" />
+    <Position X="1.75" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
       <FileName>Differencing\IDifferenceResult.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Arktos.WinBert.Differencing.ITypeDifference">
-    <Position X="9.75" Y="7.75" Width="1.5" />
+    <Position X="2.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACIAAAAAAAAQEAAAAAAAAAAAAAAAQAEA=</HashCode>
       <FileName>Differencing\ITypeDifference.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Arktos.WinBert.Differencing.IAnalysisLogDiff">
-    <Position X="0.75" Y="13.25" Width="1.5" />
+  <Interface Name="Arktos.WinBert.Differencing.IMethodCallDifference">
+    <Position X="7.5" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAEAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\IAnalysisLogDiff.cs</FileName>
+      <HashCode>AAAAAgABAAAAAAAAAAAAAAAAAAAQQABAAAAAAAAAAAE=</HashCode>
+      <FileName>Differencing\IMethodCallDifference.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Arktos.WinBert.Differencing.IAnalysisLogObjectDiffer">
-    <Position X="0.5" Y="4.25" Width="2" />
+  <Interface Name="Arktos.WinBert.Differencing.ITestExecutionDifference">
+    <Position X="4.75" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\IAnalysisLogObjectDiffer.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="Arktos.WinBert.Differencing.IMemberPath">
-    <Position X="12.25" Y="15.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAIIAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Differencing\IMemberPath.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAACAEAAAAAAAAAAAAACAAAAAAQBAAAA=</HashCode>
+      <FileName>Differencing\ITestExecutionDifference.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Segoe UI" Size="9" />

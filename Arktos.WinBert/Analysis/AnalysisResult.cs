@@ -1,5 +1,6 @@
 ﻿namespace Arktos.WinBert.Analysis
 {
+    using Arktos.WinBert.Differencing;
     using Arktos.WinBert.Testing;
     using System;
     using System.Collections.Generic;

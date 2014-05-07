@@ -1,4 +1,4 @@
-﻿namespace Arktos.WinBert.Analysis
+﻿namespace Arktos.WinBert.Differencing
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,7 +6,7 @@
     /// <summary>
     /// Represents a difference between two instances.
     /// </summary>
-    public class ObjectDifference
+    public class ObjectDifference : IObjectDifference
     {
         #region Constructors & Destructors
 
